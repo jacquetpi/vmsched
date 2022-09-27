@@ -151,10 +151,8 @@ def treat_stub_metrics(url : str, probe_metrics : dict, previous_metrics : dict 
         add_ratio_if_exists(node_metrics, 'bmr', probe_metrics['global']['perf'].get('hwbranchmisses'), probe_metrics['global']['perf'].get('hwbranchinstructions'))
         add_ratio_if_exists(node_metrics, 'cmr', probe_metrics['global']['perf'].get('hwcachemisses'), probe_metrics['global']['perf'].get('hwcachereferences'))
 
-        add_field_if_exists(node_metrics, 'alignmentfaults', probe_metrics['global']['perf'].get('swalignmentfaults'))
-        add_field_if_exists(node_metrics, 'contextswitches', probe_metrics['global']['perf'].get('swcontextswitches'))
-        add_field_if_exists(node_metrics, 'emulationfaults', probe_metrics['global']['perf'].get('swemulationfaults'))
-        add_field_if_exists(node_metrics, 'pagefaults', probe_metrics['global']['perf'].get('swpagefaults'))
+        for key in probe_metrics['global']['perf'].keys():
+            add_field_if_exists(node_metrics, key, probe_metrics['global']['perf'].get(key))
 
     if 'cpu' in probe_metrics['global']:
         add_field_if_exists(node_metrics, 'freq', probe_metrics['global']['cpu'].get('freq'))
