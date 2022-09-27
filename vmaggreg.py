@@ -99,14 +99,11 @@ def treat_domain_metrics_delta(elapsed_time : int, vm_metrics : dict, domain_met
     if 'perf' in domain_metrics:
 
         add_ratio_if_exists(vm_metrics, 'cpi', domain_metrics['perf'].get('hwcpucycles'), domain_metrics['perf'].get('hwinstructions'))
-        print(domain_metrics['perf'].get('hwcpucycles'), domain_metrics['perf'].get('hwinstructions'), vm_metrics['fields'].get('cpi'))
         add_ratio_if_exists(vm_metrics, 'bmr', domain_metrics['perf'].get('hwbranchmisses'), domain_metrics['perf'].get('hwbranchinstructions'))
         add_ratio_if_exists(vm_metrics, 'cmr', domain_metrics['perf'].get('hwcachemisses'), domain_metrics['perf'].get('hwcachereferences'))
 
-        add_field_if_exists(vm_metrics, 'alignmentfaults', domain_metrics['perf'].get('swalignmentfaults'))
-        add_field_if_exists(vm_metrics, 'contextswitches', domain_metrics['perf'].get('swcontextswitches'))
-        add_field_if_exists(vm_metrics, 'emulationfaults', domain_metrics['perf'].get('swemulationfaults'))
-        add_field_if_exists(vm_metrics, 'pagefaults', domain_metrics['perf'].get('swpagefaults'))
+        for key in domain_metrics['perf'].keys():
+            add_field_if_exists(vm_metrics, key, domain_metrics['perf'].get(key))
 
     return cpu_usage
 
