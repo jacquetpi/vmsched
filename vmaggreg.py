@@ -11,9 +11,9 @@ STUB_LIST= [("http://localhost:9100/metrics", "test")]
 FETCH_DELAY = 0
 OUTPUT_FILE = ""
 
-def retrieve_stub_metrics(stub_url : str, stub_prefix : str):                  
-    page = requests.get(url = stub_url)                              
-    lines = page.text.splitlines()    
+def retrieve_stub_metrics(stub_url : str, stub_prefix : str):
+    page = requests.get(url = stub_url)
+    lines = page.text.splitlines()
 
     probe_metrics = defaultdict(dict)
 
@@ -92,18 +92,14 @@ def treat_domain_metrics_delta(elapsed_time : int, vm_metrics : dict, domain_met
     if add_difference_if_exists(vm_metrics, 'elapsed_cpu_time', vm_metrics['fields'].get('cpu_time'), vm_previous_metrics.get('cpu_time')):
         if add_ratio_if_exists(vm_metrics, 'cpu_usage', vm_metrics['fields'].get('elapsed_cpu_time'), elapsed_time, (10**6)):
             cpu_usage = vm_metrics['fields']['cpu_usage']
-            vm_saved_metrics['cpu_usage'] = cpu_usage 
+            vm_saved_metrics['cpu_usage'] = cpu_usage
 
-    delta_perf = dict()
+    if 'sched' in domain_metrics:
+        add_difference_if_exists(vm_metrics, 'sched_runtime', domain_metrics['sched'].get('runtime'), vm_previous_metrics.get('sched_runtime'))
+        add_difference_if_exists(vm_metrics, 'sched_waittime', domain_metrics['sched'].get('waittime'), vm_previous_metrics.get('sched_waittime'))
+        add_ratio_if_exists(vm_metrics, 'sched_busy', vm_metrics['fields'].get('sched_waittime'), domain_metrics['sched'].get('sched_runtime'))
 
-    if 'perf' in domain_metrics:
-
-        add_ratio_if_exists(vm_metrics, 'cpi', domain_metrics['perf'].get('hwcpucycles'), domain_metrics['perf'].get('hwinstructions'))
-        add_ratio_if_exists(vm_metrics, 'bmr', domain_metrics['perf'].get('hwbranchmisses'), domain_metrics['perf'].get('hwbranchinstructions'))
-        add_ratio_if_exists(vm_metrics, 'cmr', domain_metrics['perf'].get('hwcachemisses'), domain_metrics['perf'].get('hwcachereferences'))
-
-        for key in domain_metrics['perf'].keys():
-            add_field_if_exists(vm_metrics, key, domain_metrics['perf'].get(key))
+    vm_saved_metrics['cpu_usage'] = cpu_usage
 
     return cpu_usage
 
@@ -123,6 +119,19 @@ def treat_domain_metrics(domain_name : str, url :str, epoch_ms : int, domain_met
         add_field_if_exists(vm_metrics, 'cpu', domain_metrics['cpu'].get('alloc'))
         if add_field_if_exists(vm_metrics, 'cpu_time', domain_metrics['cpu'].get('cputime')):
             vm_saved_metrics['cpu_time'] = vm_metrics['fields']['cpu_time']
+
+    if 'perf' in domain_metrics:
+
+        add_ratio_if_exists(vm_metrics, 'cpi', domain_metrics['perf'].get('hwcpucycles'), domain_metrics['perf'].get('hwinstructions'))
+        add_ratio_if_exists(vm_metrics, 'bmr', domain_metrics['perf'].get('hwbranchmisses'), domain_metrics['perf'].get('hwbranchinstructions'))
+        add_ratio_if_exists(vm_metrics, 'cmr', domain_metrics['perf'].get('hwcachemisses'), domain_metrics['perf'].get('hwcachereferences'))
+
+        for key in domain_metrics['perf'].keys():
+            add_field_if_exists(vm_metrics, key, domain_metrics['perf'].get(key))
+
+    if 'sched' in domain_metrics:
+        add_field_if_exists(vm_saved_metrics, 'sched_runtime', domain_metrics['sched'].get('runtime'))
+        add_field_if_exists(vm_saved_metrics, 'sched_waittime', domain_metrics['sched'].get('waittime'))
 
     if elapsed_time>0:
         cpu_usage = treat_domain_metrics_delta(elapsed_time, vm_metrics, domain_metrics, vm_previous_metrics, vm_saved_metrics)
@@ -167,6 +176,15 @@ def treat_stub_metrics(url : str, probe_metrics : dict, previous_metrics : dict 
         add_field_if_exists(node_metrics, 'mem', probe_metrics['global']['memory'].get('total'), (10**3)) # MB
         add_difference_if_exists(node_metrics, 'mem_usage', probe_metrics['global']['memory'].get('total'), probe_metrics['global']['memory'].get('available'), (10**3)) # MB
 
+    if 'sched' in probe_metrics['global']:
+        add_field_if_exists(saved_metrics, 'sched_runtime', probe_metrics['global']['sched'].get('runtime'))
+        add_field_if_exists(saved_metrics, 'sched_waittime', probe_metrics['global']['sched'].get('waittime'))
+        
+        add_difference_if_exists(node_metrics, 'sched_runtime', probe_metrics['global']['sched'].get('runtime'), previous_metrics.get('sched_runtime'))
+        add_difference_if_exists(node_metrics, 'sched_waittime', probe_metrics['global']['sched'].get('waittime'), previous_metrics.get('sched_waittime'))
+
+        add_ratio_if_exists(node_metrics, 'sched_busy', node_metrics['fields'].get('sched_waittime'), node_metrics['fields'].get('sched_waittime'))
+
     if 'probe' in probe_metrics['global']:
         if previous_metrics:
             does_exist = add_difference_if_exists(node_metrics, 'elapsed_time', probe_metrics['global']['probe'].get('epoch'), previous_metrics.get('epoch'))
@@ -174,7 +192,7 @@ def treat_stub_metrics(url : str, probe_metrics : dict, previous_metrics : dict 
                 elapsed_time = node_metrics['fields']['elapsed_time']
                 add_difference_if_exists(node_metrics, 'elapsed_cpu_time', node_metrics['fields'].get('cpu_time'), previous_metrics.get('cpu_time'))
                 add_ratio_if_exists(node_metrics, 'cpu_usage', node_metrics['fields'].get('elapsed_cpu_time'), node_metrics['fields'].get('elapsed_time'), (10**6))
-                add_field_if_exists(saved_metrics, 'cpu_usage', node_metrics['fields'].get('cpu_usage')) #for next round$
+                add_field_if_exists(saved_metrics, 'cpu_usage', node_metrics['fields'].get('cpu_usage')) #for next round
             else:
                 add_field_if_exists(node_metrics, 'cpu_usage', previous_metrics.get('cpu_usage'))
 
