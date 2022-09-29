@@ -1,15 +1,14 @@
-import requests, os, time, sys, getopt
+import requests, os, json, time, sys, getopt
 from collections import defaultdict
 from datetime import datetime, timezone
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
 
-#STUB_LIST= [("http://localhost:9101/metrics", "tornado")]
-STUB_LIST= [("http://localhost:9100/metrics", "test")]
+# Global parameters
+STUB_LIST= []
 FETCH_DELAY = 0
-OUTPUT_FILE = ""
 
 def retrieve_stub_metrics(stub_url : str, stub_prefix : str):
     page = requests.get(url = stub_url)
@@ -279,7 +278,7 @@ def monitor():
         delayer_between_iteration(iteration_start)
 
 if __name__ == '__main__':
-    load_dotenv()
+    
     short_options = "h:d:t:u:"
     long_options = ["help","timeout=","url="]
  
@@ -290,11 +289,13 @@ if __name__ == '__main__':
         sys.exit(2)
     for current_argument, current_value in arguments:
         if current_argument in ("-h", "--help"):
-            print("python3 vmaggreg.py [--help] [--delay={sec}] [--url={url}]")
+            print("python3 vmaggreg.py [--help]")
             sys.exit(0)
-        elif current_argument in ("-u", "--url"):
-            STUB_URL = current_value
-
+    
+    load_dotenv()
+    FETCH_DELAY =  int(os.getenv('AGGREG_FETCH_DELAY'))
+    STUB_LIST =   json.loads(os.getenv('AGGREG_STUB_LIST'))
+    
     try:
         monitor()
     except KeyboardInterrupt:

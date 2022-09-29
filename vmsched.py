@@ -2,72 +2,25 @@ from email.policy import default
 import requests, os, time, sys, getopt, copy, json
 from collections import defaultdict
 from resultfilehandler import ResultFileHandler
-from datetime import datetime
 from dotenv import load_dotenv, find_dotenv
 import numpy as np
 import matplotlib.pyplot as plt
-import threading, subprocess, libvirt
 
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
 
-SCOPE_MN = 60
-TIER1_MN = 20
-TIER2_MN = 40
+# Global parameters
 DEBUG = False
 DEBUG_TARGET = "cpu"
 DEBUG_TARGET_USAGE = DEBUG_TARGET + "_usage"
 
-TEMP_ENDPOINT_CONFIG = "/var/lib/vmsched/status.json"
-#TEMP_LIBVIRT_HOST = "qemu+ssh://pijacque@spirals-tornado.lille.inria.fr/system?keyfile=id_rsa"
-TEMP_LIBVIRT_HOST = "qemu:///system"
+STATE_ENDPOINT = ""
 
-#grace_period_tracker = defaultdict(lambda: int(time.time())) #default is current epoch in s
-grace_period_tracker = defaultdict(lambda: int(0))
-grace_period = 600
-
-class RssReducer(object):
-
-    def __init__(self, domain : str, mem_retrieval_thresold : int):
-        self.domain=domain
-        self.mem_retrieval_thresold=mem_retrieval_thresold*1024
-
-    def run(self):
-        conn = None
-        def target():
-            try:
-                conn = libvirt.open(TEMP_LIBVIRT_HOST)
-            except libvirt.libvirtError as e:
-                print(repr(e), file=sys.stderr)
-                exit(1)
-            dom = conn.lookupByName(self.domain)
-            if(self.mem_retrieval_thresold<2048000):
-                self.mem_retrieval_thresold=2048000
-            if dom == None:
-                print('Failed to find the domain '+ self.domain, file=sys.stderr)
-                exit(1)
-            print("Reduce", self.domain, "to", self.mem_retrieval_thresold, dom.setMemoryFlags(self.mem_retrieval_thresold,flags=libvirt.VIR_DOMAIN_AFFECT_LIVE))
-            time.sleep(180)
-            print("Increase", self.domain, "to", dom.maxMemory(), dom.setMemoryFlags(dom.maxMemory(),flags=libvirt.VIR_DOMAIN_AFFECT_LIVE))
-            conn.close()
-
-        thread = threading.Thread(target=target)
-        thread.start()
-
-def check_rss(domain : str, domain_metrics : dict, delay_metrics : list):
-    ## Check if VM is in grace period
-    if (grace_period_tracker[domain] + grace_period) > int(time.time()):
-        print(domain, "is in grace period")
-        return
-    mem_usage = np.percentile(domain_metrics['mem_usage'], 90)
-    mem_rss = domain_metrics['mem_rss'][-1]
-    mem_retrieval = mem_rss - mem_usage
-    print("debug", domain, mem_usage, mem_rss, mem_retrieval)
-    if mem_retrieval > 2048: # We can retrieve at least 2GB
-        print("geronimo")
-        reducer = RssReducer(domain, mem_usage)
-        reducer.run()
-        grace_period_tracker[domain] = int(time.time()) # update grace_period_tracker
+SCHED_SCOPE_SLICE_MN = 0
+SCHED_SCOPE_MN = 0
+SCHED_SCOPE_TIER1_MN = 0
+SCHED_SCOPE_TIER2_MN = 0
+SCHED_SCOPE_SLEEP_S = 0
 
 def monitor_nodes():
     myurl = os.getenv('INFLUXDB_URL')
@@ -78,7 +31,7 @@ def monitor_nodes():
     client = InfluxDBClient(url=myurl, token=mytoken, org=myorg)
     query_api = client.query_api()
     query = ' from(bucket:"' + mybucket + '")\
-    |> range(start: -' + str(SCOPE_MN) + 'm)\
+    |> range(start: -' + str(SCHED_SCOPE_MN) + 'm)\
     |> filter(fn:(r) => r._measurement == "node")'
     # |> keep(columns: ["oc_mem"])'
 
@@ -108,7 +61,7 @@ def monitor_domains(url : str):
     client = InfluxDBClient(url=myurl, token=mytoken, org=myorg)
     query_api = client.query_api()
     query = ' from(bucket:"' + mybucket + '")\
-    |> range(start: -' + str(SCOPE_MN) + 'm)\
+    |> range(start: -' + str(SCHED_SCOPE_MN) + 'm)\
     |> filter(fn: (r) => r["_measurement"] == "domain")\
     |> filter(fn: (r) => r["url"] == "' + url + '")'
 
@@ -131,9 +84,9 @@ def compute_percentile(metrics : list):
 def compute_lifetime_indicator(domain_metrics : dict, delay_metrics : list):
     delay = round(delay_metrics[1] - delay_metrics[0])
     lifetime =  len(domain_metrics['cpu_time']) * delay
-    if lifetime < TIER1_MN*60:
+    if lifetime < SCHED_SCOPE_TIER1_MN*60:
         return 0
-    elif lifetime < TIER2_MN*60:
+    elif lifetime < SCHED_SCOPE_TIER2_MN*60:
         return 1
     else:
         return 2
@@ -180,10 +133,7 @@ def analyze_metrics(metrics : dict):
         debug_list = list()
         print("debug1", node, node_metrics['domains'].keys())
         for domain_name, domain_metrics in node_metrics['domains'].items():
-
-            # Reduce its rss if needed
-            check_rss(domain_name, domain_metrics, node_metrics['time'][-2:])
-
+            
             # Compute metrics
             cpu_tier0, cpu_tier1, mem_tier0, mem_tier1 = compute_domain_tiers(domain_metrics, node_metrics['time'][-2:])
             cpu_tiers[0] += cpu_tier0
@@ -258,12 +208,11 @@ def main_loop():
     filehandler = ResultFileHandler()
     while True:
         tiers = analyze_metrics(monitor_nodes())
-        filehandler.writeResult(TEMP_ENDPOINT_CONFIG, tiers)
-        time.sleep(30)
+        filehandler.writeResult(STATE_ENDPOINT, tiers)
+        time.sleep(SCHED_SCOPE_SLEEP_S)
 
 if __name__ == '__main__':
 
-    load_dotenv()
     short_options = "ho:du:"
     long_options = ["help", "output=","d","url="]
 
@@ -282,6 +231,14 @@ if __name__ == '__main__':
             STUB_URL = current_value
         elif current_argument in ("-d", "--debug"):
             DEBUG = True
+
+    load_dotenv()
+    STATE_ENDPOINT = os.getenv('STATE_ENDPOINT')
+    SCHED_SCOPE_SLICE_MN = int(os.getenv('SCHED_SCOPE_SLICE_MN'))
+    SCHED_SCOPE_MN = int(os.getenv('SCHED_SCOPE_MN'))
+    SCHED_SCOPE_TIER1_MN = int(os.getenv('SCHED_SCOPE_TIER1_MN'))
+    SCHED_SCOPE_TIER2_MN = int(os.getenv('SCHED_SCOPE_TIER2_MN'))
+    SCHED_SCOPE_SLEEP_S = int(os.getenv('SCHED_SCOPE_SLEEP_S'))
 
     try:
         main_loop()

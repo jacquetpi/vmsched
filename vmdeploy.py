@@ -1,13 +1,13 @@
 from resultfilehandler import ResultFileHandler
-import time, sys, getopt
-import libvirt
+import time, sys, getopt, os, libvirt, json
+from dotenv import load_dotenv
 
-TEMP_ENDPOINT_CONFIG = "/var/lib/vmsched/status.json"
-TEMP_LIVIRT_HOST = "qemu+ssh://pijacque@spirals-tornado.lille.inria.fr/system?keyfile=id_rsa"
+STATE_ENDPOINT = ""
+LIBVIRT_NODES = dict()
 
 def read_endpoint():
     filehandler = ResultFileHandler()
-    return filehandler.loadResult(TEMP_ENDPOINT_CONFIG)
+    return filehandler.loadResult(STATE_ENDPOINT)
 
 def display_status():
     status = read_endpoint()
@@ -19,7 +19,7 @@ def display_status():
 
 def deploy_vm_on_host(host: str, name : str, cpu : int, memory : int):
         try:
-            conn = libvirt.open(TEMP_LIVIRT_HOST)
+            conn = libvirt.open(LIBVIRT_NODES[host])
             for id in conn.listDomainsID():
                 domain = conn.lookupByID(id)
                 print(domain.name(), domain.info())
@@ -50,6 +50,11 @@ if __name__ == '__main__':
     except getopt.error as err:
         print (str(err)) # Output error, and return with an error code
         sys.exit(2)
+
+    load_dotenv()
+    STATE_ENDPOINT = os.getenv('STATE_ENDPOINT')
+    LIBVIRT_NODES = json.loads(os.getenv('LIBVIRT_NODES'))
+
     for current_argument, current_value in arguments:
         if current_argument in ("-l", "--list"):
             display_status()
@@ -64,4 +69,5 @@ if __name__ == '__main__':
                 print("python3 deploy.py [--help] [--list=''] [--deploy=name,cpu,mem")
         else:
             print("python3 deploy.py [--help] [--list=''] [--deploy=name,cpu,mem")
+    
     sys.exit(0)
