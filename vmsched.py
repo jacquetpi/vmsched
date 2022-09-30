@@ -1,13 +1,11 @@
-from email.policy import default
 import requests, os, time, sys, getopt, copy, json
 from collections import defaultdict
 from resultfilehandler import ResultFileHandler
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 import numpy as np
 import matplotlib.pyplot as plt
 
-from influxdb_client import InfluxDBClient, Point, WritePrecision
-from influxdb_client.client.write_api import SYNCHRONOUS
+from model.nodemodel import NodeModel
 
 # Global parameters
 DEBUG = False
@@ -21,97 +19,6 @@ SCHED_SCOPE_MN = 0
 SCHED_SCOPE_TIER1_MN = 0
 SCHED_SCOPE_TIER2_MN = 0
 SCHED_SCOPE_SLEEP_S = 0
-
-def monitor_nodes():
-    myurl = os.getenv('INFLUXDB_URL')
-    mytoken = os.getenv('INFLUXDB_TOKEN')
-    myorg = os.getenv('INFLUXDB_ORG')
-    mybucket = os.getenv('INFLUXDB_BUCKET')
-
-    client = InfluxDBClient(url=myurl, token=mytoken, org=myorg)
-    query_api = client.query_api()
-    query = ' from(bucket:"' + mybucket + '")\
-    |> range(start: -' + str(SCHED_SCOPE_MN) + 'm)\
-    |> filter(fn:(r) => r._measurement == "node")'
-    # |> keep(columns: ["oc_mem"])'
-
-    result = query_api.query(org=myorg, query=query)
-
-    nodes = defaultdict(lambda: defaultdict(list))
-
-    for table in result:
-        for record in table.records:
-            url = record.__getitem__('url')
-            timestamp = (record.get_time()).timestamp()
-            if timestamp not in nodes[url]["time"]: #possibly a hotspot
-                nodes[url]["time"].append(timestamp)
-            nodes[url][record.get_field()].append(record.get_value())
-
-    for node in nodes.keys():
-        nodes[node]["domains"] = monitor_domains(node)
-
-    return nodes
-
-def monitor_domains(url : str):
-    myurl = os.getenv('INFLUXDB_URL')
-    mytoken = os.getenv('INFLUXDB_TOKEN')
-    myorg = os.getenv('INFLUXDB_ORG')
-    mybucket = os.getenv('INFLUXDB_BUCKET')
-
-    client = InfluxDBClient(url=myurl, token=mytoken, org=myorg)
-    query_api = client.query_api()
-    query = ' from(bucket:"' + mybucket + '")\
-    |> range(start: -' + str(SCHED_SCOPE_MN) + 'm)\
-    |> filter(fn: (r) => r["_measurement"] == "domain")\
-    |> filter(fn: (r) => r["url"] == "' + url + '")'
-
-    result = query_api.query(org=myorg, query=query)
-    domains = defaultdict(lambda: defaultdict(list))
-
-    for table in result:
-        for record in table.records:
-            domain_name = record.__getitem__('domain')
-            domains[domain_name][record.get_field()].append(record.get_value())
-
-    return domains
-
-def compute_percentile(metrics : list):
-    if(metrics):
-        return np.percentile(metrics,90)
-    else:
-        return 0
-
-def compute_lifetime_indicator(domain_metrics : dict, delay_metrics : list):
-    delay = round(delay_metrics[1] - delay_metrics[0])
-    lifetime =  len(domain_metrics['cpu_time']) * delay
-    if lifetime < SCHED_SCOPE_TIER1_MN*60:
-        return 0
-    elif lifetime < SCHED_SCOPE_TIER2_MN*60:
-        return 1
-    else:
-        return 2
-
-def compute_domain_tiers(domain_metrics : dict, delay_metrics : list):
-    lifetime = compute_lifetime_indicator(domain_metrics, delay_metrics[-2:])
-    if lifetime == 0:
-        # Between t0 and t1 : we garantee the booked ressources to the VM
-        cpu_max = np.max(domain_metrics['cpu'])
-        mem_max = np.max(domain_metrics['mem'])
-        return cpu_max, cpu_max, mem_max, mem_max
-    elif lifetime == 1:
-        # Between t1 and t2 : we garantee the percentile to the VM and keep the booked ressources in flex space
-        cpu_percentile = compute_percentile(domain_metrics['cpu_usage'])
-        cpu_max = np.max(domain_metrics['cpu'])
-        mem_percentile = compute_percentile(domain_metrics['mem_rss'])
-        mem_max = np.max(domain_metrics['mem'])
-        return cpu_percentile, cpu_max, mem_percentile, mem_max
-    else:
-        # From t2 : we use the average and percentile value only
-        cpu_avg = np.average(domain_metrics['cpu_usage'])
-        cpu_percentile = compute_percentile(domain_metrics['cpu_usage'])
-        mem_avg = np.average(domain_metrics['mem_rss'])
-        mem_percentile = compute_percentile(domain_metrics['mem_rss'])
-        return cpu_avg, cpu_percentile, mem_avg, mem_percentile
 
 def analyze_metrics(metrics : dict):
 
