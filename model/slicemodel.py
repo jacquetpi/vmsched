@@ -40,7 +40,7 @@ class SliceModel(object):
                 self.slicevmdata[domain_name]=SliceVmWrapper(domain_name)
             self.slicevmdata[domain_name].add_data(domain_stats)
 
-    def get_vm_cpu_mem_tier(self):
+    def get_vm_cpu_mem_min_max(self):
         slice_cpu_min, slice_cpu_max = 0, 0
         slice_mem_min, slice_mem_max = 0, 0
         for vm, vmwrapper in self.slicevmdata.items():
@@ -50,6 +50,37 @@ class SliceModel(object):
             slice_mem_min += wp_mem_min
             slice_mem_max += wp_mem_max
         return slice_cpu_min, slice_cpu_max, slice_mem_min, slice_mem_max
+
+    def get_vm_cpu_mem_tier(self):
+        cpu_config, mem_config = self.get_host_config()
+        if cpu_config<0 or mem_config<0:
+            print("Not enough data to compute cpu/mem tier on this slice")
+            return 0, 0, 0, 0, 0, 0
+        slice_cpu_min, slice_cpu_max, slice_mem_min, slice_mem_max = self.get_vm_cpu_mem_min_max()
+        # print("debug", slice_cpu_min, slice_cpu_max, cpu_config, slice_mem_min, slice_mem_max, mem_config)
+        # Compute CPU tier
+        cpu_tier0 = slice_cpu_min
+        cpu_tier1 = (slice_cpu_max - cpu_tier0)
+        if cpu_tier1 <= 0:
+            cpu_tier1 = 0
+        if cpu_tier1>cpu_config:
+            cpu_tier1 = cpu_config-cpu_tier0
+            cpu_tier2 = 0
+        else:
+            cpu_tier2 = (cpu_config - cpu_tier1 - cpu_tier0)
+        # Compute memory tier
+        mem_tier0 = slice_mem_min
+        mem_tier1 = (slice_mem_max - mem_tier0)
+        if mem_tier1 < 0:
+            mem_tier1 = 0
+        if mem_tier1>mem_config:
+            mem_tier1 = mem_config-mem_tier0
+            mem_tier2 = 0
+        else:
+            mem_tier2 = (mem_config - mem_tier1 - mem_tier0)
+        #print("debug", cpu_tier0, cpu_tier1, cpu_tier2, mem_tier0, mem_tier1, mem_tier2)
+        return cpu_tier0, cpu_tier1, cpu_tier2, mem_tier0, mem_tier1, mem_tier2
+        
 
     def retrieve_domain_data(self, begin_epoch : int, end_epoch : int):
         myurl = os.getenv('INFLUXDB_URL')
@@ -73,7 +104,6 @@ class SliceModel(object):
                 timestamp = (record.get_time()).timestamp()
                 domains_data[domain_name][record.get_field()].append(record.get_value())
                 domains_data[domain_name]["time"].append(timestamp)
-
         return domains_data
 
     def retrieve_node_data(self, begin_epoch : int, end_epoch : int):
@@ -96,9 +126,9 @@ class SliceModel(object):
         for table in result:
             for record in table.records:
                 timestamp = (record.get_time()).timestamp()
-                node_data["time"].append(timestamp)
+                if timestamp not in node_data["time"]:
+                    node_data["time"].append(timestamp)
                 node_data[record.get_field()].append(record.get_value())
-
         return node_data
 
     def get_host_config(self):
@@ -108,12 +138,12 @@ class SliceModel(object):
         return str(self.leftBound) + ";" + str(self.rightBound) + "["
 
     def __str__(self):
-        slice_cpu_min, slice_cpu_max, slice_mem_min, slice_mem_max = self.get_vm_cpu_mem_tier()
+        slice_cpu_min, slice_cpu_max, slice_mem_min, slice_mem_max = self.get_vm_cpu_mem_min_max()
         slice_cpu_config, slice_mem_config = self.get_host_config()
         txt = "SliceModel[" + str(self.leftBound) + ";" + str(self.rightBound) + "[:" + \
             " cpu " + str(round(slice_cpu_min,1)) + "/" + str(round(slice_cpu_max,1)) + "/" + str(int(slice_cpu_config)) +\
             " mem " + str(round(slice_mem_min,1)) + "/" + str(round(slice_mem_max,1)) + "/" + str(int(slice_mem_config)) +\
-            "\n>{" + str(self.slicenodedata) + "}"
+            "\n  >{" + str(self.slicenodedata) + "}"
         for vm, slicevm in self.slicevmdata.items():
-            txt += "\n>{" + str(slicevm) + "}"
+            txt += "\n  >{" + str(slicevm) + "}"
         return txt

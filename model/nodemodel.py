@@ -62,36 +62,35 @@ class NodeModel(object):
         mem_data = {"tier0":[], "tier1":[], "tier2":[]}
         for slice in self.slices:
             slices.append(slice.get_bound_as_str())
-            slice_cpu_min, slice_cpu_max, slice_mem_min, slice_mem_max = slice.get_vm_cpu_mem_tier()
-            print(slice_cpu_min, slice_cpu_max, slice_mem_min, slice_mem_max)
-            cpu_config, mem_config = slice.get_host_config()
-            cpu_data["tier0"].append(slice_cpu_min)
-            cpu_data["tier1"].append(slice_cpu_max-slice_cpu_min)
-            cpu_data["tier2"].append(cpu_config-slice_cpu_max)
-            mem_data["tier0"].append(slice_mem_min)
-            mem_data["tier1"].append(slice_mem_max-slice_mem_min)
-            mem_data["tier2"].append(mem_config-slice_mem_max)
-
+            cpu_tier0, cpu_tier1, cpu_tier2, mem_tier0, mem_tier1, mem_tier2 = slice.get_vm_cpu_mem_tier()
+            cpu_data["tier0"].append(cpu_tier0)
+            cpu_data["tier1"].append(cpu_tier1)
+            cpu_data["tier2"].append(cpu_tier2)
+            mem_data["tier0"].append(mem_tier0)
+            mem_data["tier1"].append(mem_tier1)
+            mem_data["tier2"].append(mem_tier2)
+            
         df=pd.DataFrame(cpu_data,index=slices)
-        df.plot(kind="bar",stacked=True, title="CPU tier", figsize=(10,8))
+        ax = df.plot(kind="bar",stacked=True, title="CPU tier", figsize=(10,8))
 
-        df2=pd.DataFrame(mem_data,index=slices)
-        df2.plot(kind="bar",stacked=True, title="Mem tier", figsize=(10,8))
+        # df2=pd.DataFrame(mem_data,index=slices)
+        # ax2 = df2.plot(kind="bar",stacked=True, title="Mem tier", figsize=(10,8))
 
         plt.legend(loc="lower left",bbox_to_anchor=(0.8,1.0))
         plt.show()
 
 ## For development purpose only
 if __name__ == '__main__':
-    debug_scope = 24
-    debug_slice = 6
+    debug_scope = 30
+    debug_slice = 15
     load_dotenv()
     model = NodeModel("http://localhost:9100/metrics", debug_scope,debug_slice)
-    model.build_past_slices()
+    #model.build_past_slices()
     time.sleep(debug_slice)
     while True:
+        loop_begin = int(time.time())
         previous_iteration, previous_slide_number = model.get_previous_iteration_and_slide_number()
         model.get_slide(previous_slide_number).build_slice(previous_iteration)
         print(str(model) + "\n")
-        #model.display_model()
-        time.sleep(debug_slice)
+        model.display_model()
+        time.sleep(debug_slice - (int(time.time()) - loop_begin))

@@ -45,7 +45,17 @@ class SliceHostWrapper(object):
         return metric_list
 
     def get_host_config(self):
-        return self.get_slice_metric("cpu_config")[-1], self.get_slice_metric("mem_config")[-1]
+        cpu_config_list =  self.get_slice_metric("cpu_config")
+        mem_config_list =  self.get_slice_metric("cpu_config")
+        if cpu_config_list:
+            cpu_config = self.get_slice_metric("cpu_config")[-1]
+        else:
+            cpu_config=-1
+        if mem_config_list:
+            mem_config = self.get_slice_metric("mem_config")[-1]
+        else:
+            mem_config=-1
+        return cpu_config, mem_config
 
     def get_host_average(self):
         cpu_usage_list = self.get_slice_metric("cpu_avg")
