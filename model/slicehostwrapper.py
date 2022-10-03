@@ -1,4 +1,4 @@
-from slicehost import SliceHost
+from model.slicehost import SliceHost
 import numpy as np
 
 class SliceHostWrapper(object):

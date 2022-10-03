@@ -19,11 +19,10 @@ LIBVIRT_NODES='{"url":"qemu+ssh://ip/system?keyfile=id_rsa"}'
 ############
 # vmsched #
 ############
-SCHED_SCOPE_SLICE_MN=10
-SCHED_SCOPE_MN=60
-SCHED_SCOPE_TIER1_MN=20
-SCHED_SCOPE_TIER2_MN=40
-SCHED_SCOPE_SLEEP_S=30
+SCHED_NODES='["http://localhost:9100/metrics"]'
+SCHED_SCOPE_S=30
+SCHED_SCOPE_SLICE_S=15
+SCHED_SCOPE_INIT_FETCH_PREVIOUS=3
 ################
 # vmballooning #
 ################

@@ -1,4 +1,4 @@
-from slicevm import SliceVm
+from model.slicevm import SliceVm
 import numpy as np
 
 class SliceVmWrapper(object):

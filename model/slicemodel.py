@@ -1,5 +1,5 @@
-from slicevmwrapper import SliceVmWrapper
-from slicehostwrapper import SliceHostWrapper
+from model.slicevmwrapper import SliceVmWrapper
+from model.slicehostwrapper import SliceHostWrapper
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
 from collections import defaultdict
@@ -51,7 +51,7 @@ class SliceModel(object):
             slice_mem_max += wp_mem_max
         return slice_cpu_min, slice_cpu_max, slice_mem_min, slice_mem_max
 
-    def get_vm_cpu_mem_tier(self):
+    def get_cpu_mem_tier(self):
         cpu_config, mem_config = self.get_host_config()
         if cpu_config<0 or mem_config<0:
             print("Not enough data to compute cpu/mem tier on this slice")
@@ -143,7 +143,7 @@ class SliceModel(object):
         txt = "SliceModel[" + str(self.leftBound) + ";" + str(self.rightBound) + "[:" + \
             " cpu " + str(round(slice_cpu_min,1)) + "/" + str(round(slice_cpu_max,1)) + "/" + str(int(slice_cpu_config)) +\
             " mem " + str(round(slice_mem_min,1)) + "/" + str(round(slice_mem_max,1)) + "/" + str(int(slice_mem_config)) +\
-            "\n  >{" + str(self.slicenodedata) + "}"
+            "\n    >{" + str(self.slicenodedata) + "}"
         for vm, slicevm in self.slicevmdata.items():
-            txt += "\n  >{" + str(slicevm) + "}"
+            txt += "\n    >{" + str(slicevm) + "}"
         return txt
