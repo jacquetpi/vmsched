@@ -9,6 +9,8 @@ class SliceVmWrapper(object):
         self.vm_last_seen = 0
         self.slice_vm_list=list()
         self.max_data = 3
+        self.debug_cpu_reason = "=0 no prev data"
+        self.debug_mem_reason = "=0 no prev data"
 
     def add_data(self, domain_data : dict):
         if(len(domain_data.keys()) == 0):
@@ -47,7 +49,7 @@ class SliceVmWrapper(object):
 
     def get_slices_coherent_value_of_metric(self, metric : str):
         metric_list = self.get_slices_metric(metric)
-        return np.average(metric_list) + np.std(metric_list)
+        return np.average(metric_list) + 3*np.std(metric_list)
 
     def get_last_slice(self):
         return self.slice_vm_list[-1]
@@ -55,42 +57,50 @@ class SliceVmWrapper(object):
     def compute_cpu_state_of_new_slice(self, new_slice : SliceVm, previous_cpu_state : int):
         # If config changed
         if(self.get_slices_metric('cpu_config')[-1] != new_slice.cpu_config):
-            return previous_cpu_state-1
+            self.debug_cpu_reason = ">0 conf changed"
+            return 0
         # If oc is too important
         if(self.get_slices_coherent_value_of_metric('oc_sched_wait') < new_slice.oc_sched_wait):
-            return previous_cpu_state-1
+            self.debug_cpu_reason = ">0 perf oc desc"
+            return 0
         # If behavior changed
         if(self.get_slices_coherent_value_of_metric('cpu_avg') < new_slice.cpu_avg):
+            self.debug_cpu_reason = "-1 avg increase"
             return previous_cpu_state-1
         if(self.get_slices_coherent_value_of_metric('cpu_percentile') < new_slice.cpu_percentile):
+            self.debug_cpu_reason = "-1 nth increase"
             return previous_cpu_state-1
         # Stability case
+        self.debug_cpu_reason = "+1 usage stable"
         return previous_cpu_state+1
 
     def compute_mem_state_of_new_slice(self, new_slice : SliceVm, previous_mem_state : int):
         # If config changed
         if(self.get_slices_metric('mem_config')[-1] != new_slice.mem_config):
-            return previous_mem_state-1
+            self.debug_mem_reason = ">0 conf changed"
+            return 0
         # If oc is too important
         if(self.get_slices_coherent_value_of_metric('oc_page_fault') < new_slice.oc_page_fault):
-            return previous_mem_state-1
+            self.debug_mem_reason = ">0 perf oc desc"
+            return 0
         # If behavior changed
         if(self.get_slices_coherent_value_of_metric('mem_avg') < new_slice.mem_avg):
+            self.debug_mem_reason = "-1 avg increase"
             return previous_mem_state-1
         if(self.get_slices_coherent_value_of_metric('mem_percentile') < new_slice.mem_percentile):
+            self.debug_mem_reason = "-1 nth increase"
             return previous_mem_state-1
         # Stability case
+        self.debug_mem_reason = "+1 usage stable"
         return previous_mem_state+1
 
     def compute_state_of_new_slice(self, new_slice : SliceVm):
+        cpu_state = 0
+        mem_state = 0
         if(self.slice_vm_list):
-            previous_cpu_state = getattr(self.slice_vm_list[-1], 'cpu_state')
-            previous_mem_state = getattr(self.slice_vm_list[-1], 'mem_state')
-            new_slice.update_state(
-                cpu_state = self.compute_cpu_state_of_new_slice(new_slice, previous_cpu_state),
-                mem_state = self.compute_mem_state_of_new_slice(new_slice, previous_cpu_state))
-        else:
-            new_slice.update_state(cpu_state = 0, mem_state = 0)
+            cpu_state = self.compute_cpu_state_of_new_slice(new_slice, getattr(self.slice_vm_list[-1], 'cpu_state'))
+            mem_state = self.compute_mem_state_of_new_slice(new_slice, getattr(self.slice_vm_list[-1], 'mem_state'))
+        new_slice.update_state(cpu_state = cpu_state, mem_state = mem_state)
 
     def get_cpu_mem_tier(self): # return cpu_min, cpu_max, mem_min, mem_max
         last_slice = self.get_last_slice()
@@ -104,7 +114,7 @@ class SliceVmWrapper(object):
             cpu_state = getattr(self.get_last_slice(), 'cpu_state')
             mem_state = getattr(self.get_last_slice(), 'mem_state')
             return "SliceVmWrapper for " + self.domain_name + ": " +\
-                 "cpu_state=" + str(cpu_state) + " [" + str(round(cpu_min,1)) + ";" + str(round(cpu_max,1)) + "] " +\
-                 "mem_state=" + str(mem_state) + " [" + str(round(mem_min,1)) + ";" + str(round(mem_max,1)) + "]"
+                 "cpu_state=" + str(cpu_state) + "(" + self.debug_cpu_reason + ") [" + str(round(cpu_min,1)) + ";" + str(round(cpu_max,1)) + "] " +\
+                 "mem_state=" + str(mem_state) + "(" + self.debug_mem_reason + ") [" + str(round(mem_min,1)) + ";" + str(round(mem_max,1)) + "]"
         else:
             return "SliceVmWrapper for " + self.domain_name + ": no data"

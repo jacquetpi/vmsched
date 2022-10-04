@@ -59,15 +59,15 @@ class SliceModel(object):
         slice_cpu_min, slice_cpu_max, slice_mem_min, slice_mem_max = self.get_vm_cpu_mem_min_max()
         # print("debug", slice_cpu_min, slice_cpu_max, cpu_config, slice_mem_min, slice_mem_max, mem_config)
         # Compute CPU tier
-        cpu_tier0 = int(slice_cpu_min)
-        cpu_tier1 = int(slice_cpu_max - cpu_tier0)
+        cpu_tier0 = round(slice_cpu_min,1)
+        cpu_tier1 = round(slice_cpu_max - cpu_tier0,1)
         if cpu_tier1 <= 0:
             cpu_tier1 = 0
         if cpu_tier1>cpu_config:
             cpu_tier1 = cpu_config-cpu_tier0
             cpu_tier2 = 0
         else:
-            cpu_tier2 = int(cpu_config - cpu_tier1 - cpu_tier0)
+            cpu_tier2 = round(cpu_config - cpu_tier1 - cpu_tier0,1)
         # Compute memory tier
         mem_tier0 = int(slice_mem_min)
         mem_tier1 = int(slice_mem_max - mem_tier0)

@@ -68,23 +68,33 @@ class NodeModel(object):
 
     def display_model(self):
         slices=[]
-        cpu_data = {"tier0":[], "tier1":[], "tier2":[]}
-        mem_data = {"tier0":[], "tier1":[], "tier2":[]}
+        groups=[]
+        tiers = {"tier0":[], "tier1":[], "tier2":[]}
         for slice in self.slices:
             slices.append(slice.get_bound_as_str())
+            groups.append("cpu")
             cpu_tier0, cpu_tier1, cpu_tier2, mem_tier0, mem_tier1, mem_tier2 = slice.get_cpu_mem_tier()
-            cpu_data["tier0"].append(cpu_tier0)
-            cpu_data["tier1"].append(cpu_tier1)
-            cpu_data["tier2"].append(cpu_tier2)
-            mem_data["tier0"].append(mem_tier0)
-            mem_data["tier1"].append(mem_tier1)
-            mem_data["tier2"].append(mem_tier2)
-            
-        df=pd.DataFrame(cpu_data,index=slices)
-        ax = df.plot(kind="bar",stacked=True, title="CPU tier", figsize=(10,8))
+            tiers["tier0"].append(cpu_tier0)
+            tiers["tier1"].append(cpu_tier1)
+            tiers["tier2"].append(cpu_tier2)
+        for slice in self.slices:
+            slices.append(slice.get_bound_as_str())
+            groups.append("mem")
+            cpu_tier0, cpu_tier1, cpu_tier2, mem_tier0, mem_tier1, mem_tier2 = slice.get_cpu_mem_tier()
+            tiers["tier0"].append(mem_tier0)
+            tiers["tier1"].append(mem_tier1)
+            tiers["tier2"].append(mem_tier2)
 
-        df2=pd.DataFrame(mem_data,index=slices)
-        ax2 = df2.plot(kind="bar",stacked=True, title="Mem tier", figsize=(10,8))
+        fig, axes = plt.subplots(1,2,figsize=(18,9))
 
-        plt.legend(loc="lower left",bbox_to_anchor=(0.8,1.0))
+        df = pd.DataFrame({'groups': groups, 'tier0' : tiers["tier0"], 'tier1' : tiers["tier1"], 'tier2' : tiers["tier2"]}, index=slices)
+        for (k,d), ax in zip(df.groupby('groups'), axes.flat):
+            axes = d.plot.bar(stacked=True, ax=ax, title=(k + " tiers"))
+            axes.legend(loc=2)
+        fig.canvas.manager.set_window_title("CPU/Mem tiers on node " + self.node_name)
+        # def close_event():
+        #     plt.close() 
+        # timer = fig.canvas.new_timer(interval = 10000)
+        # timer.add_callback(close_event)
+        # timer.start()
         plt.show()
