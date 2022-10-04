@@ -49,13 +49,6 @@ class NodeModel(object):
     def get_cpu_mem_tier(self, slice_number):
             return self.slices[slice_number]
 
-
-    def __str__(self):
-        txt = self.node_name + " model:\n"
-        for slice in self.slices:
-            txt= txt + "  |_" + str(slice) + "\n"
-        return txt
-
     def get_free_cpu_mem(self):
         cpu_tier_min_value, mem_tier_min_value = float('inf'), float('inf')
         for slice in self.slices:
@@ -65,6 +58,13 @@ class NodeModel(object):
             if mem_tier2 < mem_tier_min_value:
                 mem_tier_min_value = mem_tier2
         return cpu_tier_min_value, mem_tier_min_value
+
+    def __str__(self):
+        free_cpu, free_mem = self.get_free_cpu_mem()
+        txt = "NodeModel{url=" + self.node_name + "} free_cpu=" + str(free_cpu) + " free_mem=" + str(free_mem) + "\n"
+        for slice in self.slices:
+            txt= txt + "  |_" + str(slice) + "\n"
+        return txt
 
     def display_model(self):
         slices=[]

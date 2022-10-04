@@ -54,30 +54,30 @@ class SliceModel(object):
     def get_cpu_mem_tier(self):
         cpu_config, mem_config = self.get_host_config()
         if cpu_config<0 or mem_config<0:
-            print("Not enough data to compute cpu/mem tier on this slice")
+            #print("Not enough data to compute cpu/mem tier on this slice: [" + str(self.leftBound) + ";" + str(self.rightBound) + "[")
             return 0, 0, 0, 0, 0, 0
         slice_cpu_min, slice_cpu_max, slice_mem_min, slice_mem_max = self.get_vm_cpu_mem_min_max()
         # print("debug", slice_cpu_min, slice_cpu_max, cpu_config, slice_mem_min, slice_mem_max, mem_config)
         # Compute CPU tier
-        cpu_tier0 = slice_cpu_min
-        cpu_tier1 = (slice_cpu_max - cpu_tier0)
+        cpu_tier0 = int(slice_cpu_min)
+        cpu_tier1 = int(slice_cpu_max - cpu_tier0)
         if cpu_tier1 <= 0:
             cpu_tier1 = 0
         if cpu_tier1>cpu_config:
             cpu_tier1 = cpu_config-cpu_tier0
             cpu_tier2 = 0
         else:
-            cpu_tier2 = (cpu_config - cpu_tier1 - cpu_tier0)
+            cpu_tier2 = int(cpu_config - cpu_tier1 - cpu_tier0)
         # Compute memory tier
-        mem_tier0 = slice_mem_min
-        mem_tier1 = (slice_mem_max - mem_tier0)
+        mem_tier0 = int(slice_mem_min)
+        mem_tier1 = int(slice_mem_max - mem_tier0)
         if mem_tier1 < 0:
             mem_tier1 = 0
         if mem_tier1>mem_config:
             mem_tier1 = mem_config-mem_tier0
             mem_tier2 = 0
         else:
-            mem_tier2 = (mem_config - mem_tier1 - mem_tier0)
+            mem_tier2 = int(mem_config - mem_tier1 - mem_tier0)
         #print("debug", cpu_tier0, cpu_tier1, cpu_tier2, mem_tier0, mem_tier1, mem_tier2)
         return cpu_tier0, cpu_tier1, cpu_tier2, mem_tier0, mem_tier1, mem_tier2
         

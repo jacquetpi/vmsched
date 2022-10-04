@@ -6,7 +6,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from model.nodemodel import NodeModel
-from model.slicemodel import SliceModel
 
 STATE_ENDPOINT = ""
 
@@ -19,7 +18,7 @@ def manage_nodes_model(node_model : NodeModel, debug : int = 0):
     previous_iteration, previous_slide_number = node_model.get_previous_iteration_and_slide_number()
     node_model.get_slide(previous_slide_number).build_slice(previous_iteration)
     if debug>0:
-        print(str(node_model) + "\n")
+        print(node_model)
     if debug>1:
         node_model.display_model()
     return node_model.get_free_cpu_mem()
@@ -43,8 +42,6 @@ def main_loop(debug : int = 0):
         for node_id, model in models.items():
             tiers[node_id] = manage_nodes_model(node_model=model, debug=debug)
         # Write current state
-        if(debug>0):
-            print(STATE_ENDPOINT, tiers)
         filehandler.writeResult(STATE_ENDPOINT, tiers)
         # Wait until next slice
         sleep_duration = SCHED_SCOPE_SLICE_S - (int(time.time()) - loop_begin)
