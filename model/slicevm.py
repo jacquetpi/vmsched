@@ -3,7 +3,9 @@ class SliceVm(object):
     def __init__(self, cpu_config : int, mem_config : int, 
                 cpu_percentile : int, mem_percentile : int, 
                 cpu_avg : int, mem_avg : int, 
-                oc_page_fault : int, oc_sched_wait : int,
+                cpu_std : int, mem_std : int, 
+                oc_page_fault : int, oc_page_fault_std : int,
+                oc_sched_wait : int, oc_sched_wait_std : int,
                 cpu_state : int = 0, mem_state : int = 0):
         self.cpu_config = cpu_config
         self.mem_config = mem_config
@@ -11,8 +13,14 @@ class SliceVm(object):
         self.mem_percentile = mem_percentile
         self.cpu_avg = cpu_avg
         self.mem_avg = mem_avg
+        self.cpu_std = cpu_std
+        self.mem_std = mem_std
         self.oc_page_fault = oc_page_fault
+        self.oc_page_fault_std = oc_page_fault_std
         self.oc_sched_wait = oc_sched_wait
+        self.oc_sched_wait_std = oc_sched_wait_std
+        self.cpu_state = 0
+        self.mem_state = 0
 
     def update_state(self, cpu_state : int, mem_state : int):
         # Check cpu_state validity
