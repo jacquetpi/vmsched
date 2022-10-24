@@ -13,12 +13,16 @@ SCHED_NODES = list()
 SCHED_SCOPE_S = 0
 SCHED_SCOPE_SLICE_S = 0
 SCHED_SCOPE_INIT_FETCH_PREVIOUS = 0
+DEBUG_DUMP_STATE = dict()
 
 def manage_nodes_model(node_model : NodeModel, debug : int = 0):
     previous_iteration, previous_slide_number = node_model.get_previous_iteration_and_slide_number()
     node_model.get_slide(previous_slide_number).build_slice(previous_iteration)
     if debug>0:
         print(node_model)
+        with open("dump-" + getattr(node_model, "node_name").replace("/", "") + ".json", 'w') as f:
+            node_model.dump_state_and_slide_to_dict(dump_dict=DEBUG_DUMP_STATE, slide_number=previous_slide_number)
+            f.write(json.dumps(DEBUG_DUMP_STATE))
     if debug>1:
         node_model.display_model()
     return node_model.get_free_cpu_mem()

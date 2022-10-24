@@ -6,10 +6,10 @@ import matplotlib.pyplot as plt
 class NodeModel(object):
 
     def __init__(self, node_name : str, model_scope : int, slice_scope):
-        if slice_scope > model_scope !=0:
-            raise ValueError("Model scope must greater than slice scope")
+        if slice_scope > model_scope:
+            raise ValueError("Model scope must be greater than slice scope")
         if model_scope % slice_scope !=0:
-            raise ValueError("Model scope must a slice multiple")
+            raise ValueError("Model scope must be a slice multiple")
         self.node_name=node_name
         self.node_scope=model_scope
         self.slice_scope=slice_scope
@@ -46,9 +46,6 @@ class NodeModel(object):
     def get_slide(self, slice_number):
         return self.slices[slice_number]
 
-    def get_cpu_mem_tier(self, slice_number):
-            return self.slices[slice_number]
-
     def get_free_cpu_mem(self):
         cpu_tier_min_value, mem_tier_min_value = float('inf'), float('inf')
         for slice in self.slices:
@@ -65,6 +62,44 @@ class NodeModel(object):
         for slice in self.slices:
             txt= txt + "  |_" + str(slice) + "\n"
         return txt
+
+    def dump_state_and_slide_to_dict(self, dump_dict : dict, slide_number : int):
+        if "config" not in dump_dict:
+            dump_dict["config"] = dict()
+            dump_dict["config"]["node_scope"] = self.node_scope
+            dump_dict["config"]["slice_scope"] = self.slice_scope
+            dump_dict["config"]["number_of_slice"] = self.number_of_slice
+        delta = int(time.time()) - self.init_epoch
+        if "epoch" not in dump_dict:
+            dump_dict["epoch"] = list()
+        dump_dict["epoch"].append(delta)
+        free_cpu, free_mem = self.get_free_cpu_mem()
+        if "free_cpu" not in dump_dict:
+            dump_dict["free_cpu"] = list()
+        if "free_mem" not in dump_dict:
+            dump_dict["free_mem"] = list()
+        dump_dict["free_cpu"].append(free_cpu)
+        dump_dict["free_mem"].append(free_mem)
+        cpu_tier0, cpu_tier1, cpu_tier2, mem_tier0, mem_tier1, mem_tier2 = self.get_slide(slide_number).get_cpu_mem_tier()
+        if "cpu_tier0" not in dump_dict:
+            dump_dict["cpu_tier0"] = list()
+        if "cpu_tier1" not in dump_dict:
+            dump_dict["cpu_tier1"] = list()
+        if "cpu_tier2" not in dump_dict:
+            dump_dict["cpu_tier2"] = list()
+        if "mem_tier0" not in dump_dict:
+            dump_dict["mem_tier0"] = list()
+        if "mem_tier1" not in dump_dict:
+            dump_dict["mem_tier1"] = list()
+        if "mem_tier2" not in dump_dict:
+            dump_dict["mem_tier2"] = list()
+        dump_dict["cpu_tier0"].append(cpu_tier0)
+        dump_dict["cpu_tier1"].append(cpu_tier1)
+        dump_dict["cpu_tier2"].append(cpu_tier2)
+        dump_dict["mem_tier0"].append(mem_tier0)
+        dump_dict["mem_tier1"].append(mem_tier1)
+        dump_dict["mem_tier2"].append(mem_tier2)
+        return dump_dict
 
     def display_model(self):
         slices=[]
