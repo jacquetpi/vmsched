@@ -3,6 +3,7 @@
 
 ##misc
 dump*.json
+debug/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
