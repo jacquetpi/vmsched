@@ -15,7 +15,7 @@ def graph(data : dict):
     cpu_tier2_cumulated = list()
     for i in range(len(data["cpu_tier1"])):
         cpu_tier2_cumulated.append(cpu_tier1_cumulated[i] + data["cpu_tier2"][i])
-    ax1.plot(x_axis, cpu_free, '-', color='purple', label="free cpu")
+    ax1.plot(x_axis, cpu_free, '-', color='red', label="free cpu")
     ax1.fill_between(x_axis, empty_data, cpu_tier0, color='blue', alpha=0.3, label="Tier0")
     ax1.fill_between(x_axis, cpu_tier0, cpu_tier1_cumulated, color='orange', alpha=0.3,  label="Tier1")
     ax1.fill_between(x_axis, cpu_tier1_cumulated, cpu_tier2_cumulated, color='green', alpha=0.3, label="Tier2")
@@ -30,7 +30,7 @@ def graph(data : dict):
     mem_tier2_cumulated = list()
     for i in range(len(data["mem_tier1"])):
         mem_tier2_cumulated.append(mem_tier1_cumulated[i] + data["mem_tier2"][i])
-    ax2.plot(x_axis, mem_free, '-', color='purple', label="free mem")
+    ax2.plot(x_axis, mem_free, '-', color='red', label="free mem")
     ax2.fill_between(x_axis, empty_data, mem_tier0, color='blue', alpha=0.3, label="Tier0")
     ax2.fill_between(x_axis, mem_tier0, mem_tier1_cumulated, color='orange', alpha=0.3,  label="Tier1")
     ax2.fill_between(x_axis, mem_tier1_cumulated, mem_tier2_cumulated, color='green', alpha=0.3, label="Tier2")

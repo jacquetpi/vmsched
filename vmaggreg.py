@@ -43,7 +43,8 @@ def retrieve_stub_metrics(stub_url : str, stub_prefix : str):
             probe_metrics[splited_key[1]][splited_key[2]][splited_key[3]][splited_key[4]] = value
 
         else:
-            raise ValueError('Unknown key', splited_key[1])
+            print("Warning, Unknown key", splited_key[1], "in", line)
+            #raise ValueError('Unknown key', splited_key[1])
 
     return probe_metrics
 
