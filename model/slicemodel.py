@@ -44,7 +44,7 @@ class SliceModel(object):
         slice_cpu_min, slice_cpu_max = 0, 0
         slice_mem_min, slice_mem_max = 0, 0
         for vm, vmwrapper in self.slicevmdata.items():
-            wp_cpu_min, wp_cpu_max, wp_mem_max, wp_mem_min = vmwrapper.get_cpu_mem_tier()
+            wp_cpu_min, wp_cpu_max, wp_mem_min, wp_mem_max = vmwrapper.get_cpu_mem_tier()
             slice_cpu_min += wp_cpu_min
             slice_cpu_max += wp_cpu_max
             slice_mem_min += wp_mem_min
