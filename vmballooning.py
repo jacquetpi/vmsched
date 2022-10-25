@@ -57,9 +57,9 @@ def check_rss(domain : str, domain_metrics : dict):
     mem_rss = domain_metrics['mem_rss'][-1]
     mem_retrieval = mem_rss - mem_usage
     print("debug", domain, domain_metrics['node'], mem_usage, mem_rss, mem_retrieval)
-    if mem_retrieval > BALLOONING_THRESOLD_GAIN_MB: # We can retrieve at least 2GB
+    if mem_retrieval > BALLOONING_THRESOLD_GAIN_MB: # We can retrieve at least XGB
         print("geronimo")
-        reducer = RssReducer(LIBVIRT_NODES[domain_metrics['node']], mem_usage)
+        reducer = RssReducer(node=LIBVIRT_NODES[domain_metrics['node']], domain=domain, mem_retrieval_thresold=mem_usage)
         reducer.run()
         grace_period_tracker[domain] = int(time.time()) # update grace_period_tracker
 
