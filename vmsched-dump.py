@@ -1,4 +1,5 @@
 import getopt, sys, json
+import numpy as np
 import matplotlib.pyplot as plt
 
 def graph(data : dict):
@@ -6,8 +7,9 @@ def graph(data : dict):
     x_axis = data["epoch"]
     empty_data = [0 for i in data["epoch"]]
 
+    ax1prime = ax1.twinx()
     ax1.set_title('CPU Tiers evolution')
-    cpu_free = data["free_cpu"]
+    cpu_free = [0 if i < 0 else i for i in data["free_cpu"]] 
     cpu_tier0 = data["cpu_tier0"]
     cpu_tier1_cumulated = list()
     for i in range(len(data["cpu_tier0"])):
@@ -15,12 +17,22 @@ def graph(data : dict):
     cpu_tier2_cumulated = list()
     for i in range(len(data["cpu_tier1"])):
         cpu_tier2_cumulated.append(cpu_tier1_cumulated[i] + data["cpu_tier2"][i])
-    ax1.plot(x_axis, cpu_free, '-', color='red', label="free cpu")
-    ax1.fill_between(x_axis, empty_data, cpu_tier0, color='blue', alpha=0.3, label="Tier0")
-    ax1.fill_between(x_axis, cpu_tier0, cpu_tier1_cumulated, color='orange', alpha=0.3,  label="Tier1")
-    ax1.fill_between(x_axis, cpu_tier1_cumulated, cpu_tier2_cumulated, color='green', alpha=0.3, label="Tier2")
+    # Convert to numpy format
+    cpu_free_np = np.array(cpu_free)
+    cpu_tier0_np = np.array(cpu_tier0)
+    cpu_tier1_np = np.array(cpu_tier1_cumulated)
+    cpu_tier2_np = np.array(cpu_tier2_cumulated)
+    ax1prime.plot(x_axis, cpu_free_np, '-', color='red', label="free cpu")
+    ax1.fill_between(x_axis, empty_data, cpu_tier0_np, color='blue', alpha=0.3, interpolate=True, label="Tier0")
+    ax1.fill_between(x_axis, cpu_tier0_np, cpu_tier1_np, where=(cpu_tier0_np<cpu_tier1_np), color='orange', alpha=0.3, interpolate=True, label="Tier1")
+    ax1.fill_between(x_axis, cpu_tier1_np, cpu_tier2_np, where=(cpu_tier1_np<cpu_tier2_np), color='green', alpha=0.3, interpolate=True, label="Tier2")
+    ax1.set_xlabel('time (s)')
+    ax1.set_ylabel('cores')
     ax1.legend(loc="upper left")
+    ax1prime.legend(loc="upper right")
+    ax1prime.set_ylabel('cores')
 
+    ax2prime = ax2.twinx()
     ax2.set_title('Memory Tiers evolution')
     mem_free = data["free_mem"]
     mem_tier0 = data["mem_tier0"]
@@ -30,11 +42,20 @@ def graph(data : dict):
     mem_tier2_cumulated = list()
     for i in range(len(data["mem_tier1"])):
         mem_tier2_cumulated.append(mem_tier1_cumulated[i] + data["mem_tier2"][i])
-    ax2.plot(x_axis, mem_free, '-', color='red', label="free mem")
-    ax2.fill_between(x_axis, empty_data, mem_tier0, color='blue', alpha=0.3, label="Tier0")
-    ax2.fill_between(x_axis, mem_tier0, mem_tier1_cumulated, color='orange', alpha=0.3,  label="Tier1")
-    ax2.fill_between(x_axis, mem_tier1_cumulated, mem_tier2_cumulated, color='green', alpha=0.3, label="Tier2")
+    # Convert to numpy format
+    mem_free_np = np.array(mem_free)
+    mem_tier0_np = np.array(mem_tier0)
+    mem_tier1_np = np.array(mem_tier1_cumulated)
+    mem_tier2_np = np.array(mem_tier2_cumulated)
+    ax2prime.plot(x_axis, mem_free_np, '-', color='red', label="free mem")
+    ax2.fill_between(x_axis, empty_data, mem_tier0_np, color='blue', alpha=0.3, interpolate=True, label="Tier0")
+    ax2.fill_between(x_axis, mem_tier0_np, mem_tier1_np,  where=(mem_tier0_np<mem_tier1_np), color='orange', alpha=0.3,  interpolate=True, label="Tier1")
+    ax2.fill_between(x_axis, mem_tier1_np, mem_tier2_np, where=(mem_tier1_np<mem_tier2_np), color='green', alpha=0.3, interpolate=True, label="Tier2")
+    ax2.set_xlabel('time (s)')
+    ax2.set_ylabel('Memory (MB)')
     ax2.legend(loc="upper left")
+    ax2prime.legend(loc="upper right")
+    ax2prime.set_ylabel('Memory (MB)')
 
     # Add visual line for slices
     max_cpu=cpu_tier2_cumulated[-1]

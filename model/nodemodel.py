@@ -54,6 +54,10 @@ class NodeModel(object):
                 cpu_tier_min_value = cpu_tier2
             if mem_tier2 < mem_tier_min_value:
                 mem_tier_min_value = mem_tier2
+            if cpu_tier_min_value < 0:
+                cpu_tier_min_value = 0 # Possible in an overcommited scenario
+            if mem_tier_min_value < 0:
+                mem_tier_min_value = 0 # Possible in an overcommited scenario
         return cpu_tier_min_value, mem_tier_min_value
 
     def __str__(self):

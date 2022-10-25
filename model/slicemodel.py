@@ -141,8 +141,8 @@ class SliceModel(object):
         slice_cpu_min, slice_cpu_max, slice_mem_min, slice_mem_max = self.get_vm_cpu_mem_min_max()
         slice_cpu_config, slice_mem_config = self.get_host_config()
         txt = "SliceModel[" + str(self.leftBound) + ";" + str(self.rightBound) + "[:" + \
-            " cpu " + str(round(slice_cpu_min,1)) + "/" + str(round(slice_cpu_max,1)) + "/" + str(int(slice_cpu_config)) +\
-            " mem " + str(round(slice_mem_min,1)) + "/" + str(round(slice_mem_max,1)) + "/" + str(int(slice_mem_config)) +\
+            " cumul cpu min/max " + str(round(slice_cpu_min,1)) + "/" + str(round(slice_cpu_max,1)) +\
+            " cumul mem min/max " + str(round(slice_mem_min,1)) + "/" + str(round(slice_mem_max,1)) +\
             "\n    >{" + str(self.slicenodedata) + "}"
         for vm, slicevm in self.slicevmdata.items():
             txt += "\n    >{" + str(slicevm) + "}"
