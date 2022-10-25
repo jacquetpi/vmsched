@@ -73,10 +73,6 @@ class NodeModel(object):
             dump_dict["config"]["node_scope"] = self.node_scope
             dump_dict["config"]["slice_scope"] = self.slice_scope
             dump_dict["config"]["number_of_slice"] = self.number_of_slice
-        delta = int(time.time()) - self.init_epoch
-        if "epoch" not in dump_dict:
-            dump_dict["epoch"] = list()
-        dump_dict["epoch"].append(delta)
         free_cpu, free_mem = self.get_free_cpu_mem()
         if "free_cpu" not in dump_dict:
             dump_dict["free_cpu"] = list()
@@ -103,6 +99,14 @@ class NodeModel(object):
         dump_dict["mem_tier0"].append(mem_tier0)
         dump_dict["mem_tier1"].append(mem_tier1)
         dump_dict["mem_tier2"].append(mem_tier2)
+        if "epoch" not in dump_dict:
+            dump_dict["epoch"] = list()
+        if "vm" not in dump_dict:
+            dump_dict["vm"]=dict()
+        for vm, vmwrapper in self.get_slide(slide_number).get_vmwrapper().items():
+            vmwrapper.get_last_slice().dump_state_to_dict(dump_dict=dump_dict["vm"], key=vm, iteration=len(dump_dict["epoch"]))
+        delta = int(time.time()) - self.init_epoch
+        dump_dict["epoch"].append(delta)
         return dump_dict
 
     def display_model(self):

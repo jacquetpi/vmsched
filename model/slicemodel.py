@@ -40,6 +40,9 @@ class SliceModel(object):
                 self.slicevmdata[domain_name]=SliceVmWrapper(domain_name)
             self.slicevmdata[domain_name].add_data(domain_stats)
 
+    def get_vmwrapper(self):
+        return self.slicevmdata
+
     def get_vm_cpu_mem_min_max(self):
         slice_cpu_min, slice_cpu_max = 0, 0
         slice_mem_min, slice_mem_max = 0, 0

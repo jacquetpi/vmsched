@@ -66,14 +66,14 @@ class SliceVmWrapper(object):
             self.debug_cpu_reason = ">0 conf changed"
             return 0
         # If oc is too important
-        if(self.get_slices_coherent_value_of_metric('oc_sched_wait', 'oc_sched_wait_std') < new_slice.oc_sched_wait):
+        if(self.get_slices_coherent_value_of_metric('oc_sched_wait', 'oc_sched_wait_std',10) < new_slice.oc_sched_wait):
             self.debug_cpu_reason = ">0 perf oc desc"
             return 0
         # If behavior changed
-        if(self.get_slices_coherent_value_of_metric('cpu_avg', 'cpu_std') < new_slice.cpu_avg):
+        if(self.get_slices_coherent_value_of_metric('cpu_avg', 'cpu_std',10) < new_slice.cpu_avg):
             self.debug_cpu_reason = "-1 avg increase"
             return previous_cpu_state-1
-        if(self.get_slices_coherent_value_of_metric('cpu_percentile', 'cpu_std') < new_slice.cpu_percentile):
+        if(self.get_slices_coherent_value_of_metric('cpu_percentile', 'cpu_std',10) < new_slice.cpu_percentile):
             self.debug_cpu_reason = "-1 nth increase"
             return previous_cpu_state-1
         # Stability case
