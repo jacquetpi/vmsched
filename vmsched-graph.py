@@ -79,7 +79,57 @@ def graph_node(data : dict):
     fig.tight_layout()
     plt.show()
 
-def graph_vm(data : dict):
+def graph_vm_save(data : dict):
+
+    test = list()
+    print(len(data["vm"]))
+    fig, axes = plt.subplots(3, 3, sharex=True)
+    print(axes)
+    x_axis = [round(x/60) for x in data["epoch"]]
+    empty_data = [0 for i in data["epoch"]]
+
+    index_x = 0
+    index_y = 0
+    for vmname, vmdata in data["vm"].items():
+
+        current_axe = axes[index_y][index_x]
+        current_axe_prime = current_axe.twinx()
+
+        vmdata["mem_tier0"] = [round(i/1024,1) for i in vmdata["mem_tier0"]]
+        vmdata["mem_tier1"] = [round(i/1024,1) for i in vmdata["mem_tier1"]]
+        vmdata["mem_config"] = [round(i/1024,1) for i in vmdata["mem_config"]]
+        vmdata["mem_avg"] = [round(i/1024,1) for i in vmdata["mem_avg"]]
+
+        tier0_cumul_data = list()
+        for i in range(len(vmdata["mem_tier0"])):
+            tier0_cumul_data.append(empty_data[i] + vmdata["mem_tier0"][i])
+        x = current_axe.fill_between(x_axis, np.array(empty_data), np.array(tier0_cumul_data), alpha=1, interpolate=True)
+        
+        tier1_cumul_data = list()
+        for i in range(len(vmdata["mem_tier1"])):
+            tier1_cumul_data.append(tier0_cumul_data[i] + vmdata["mem_tier1"][i])
+        current_axe.fill_between(x_axis, np.array(tier0_cumul_data), np.array(tier1_cumul_data), alpha=0.5, color=x.get_facecolor(), interpolate=True)
+        
+        tier2_cumul_data = list()
+        for i in range(len(vmdata["mem_tier1"])):
+            tier2_cumul_data.append(tier1_cumul_data[i] + (vmdata["mem_config"][i] - vmdata["mem_tier1"][i] - vmdata["mem_tier0"][i]))
+        x = current_axe.fill_between(x_axis, np.array(tier1_cumul_data), np.array(tier2_cumul_data), alpha=0.2, color=x.get_facecolor(), hatch='/', interpolate=True)
+
+        current_axe.set_xlabel(vmname)
+        # current_axe.set_ylabel('GB')
+        current_axe_prime.plot(x_axis, np.array(vmdata["mem_avg"]), '-', color='black', label="avg")
+        current_axe_prime.legend(loc="upper center")
+        # current_axe_prime.set_ylabel('GB')
+
+        index_x+=1
+        if index_x>2:
+            index_x=0
+            index_y+=1
+
+    fig.tight_layout()
+    plt.show()
+
+def graph_vm_save2(data : dict):
 
     fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
     x_axis = [round(x/1) for x in data["epoch"]]
@@ -96,26 +146,32 @@ def graph_vm(data : dict):
         for i in range(len(vmdata["mem_tier0"])):
             tier0_cumul_data.append(old_cumul_data[i] + vmdata["mem_tier0"][i])
         x = ax1.fill_between(x_axis, np.array(old_cumul_data), np.array(tier0_cumul_data), alpha=1, interpolate=True, label=vmname)
-        
-        tier1_cumul_data = list()
-        for i in range(len(vmdata["mem_tier1"])):
-            tier1_cumul_data.append(tier0_cumul_data[i] + vmdata["mem_tier1"][i])
-        ax1.fill_between(x_axis, np.array(tier0_cumul_data), np.array(tier1_cumul_data), alpha=0.5, color=x.get_facecolor(), interpolate=True)
-        
-        tier2_cumul_data = list()
-        for i in range(len(vmdata["mem_tier1"])):
-            tier2_cumul_data.append(tier1_cumul_data[i] + (vmdata["mem_config"][i] - vmdata["mem_tier1"][i] - vmdata["mem_tier0"][i]))
-        x = ax1.fill_between(x_axis, np.array(tier1_cumul_data), np.array(tier2_cumul_data), alpha=0.2, color=x.get_facecolor(), hatch='/', interpolate=True)
+        vmdata["color"] = x.get_facecolor()
 
         # mem_usage = list()
         # for i in range(len(vmdata["mem_avg"])):
         #     mem_usage.append(old_cumul_data[i] + vmdata["mem_avg"][i])
         # ax1.plot(x_axis, mem_usage, '-', color='red')
 
-        current_cumul_data = list()
-        for i in range(len(vmdata["mem_config"])):
-            current_cumul_data.append(old_cumul_data[i] + vmdata["mem_config"][i])
-        old_cumul_data = current_cumul_data
+        old_cumul_data = tier0_cumul_data
+
+    for vmname, vmdata in data["vm"].items():
+        # Display area for usage:
+        tier1_cumul_data = list()
+        for i in range(len(vmdata["mem_tier1"])):
+            tier1_cumul_data.append(old_cumul_data[i] + vmdata["mem_tier1"][i])
+        ax1.fill_between(x_axis, np.array(old_cumul_data), np.array(tier1_cumul_data), alpha=0.4, color=vmdata["color"], hatch='/', interpolate=True)
+
+        old_cumul_data = tier1_cumul_data
+
+    for vmname, vmdata in data["vm"].items():
+        # Display area for usage:
+        tier2_cumul_data = list()
+        for i in range(len(vmdata["mem_tier1"])):
+            tier2_cumul_data.append(old_cumul_data[i] + (vmdata["mem_config"][i] - vmdata["mem_tier1"][i] - vmdata["mem_tier0"][i]))
+        ax1.fill_between(x_axis, np.array(old_cumul_data), np.array(tier2_cumul_data), alpha=0.2, color=vmdata["color"], interpolate=True)
+
+        old_cumul_data = tier2_cumul_data
 
     ax1.legend(loc="upper left")
     ax1prime.plot(x_axis, np.array(data["free_mem"]), '-', color='red', label="free mem")
@@ -145,6 +201,50 @@ def graph_vm(data : dict):
     fig.tight_layout()
     plt.show()
 
+def graph_vm(data : dict):
+
+    test = list()
+    print()
+    fig, axes = plt.subplots(len(data["vm"]), sharex=True)
+    print(axes)
+    x_axis = [round(x/60) for x in data["epoch"]]
+    empty_data = [0 for i in data["epoch"]]
+
+    index_x = 0
+    index_y = 0
+    for vmname, vmdata in data["vm"].items():
+
+        current_axe = axes[index_y][index_x]
+
+        vmdata["mem_percentile"] = [round(i/1024,1) for i in vmdata["mem_percentile"]]
+        vmdata["mem_config"] = [round(i/1024,1) for i in vmdata["mem_config"]]
+    
+        x = current_axe.fill_between(x_axis, np.array(empty_data), np.array(vmdata["mem_percentile"]), alpha=1, interpolate=True)
+        x = current_axe.fill_between(x_axis, np.array(empty_data), np.array(vmdata["mem_config"]), alpha=0.3, interpolate=True)
+
+        current_axe.set_xlabel(vmname)
+        # current_axe.set_ylabel('GB')
+        # current_axe_prime.set_ylabel('GB')
+
+        # Add visual line for slices
+        # max_mem=np.max(vmdata["mem_config"])
+        # count=0
+        # for time in x_axis:
+        #     fake_x=[time,time]
+        #     count+=1
+        #     if count>=data["config"]["number_of_slice"]:
+        #         count=0
+        #     fake_y_mem=[0,max_mem]
+        #     current_axe.plot(fake_x, fake_y_mem, color='white', linestyle='-')
+
+        index_x+=1
+        if index_x>2:
+            index_x=0
+            index_y+=1
+
+    fig.tight_layout()
+    plt.show()
+
 if __name__ == '__main__':
 
     short_options = "hn:v:"
@@ -170,7 +270,7 @@ if __name__ == '__main__':
                 data_vm = json.load(f)
 
     if data_vm is not None:    
-        graph_vm(data_vm)
+        graph_vm_save(data_vm)
 
     if data_node is not None:    
         graph_node(data_node)
