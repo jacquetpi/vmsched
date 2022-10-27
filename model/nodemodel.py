@@ -25,25 +25,25 @@ class NodeModel(object):
         for slice in self.slices:
             slice.build_past_slices(past_slice)
 
-    def get_current_iteration_and_slide_number(self):
+    def get_current_iteration_and_slice_number(self):
         delta = int(time.time()) - self.init_epoch
         iteration = int(delta / self.node_scope)
-        slide_number = int((delta % self.node_scope)/self.slice_scope)
-        return iteration, slide_number
+        slice_number = int((delta % self.node_scope)/self.slice_scope)
+        return iteration, slice_number
 
-    def get_previous_iteration_and_slide_number(self):
-        current_iteration, current_slide_number = self.get_current_iteration_and_slide_number()
-        previous_slide_number = current_slide_number-1
-        if previous_slide_number < 0:
-            previous_slide_number = (self.number_of_slice-1)
+    def get_previous_iteration_and_slice_number(self):
+        current_iteration, current_slice_number = self.get_current_iteration_and_slice_number()
+        previous_slice_number = current_slice_number-1
+        if previous_slice_number < 0:
+            previous_slice_number = (self.number_of_slice-1)
             previous_iteration = current_iteration-1
             if previous_iteration<0:
                 raise ValueError("No previous iteration at call")
         else:
-            previous_iteration = current_iteration # no iteration change on last slide
-        return previous_iteration, previous_slide_number
+            previous_iteration = current_iteration # no iteration change on last slice
+        return previous_iteration, previous_slice_number
 
-    def get_slide(self, slice_number):
+    def get_slice(self, slice_number):
         return self.slices[slice_number]
 
     def get_free_cpu_mem(self):
@@ -66,48 +66,6 @@ class NodeModel(object):
         for slice in self.slices:
             txt= txt + "  |_" + str(slice) + "\n"
         return txt
-
-    def dump_state_and_slide_to_dict(self, dump_dict : dict, slide_number : int):
-        if "config" not in dump_dict:
-            dump_dict["config"] = dict()
-            dump_dict["config"]["node_scope"] = self.node_scope
-            dump_dict["config"]["slice_scope"] = self.slice_scope
-            dump_dict["config"]["number_of_slice"] = self.number_of_slice
-        free_cpu, free_mem = self.get_free_cpu_mem()
-        if "free_cpu" not in dump_dict:
-            dump_dict["free_cpu"] = list()
-        if "free_mem" not in dump_dict:
-            dump_dict["free_mem"] = list()
-        dump_dict["free_cpu"].append(free_cpu)
-        dump_dict["free_mem"].append(free_mem)
-        cpu_tier0, cpu_tier1, cpu_tier2, mem_tier0, mem_tier1, mem_tier2 = self.get_slide(slide_number).get_cpu_mem_tier()
-        if "cpu_tier0" not in dump_dict:
-            dump_dict["cpu_tier0"] = list()
-        if "cpu_tier1" not in dump_dict:
-            dump_dict["cpu_tier1"] = list()
-        if "cpu_tier2" not in dump_dict:
-            dump_dict["cpu_tier2"] = list()
-        if "mem_tier0" not in dump_dict:
-            dump_dict["mem_tier0"] = list()
-        if "mem_tier1" not in dump_dict:
-            dump_dict["mem_tier1"] = list()
-        if "mem_tier2" not in dump_dict:
-            dump_dict["mem_tier2"] = list()
-        dump_dict["cpu_tier0"].append(cpu_tier0)
-        dump_dict["cpu_tier1"].append(cpu_tier1)
-        dump_dict["cpu_tier2"].append(cpu_tier2)
-        dump_dict["mem_tier0"].append(mem_tier0)
-        dump_dict["mem_tier1"].append(mem_tier1)
-        dump_dict["mem_tier2"].append(mem_tier2)
-        if "epoch" not in dump_dict:
-            dump_dict["epoch"] = list()
-        if "vm" not in dump_dict:
-            dump_dict["vm"]=dict()
-        for vm, vmwrapper in self.get_slide(slide_number).get_vmwrapper().items():
-            vmwrapper.get_last_slice().dump_state_to_dict(dump_dict=dump_dict["vm"], key=vm, iteration=len(dump_dict["epoch"]))
-        delta = int(time.time()) - self.init_epoch
-        dump_dict["epoch"].append(delta)
-        return dump_dict
 
     def display_model(self):
         slices=[]
@@ -141,3 +99,48 @@ class NodeModel(object):
         # timer.add_callback(close_event)
         # timer.start()
         plt.show()
+
+    def dump_state_and_slice_to_dict(self, dump_dict : dict, slice_number : int): 
+        if "config" not in dump_dict:
+            dump_dict["config"] = dict()
+            dump_dict["config"]["node_scope"] = self.node_scope
+            dump_dict["config"]["slice_scope"] = self.slice_scope
+            dump_dict["config"]["number_of_slice"] = self.number_of_slice
+            dump_dict["vm"]=dict()
+            dump_dict["free_cpu"] = list()
+            dump_dict["free_mem"] = list()
+            dump_dict["cpu_tier0"] = list()
+            dump_dict["cpu_tier1"] = list()
+            dump_dict["cpu_tier2"] = list()
+            dump_dict["mem_tier0"] = list()
+            dump_dict["mem_tier1"] = list()
+            dump_dict["mem_tier2"] = list()
+            dump_dict["epoch"] = list()
+        free_cpu, free_mem = self.get_free_cpu_mem()
+        dump_dict["free_cpu"].append(free_cpu)
+        dump_dict["free_mem"].append(free_mem)
+        cpu_tier0, cpu_tier1, cpu_tier2, mem_tier0, mem_tier1, mem_tier2 = self.get_slice(slice_number).get_cpu_mem_tier()
+        dump_dict["cpu_tier0"].append(cpu_tier0)
+        dump_dict["cpu_tier1"].append(cpu_tier1)
+        dump_dict["cpu_tier2"].append(cpu_tier2)
+        dump_dict["mem_tier0"].append(mem_tier0)
+        dump_dict["mem_tier1"].append(mem_tier1)
+        dump_dict["mem_tier2"].append(mem_tier2)
+
+        for vm, vmwrapper in self.get_slice(slice_number).get_vmwrapper().items():
+            vmwrapper.get_last_slice().dump_state_to_dict(dump_dict=dump_dict["vm"], key=vm, iteration=len(dump_dict["epoch"]))
+            cpu_min, cpu_max, mem_min, mem_max = vmwrapper.get_cpu_mem_tier()
+            # Artificial metric as tiers are aggregated by the slice model
+            vm_cpu_tier0, vm_cpu_tier1, vm_cpu_tier2, vm_mem_tier0, vm_mem_tier1, vm_mem_tier2 = self.get_slice(slice_number).compute_cpu_mem_tier(
+                    slice_cpu_min=cpu_min, slice_cpu_max=cpu_max, cpu_config=vmwrapper.get_last_slice().get_cpu_config(), 
+                    slice_mem_min=mem_min, slice_mem_max=mem_max, mem_config=vmwrapper.get_last_slice().get_mem_config())
+            dump_dict["vm"][vm]["cpu_tier0"].append(cpu_min)
+            dump_dict["vm"][vm]["cpu_tier1"].append(cpu_max)
+            dump_dict["vm"][vm]["cpu_tier2"].append(cpu_tier2)
+            dump_dict["vm"][vm]["mem_tier0"].append(mem_tier0)
+            dump_dict["vm"][vm]["mem_tier1"].append(mem_tier1)
+            dump_dict["vm"][vm]["mem_tier2"].append(mem_tier2)
+
+        delta = int(time.time()) - self.init_epoch
+        dump_dict["epoch"].append(delta)
+        return dump_dict
