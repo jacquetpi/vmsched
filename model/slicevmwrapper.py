@@ -1,14 +1,15 @@
 from model.slicevm import SliceVm
 import numpy as np
+from scipy.stats import ttest_ind_from_stats
 
 class SliceVmWrapper(object):
 
-    def __init__(self, domain_name : str):
+    def __init__(self, domain_name : str, historical_occurences : int):
         self.domain_name=domain_name
+        self.historical_occurences=historical_occurences
         self.vm_seen = 0
         self.vm_last_seen = 0
         self.slice_vm_list=list()
-        self.max_data = 3
         self.debug_cpu_reason = "=0 no prev data"
         self.debug_mem_reason = "=0 no prev data"
 
@@ -38,12 +39,14 @@ class SliceVmWrapper(object):
                 cpu_avg=cpu_avg, mem_avg=mem_avg,
                 cpu_std=cpu_std, mem_std=mem_std, 
                 oc_page_fault=oc_page_fault, oc_page_fault_std=oc_page_fault_std,
-                oc_sched_wait=oc_sched_wait, oc_sched_wait_std=oc_sched_wait_std)
+                oc_sched_wait=oc_sched_wait, oc_sched_wait_std=oc_sched_wait_std,
+                number_of_values=len(domain_data['time']))
+        print(domain_data['time'])
         self.compute_state_of_new_slice(slice_vm)
         self.add_slice(slice_vm)
 
     def add_slice(self, slice : SliceVm):
-        if self.max_data<len(self.slice_vm_list):
+        if self.historical_occurences<len(self.slice_vm_list):
             self.slice_vm_list.pop(0) # remove oldest element
         self.slice_vm_list.append(slice)
 
@@ -53,9 +56,15 @@ class SliceVmWrapper(object):
             metric_list.append(getattr(slice, metric))
         return metric_list
 
-    def get_slices_coherent_value_of_metric(self, metric : str, std_metric : str, multiplier : int = 1):
+    def is_incoherent_value(self, new_slice : SliceVm, metric : str, std_metric : str):
+        # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind_from_stats.html 
+        # scipy.stats.ttest_ind_from_stats
         last_slice = self.get_last_slice()
-        return getattr(last_slice, metric) + multiplier*getattr(last_slice, std_metric)
+        stats, pvalue = ttest_ind_from_stats(
+                            getattr(last_slice, metric), getattr(last_slice, std_metric), getattr(last_slice, 'number_of_values'), 
+                            getattr(new_slice, metric), getattr(new_slice, std_metric), getattr(new_slice, 'number_of_values'))
+        # identical list return nan, nan which is evaluated as false
+        return pvalue < 0.1 
 
     def get_last_slice(self):
         return self.slice_vm_list[-1]
@@ -63,18 +72,18 @@ class SliceVmWrapper(object):
     def compute_cpu_state_of_new_slice(self, new_slice : SliceVm):
         current_cpu_state = getattr(self.get_last_slice(), 'cpu_state')
         # If config changed
-        if(self.get_slices_metric('cpu_config')[-1] != new_slice.cpu_config):
+        if (self.get_slices_metric('cpu_config')[-1] != new_slice.cpu_config):
             self.debug_cpu_reason = ">0 conf changed"
             return 0
         # If oc is too important
-        if(self.get_slices_coherent_value_of_metric('oc_sched_wait', 'oc_sched_wait_std',10) < new_slice.oc_sched_wait):
+        if self.is_incoherent_value(new_slice, 'oc_sched_wait', 'oc_sched_wait_std'):
             self.debug_cpu_reason = ">0 perf oc desc"
             return 0
         # If behavior changed
-        if(self.get_slices_coherent_value_of_metric('cpu_avg', 'cpu_std',10) < new_slice.cpu_avg):
+        if self.is_incoherent_value(new_slice, 'cpu_avg', 'cpu_std'):
             self.debug_cpu_reason = "-1 avg increase"
             return current_cpu_state-1
-        if(self.get_slices_coherent_value_of_metric('cpu_percentile', 'cpu_std',10) < new_slice.cpu_percentile):
+        if self.is_incoherent_value(new_slice, 'cpu_percentile', 'cpu_std'):
             self.debug_cpu_reason = "-1 nth increase"
             return current_cpu_state-1
         # Stability case
@@ -84,18 +93,18 @@ class SliceVmWrapper(object):
     def compute_mem_state_of_new_slice(self, new_slice : SliceVm):
         current_mem_state = getattr(self.get_last_slice(), 'mem_state')
         # If config changed
-        if(self.get_slices_metric('mem_config')[-1] != new_slice.mem_config):
+        if (self.get_slices_metric('mem_config')[-1] != new_slice.mem_config):
             self.debug_mem_reason = ">0 conf changed"
             return 0
         # If oc is too important
-        if(self.get_slices_coherent_value_of_metric('oc_page_fault', 'oc_page_fault_std') < new_slice.oc_page_fault):
+        if self.is_incoherent_value(new_slice, 'oc_page_fault', 'oc_page_fault_std'):
             self.debug_mem_reason = ">0 perf oc desc"
             return 0
         # If behavior changed
-        if(self.get_slices_coherent_value_of_metric('mem_avg', 'mem_std') < new_slice.mem_avg):
+        if self.is_incoherent_value(new_slice, 'mem_avg', 'mem_std'):
             self.debug_mem_reason = "-1 avg increase"
             return current_mem_state-1
-        if(self.get_slices_coherent_value_of_metric('mem_percentile', 'mem_std') < new_slice.mem_percentile):
+        if self.is_incoherent_value(new_slice, 'mem_percentile', 'mem_std'):
             self.debug_mem_reason = "-1 nth increase"
             return current_mem_state-1
         # Stability case

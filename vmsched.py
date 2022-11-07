@@ -13,6 +13,7 @@ SCHED_NODES = list()
 SCHED_SCOPE_S = 0
 SCHED_SCOPE_SLICE_S = 0
 SCHED_SCOPE_INIT_FETCH_PREVIOUS = 0
+SCHED_SCOPE_HISTORICAL = 3
 DEBUG_DUMP_STATE = dict()
 
 def manage_nodes_model(node_model : NodeModel, debug : int = 0):
@@ -32,7 +33,7 @@ def main_loop(debug : int = 0):
     models = dict()
     # Init
     for sched_node in SCHED_NODES:
-        models[sched_node]= NodeModel(sched_node, SCHED_SCOPE_S, SCHED_SCOPE_SLICE_S)
+        models[sched_node]= NodeModel(node_name=sched_node, model_scope=SCHED_SCOPE_S, slice_scope=SCHED_SCOPE_SLICE_S, historical_occurences=SCHED_SCOPE_HISTORICAL)
         if SCHED_SCOPE_INIT_FETCH_PREVIOUS:
             models[sched_node].build_past_slices(SCHED_SCOPE_INIT_FETCH_PREVIOUS)
     # Main loop
@@ -77,6 +78,7 @@ if __name__ == '__main__':
     SCHED_SCOPE_S = int(os.getenv('SCHED_SCOPE_S'))
     SCHED_SCOPE_SLICE_S = int(os.getenv('SCHED_SCOPE_SLICE_S'))
     SCHED_SCOPE_INIT_FETCH_PREVIOUS = int(os.getenv('SCHED_SCOPE_INIT_FETCH_PREVIOUS'))
+    SCHED_SCOPE_HISTORICAL= int(os.getenv('SCHED_SCOPE_HISTORICAL'))
 
     try:
         main_loop(debug)

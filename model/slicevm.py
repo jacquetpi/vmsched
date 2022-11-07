@@ -9,6 +9,7 @@ class SliceVm(object):
                 cpu_std : int, mem_std : int, 
                 oc_page_fault : int, oc_page_fault_std : int,
                 oc_sched_wait : int, oc_sched_wait_std : int,
+                number_of_values :int,
                 cpu_state : int = 0, mem_state : int = 0):
         self.cpu_config = cpu_config
         self.mem_config = mem_config
@@ -22,6 +23,7 @@ class SliceVm(object):
         self.oc_page_fault_std = oc_page_fault_std
         self.oc_sched_wait = oc_sched_wait
         self.oc_sched_wait_std = oc_sched_wait_std
+        self.number_of_values = number_of_values
         self.cpu_state = 0
         self.mem_state = 0
 

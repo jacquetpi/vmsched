@@ -7,8 +7,9 @@ import os
 
 class SliceModel(object):
 
-    def __init__(self, model_node_name : str, model_position : int, model_init_epoch : int, model_number_of_slice : int, leftBound : int, rightBound : int):
+    def __init__(self, model_node_name : str, model_position : int, model_init_epoch : int, model_historical_occurences : int, model_number_of_slice : int, leftBound : int, rightBound : int):
         #Data related to model
+        self.model_historical_occurences=model_historical_occurences
         self.model_node_name=model_node_name
         self.model_position=model_position
         self.model_init_epoch=model_init_epoch
@@ -37,7 +38,7 @@ class SliceModel(object):
         #print("debug", begin_epoch, end_epoch, len(node_stats.keys()), len(domain_data.keys()))
         for domain_name, domain_stats in domain_data.items():
             if domain_name not in self.slicevmdata:
-                self.slicevmdata[domain_name]=SliceVmWrapper(domain_name)
+                self.slicevmdata[domain_name]=SliceVmWrapper(domain_name=domain_name, historical_occurences=self.model_historical_occurences)
             self.slicevmdata[domain_name].add_data(domain_stats)
 
     def get_vmwrapper(self):
@@ -108,8 +109,9 @@ class SliceModel(object):
             for record in table.records:
                 domain_name = record.__getitem__('domain')
                 timestamp = (record.get_time()).timestamp()
+                if timestamp not in domains_data[domain_name]["time"]:
+                    domains_data[domain_name]["time"].append(timestamp)
                 domains_data[domain_name][record.get_field()].append(record.get_value())
-                domains_data[domain_name]["time"].append(timestamp)
         return domains_data
 
     def retrieve_node_data(self, begin_epoch : int, end_epoch : int):

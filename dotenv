@@ -23,6 +23,7 @@ SCHED_NODES='["http://localhost:9100/metrics"]'
 SCHED_SCOPE_S=30
 SCHED_SCOPE_SLICE_S=15
 SCHED_SCOPE_INIT_FETCH_PREVIOUS=3
+SCHED_SCOPE_HISTORICAL=7 # number of previous slice occurences considered
 ################
 # vmballooning #
 ################

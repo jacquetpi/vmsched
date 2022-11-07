@@ -1,10 +1,12 @@
 import getopt, sys, json
+from typing import DefaultDict
 import numpy as np
 import seaborn as sns
 import matplotlib
 import matplotlib.pyplot as plt
 from horizonplot import horizonplot
 import pandas as pd
+from collections import defaultdict
 
 def graph_node(data : dict):
     fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
@@ -241,6 +243,46 @@ def graph_horizon(data : dict):
   
     fig = horizonplot(df, 'data', width=1, col='chrom', row='vmlabel', size=0.3, aspect=100)
 
+def graph_test(data_source : dict):
+
+    number_of_slice=data_input["config"]["number_of_slice"]
+    columns=["free_cpu","free_mem","cpu_tier0","cpu_tier1","cpu_tier2","mem_tier0","mem_tier1","mem_tier2",
+            "epoch"]
+
+    vm_based_columns=["cpu_avg","cpu_tier0","cpu_tier1","mem_avg","mem_tier0","mem_tier1","cpu_config","mem_config"]
+    data={key:data_input[key]for key in columns}
+    data=pd.DataFrame(data)
+    data.head()
+    	
+    data=data.melt(id_vars="epoch",var_name="tier",value_vars=["cpu_tier0","cpu_tier1","cpu_tier2"],value_name="conso_cpu")
+    sns.barplot(data=data, x="epoch", y="conso_cpu",hue="tier")
+
+
+def graph_test2(data_source : dict):
+
+    node_scope = data_source["config"]["node_scope"]
+    slice_scope = data_source["config"]["slice_scope"]
+    number_of_slice = data_source["config"]["number_of_slice"]
+
+    slice_index = 0
+    iteration = 0
+    formatted_data = [defaultdict(lambda: list()) for x in range(number_of_slice)]
+    for i in range(len(data_source["cpu_tier0"])):
+        formatted_data[slice_index]["cpu_tier0"].append(data_source["cpu_tier0"][i])
+        formatted_data[slice_index]["cpu_tier1"].append(data_source["cpu_tier1"][i])
+        formatted_data[slice_index]["cpu_tier2"].append(data_source["cpu_tier2"][i])
+        slice_index+=1
+        if slice_index>=number_of_slice:
+            slice_index=0
+            iteration+=1
+
+    data = pd.DataFrame.from_dict(formatted_data[0])
+    #data = data.T
+    print(data.head())
+    # sns.barplot(data=data)
+    data=data.melt(var_name="tier",value_vars=["cpu_tier0","cpu_tier1","cpu_tier2"],value_name="conso_cpu")
+    sns.barplot(data=data, y="conso_cpu",hue="tier")
+
 if __name__ == '__main__':
 
     short_options = "hi:nvub"
@@ -279,6 +321,8 @@ if __name__ == '__main__':
         print("No input specified")
         print(help)
         sys.exit(0)    
+
+    #graph_test(data_input)
 
     if display_graph_node:
         graph_node(data_input)
