@@ -64,7 +64,7 @@ class SliceVmWrapper(object):
                             getattr(last_slice, metric), getattr(last_slice, std_metric), getattr(last_slice, 'number_of_values'), 
                             getattr(new_slice, metric), getattr(new_slice, std_metric), getattr(new_slice, 'number_of_values'))
         # identical list return nan, nan which is evaluated as false
-        return pvalue < 0.1 
+        return pvalue < 0.1
 
     def get_last_slice(self):
         return self.slice_vm_list[-1]

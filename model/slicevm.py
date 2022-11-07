@@ -1,6 +1,3 @@
-from pyrsistent import v
-
-
 class SliceVm(object):
 
     def __init__(self, cpu_config : int, mem_config : int, 
