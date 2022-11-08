@@ -41,7 +41,6 @@ class SliceVmWrapper(object):
                 oc_page_fault=oc_page_fault, oc_page_fault_std=oc_page_fault_std,
                 oc_sched_wait=oc_sched_wait, oc_sched_wait_std=oc_sched_wait_std,
                 number_of_values=len(domain_data['time']))
-        print(domain_data['time'])
         self.compute_state_of_new_slice(slice_vm)
         self.add_slice(slice_vm)
 
