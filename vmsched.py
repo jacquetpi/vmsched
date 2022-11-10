@@ -52,7 +52,6 @@ def main_loop(debug : int = 0):
         sleep_duration = SCHED_SCOPE_SLICE_S - (int(time.time()) - loop_begin)
         
 if __name__ == '__main__':
-
     short_options = "hd:u:"
     long_options = ["help","debug=","url="]
     debug = 0

@@ -1,7 +1,7 @@
 class SliceVm(object):
 
     def __init__(self, cpu_config : int, mem_config : int, 
-                cpu_percentile : int, mem_percentile : int, 
+                cpu_percentile : dict, mem_percentile : dict, 
                 cpu_avg : int, mem_avg : int, 
                 cpu_std : int, mem_std : int, 
                 oc_page_fault : int, oc_page_fault_std : int,
@@ -52,11 +52,23 @@ class SliceVm(object):
     def get_mem_config(self):
         return self.mem_config
 
+    def get_cpu_avg(self):
+        return self.cpu_avg
+    
+    def get_mem_avg(self):
+        return self.mem_avg
+
+    def get_cpu_percentile(self, percentile : int):
+        return self.cpu_percentile[percentile]
+
+    def get_mem_percentile(self, percentile : int):
+        return self.mem_percentile[percentile]
+
     def dump_state_to_dict(self, dump_dict : dict,  key : str, iteration : int = 0):
 
         if key not in dump_dict:
             dump_dict[key] = dict()
-            dump_dict[key]["cpu_tier0"]=list() # For future usage
+            dump_dict[key]["cpu_tier0"]=list()
             dump_dict[key]["cpu_tier1"]=list()
             dump_dict[key]["cpu_tier2"]=list()
             dump_dict[key]["mem_tier0"]=list()
