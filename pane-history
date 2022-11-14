@@ -1,0 +1,1328 @@
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [1366;1367]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=1(+1 usage stabl
+e) [2905;7340.0]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=12044
+  |_SliceModel[0;300[: cumul cpu min/max 14.0/14.0 cumul mem min/max 16009/16011
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/4.6/8 mem av
+g/percentile/config 17776.3/17952.8/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [8
+37;837]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [1
+005;1005]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [190
+2;1902]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [1919;1919]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1005;1007]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [1290;1290]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [3779;3779]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [1367;1367]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+2905;2905]}
+  |_SliceModel[300;600[: cumul cpu min/max 17.0/17.0 cumul mem min/max 16008/20446.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/4.9/8 mem av
+g/percentile/config 17795.1/17947.0/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [837
+;837]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [100
+5;1007]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[1902;1902]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1919;1919]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=1(-1 avg increase) [1;1.0] mem_state=2(+1 usage stable)
+ [1005;1005]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(-1 avg increase) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [1290;1290]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [3779;3779]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [1366;1367]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=1(+1 usage stabl
+e) [2905;7340.0]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=16458
+  |_SliceModel[0;300[: cumul cpu min/max 14.0/14.0 cumul mem min/max 16009/16011
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/4.6/8 mem av
+g/percentile/config 17776.3/17952.8/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [8
+37;837]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [1
+005;1005]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [190
+2;1902]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [1919;1919]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1005;1007]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [1290;1290]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [3779;3779]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [1367;1367]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+2905;2905]}
+  |_SliceModel[300;600[: cumul cpu min/max 13.0/17.0 cumul mem min/max 16032/15927.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.3/4.9/8 mem av
+g/percentile/config 17770.8/17924.2/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [837
+;837]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=1(-1 nth increase) [1;1.0] mem_state=2(+1 usage stable) [1
+005;1007]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=0(-1 avg increase) [1.0;1.0] mem_state=2(+1 usage stable)
+[1902;1902]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(-1 avg increase) [
+1943;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [1005;1005]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(+1 usage stable) [1;2.0] mem_state=2(+1 usage stable)
+ [1290;1290]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=0(-1 avg increase) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [3779;3779]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [1366;1367]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 nth increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2905;2905]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=6500
+  |_SliceModel[0;300[: cumul cpu min/max 10.0/17.0 cumul mem min/max 25990.5/25886.5
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/4.6/8 mem av
+g/percentile/config 17751.0/17952.8/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(>0 perf oc desc) [786
+.4;786.4]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(>0 perf oc desc) [183
+5.0;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=1(-1 nth increase) [1;1.0] mem_state=2(+1 usage stable) [1
+902;1902]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=0(-1 nth increase) [1.0;1.0] mem_state=1(-1 avg increas
+e) [1942;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(>0 perf oc desc) [
+1835.0;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(+1 usage stable) [1;2.0] mem_state=0(>0 perf oc desc)
+ [3670.0;3670.0]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=0(-1 avg increase) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [3775;3778]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=0(>0 perf oc desc)
+ [7340.0;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(-1 avg increase) [1;4.0] mem_state=2(+1 usage stable)
+ [2905;2905]}
+  |_SliceModel[300;600[: cumul cpu min/max 13.0/17.0 cumul mem min/max 16032/15927.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.3/4.9/8 mem av
+g/percentile/config 17770.8/17924.2/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [837
+;837]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=1(-1 nth increase) [1;1.0] mem_state=2(+1 usage stable) [1
+005;1007]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=0(-1 avg increase) [1.0;1.0] mem_state=2(+1 usage stable)
+[1902;1902]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(-1 avg increase) [
+1943;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [1005;1005]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(+1 usage stable) [1;2.0] mem_state=2(+1 usage stable)
+ [1290;1290]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=0(-1 avg increase) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [3779;3779]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [1366;1367]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 nth increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2905;2905]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=6500
+  |_SliceModel[0;300[: cumul cpu min/max 10.0/17.0 cumul mem min/max 25990.5/25886.5
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/4.6/8 mem av
+g/percentile/config 17751.0/17952.8/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(>0 perf oc desc) [786
+.4;786.4]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(>0 perf oc desc) [183
+5.0;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=1(-1 nth increase) [1;1.0] mem_state=2(+1 usage stable) [1
+902;1902]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=0(-1 nth increase) [1.0;1.0] mem_state=1(-1 avg increas
+e) [1942;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(>0 perf oc desc) [
+1835.0;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(+1 usage stable) [1;2.0] mem_state=0(>0 perf oc desc)
+ [3670.0;3670.0]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=0(-1 avg increase) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [3775;3778]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=0(>0 perf oc desc)
+ [7340.0;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(-1 avg increase) [1;4.0] mem_state=2(+1 usage stable)
+ [2905;2905]}
+  |_SliceModel[300;600[: cumul cpu min/max 17.0/17.0 cumul mem min/max 15899.0/15906.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/4.9/8 mem av
+g/percentile/config 17740.1/17924.2/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [832
+;835]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[1005;1005]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=0(-1 nth increase) [1.0;1.0] mem_state=2(+1 usage stable)
+[1902;1902]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=1(-1 nth increase) [1;1.0] mem_state=0(-1 avg increase)
+ [1835.0;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable)
+ [1005;1005]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(-1 nth increase) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [1290;1290]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=1(+1 usage stable) [2;2.0] mem_state=2(+1 usage stable)
+ [3759;3762]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(-1 nth increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [1366;1367]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 nth increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2905;2905]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=6628
+  |_SliceModel[0;300[: cumul cpu min/max 16.0/16.0 cumul mem min/max 23474.5/25862.5
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/5.0/8 mem av
+g/percentile/config 17747.7/18099.7/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(>0 perf oc desc) [786
+.4;786.4]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=1(-1 nth increase) [1;1.0] mem_state=0(>0 perf oc desc) [1
+835.0;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[1902;1902]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=0(-1 avg increas
+e) [1835.0;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(>0 perf oc desc) [
+1835.0;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(+1 usage stable) [
+1290;3670.0]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [3747;3754]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=0(>0 perf oc des
+c) [7340.0;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2904;2905]}
+  |_SliceModel[300;600[: cumul cpu min/max 17.0/17.0 cumul mem min/max 15899.0/15906.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/4.9/8 mem av
+g/percentile/config 17740.1/17924.2/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [832
+;835]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[1005;1005]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=0(-1 nth increase) [1.0;1.0] mem_state=2(+1 usage stable)
+[1902;1902]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=1(-1 nth increase) [1;1.0] mem_state=0(-1 avg increase)
+ [1835.0;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable)
+ [1005;1005]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(-1 nth increase) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [1290;1290]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=1(+1 usage stable) [2;2.0] mem_state=2(+1 usage stable)
+ [3759;3762]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(-1 nth increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [1366;1367]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 nth increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2905;2905]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=6628
+  |_SliceModel[0;300[: cumul cpu min/max 16.0/16.0 cumul mem min/max 23474.5/25862.5
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/5.0/8 mem av
+g/percentile/config 17747.7/18099.7/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(>0 perf oc desc) [786
+.4;786.4]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=1(-1 nth increase) [1;1.0] mem_state=0(>0 perf oc desc) [1
+835.0;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[1902;1902]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=0(-1 avg increas
+e) [1835.0;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(>0 perf oc desc) [
+1835.0;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(+1 usage stable) [
+1290;3670.0]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [3747;3754]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=0(>0 perf oc des
+c) [7340.0;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2904;2905]}
+  |_SliceModel[300;600[: cumul cpu min/max 13.0/17.0 cumul mem min/max 16241.0/21838.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/4.9/8 mem av
+g/percentile/config 17786.2/18117.8/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [815
+;816]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[1005;1005]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [1
+902;1902]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(-1 avg increase) [
+1835.0;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [1005;1005]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(+1 usage stable) [1;2.0] mem_state=2(+1 usage stable)
+ [1290;1290]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=2(+1 usage stable) [
+3741;3742]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=1(-1 avg increase)
+ [1746;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2902;2903]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=9027
+  |_SliceModel[0;300[: cumul cpu min/max 10.0/17.0 cumul mem min/max 21937.0/23463.5
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/5.0/8 mem av
+g/percentile/config 17803.6/18117.8/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=1(-1 nth increase) [1;1.0] mem_state=1(+1 usage stable) [8
+12;786.4]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=1(+1 usage stable)
+[1005;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=0(-1 avg increase) [1.0;1.0] mem_state=2(+1 usage stable)
+[1902;1902]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=0(-1 avg increase) [1.0;1.0] mem_state=1(+1 usage stabl
+e) [1963;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=1(+1 usage stabl
+e) [1003;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(-1 nth increase) [1;2.0] mem_state=2(+1 usage stable)
+ [1290;1290]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=0(-1 avg increase) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [3740;3741]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=0(-1 avg increase)
+ [7340.0;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [2882;2899]}
+  |_SliceModel[300;600[: cumul cpu min/max 13.0/17.0 cumul mem min/max 16241.0/21838.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/4.9/8 mem av
+g/percentile/config 17786.2/18117.8/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [815
+;816]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[1005;1005]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [1
+902;1902]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(-1 avg increase) [
+1835.0;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [1005;1005]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(+1 usage stable) [1;2.0] mem_state=2(+1 usage stable)
+ [1290;1290]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=2(+1 usage stable) [
+3741;3742]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=1(-1 avg increase)
+ [1746;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2902;2903]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=9027
+  |_SliceModel[0;300[: cumul cpu min/max 10.0/17.0 cumul mem min/max 21937.0/23463.5
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/5.0/8 mem av
+g/percentile/config 17803.6/18117.8/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=1(-1 nth increase) [1;1.0] mem_state=1(+1 usage stable) [8
+12;786.4]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=1(+1 usage stable)
+[1005;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=0(-1 avg increase) [1.0;1.0] mem_state=2(+1 usage stable)
+[1902;1902]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=0(-1 avg increase) [1.0;1.0] mem_state=1(+1 usage stabl
+e) [1963;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=1(+1 usage stabl
+e) [1003;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(-1 nth increase) [1;2.0] mem_state=2(+1 usage stable)
+ [1290;1290]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=0(-1 avg increase) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [3740;3741]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=0(-1 avg increase)
+ [7340.0;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [2882;2899]}
+  |_SliceModel[300;600[: cumul cpu min/max 13.0/13.0 cumul mem min/max 16177.0/17011.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/4.7/8 mem av
+g/percentile/config 17849.1/18138.8/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[805;805]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=1(-1 nth increase) [1
+013;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [190
+1;1902]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(-1 avg increase) [
+1835.0;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable)
+ [992;992]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1288;1290]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=1(-1 nth increase) [2;2.0] mem_state=2(+1 usage stable)
+ [3727;3735]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1746;1746]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2870;2871]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=9899
+  |_SliceModel[0;300[: cumul cpu min/max 13.0/13.0 cumul mem min/max 16991.0/22591.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.3/5.0/8 mem av
+g/percentile/config 17876.8/18153.2/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[804;805]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=0(-1 avg increase) [1
+835.0;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [1
+901;1901]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=0(-1 avg increase)
+ [1835.0;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=0(-1 avg increase) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [990;992]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1286;1288]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=1(+1 usage stable) [2;2.0] mem_state=2(+1 usage stable)
+ [3725;3725]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(+1 usage stable) [
+1745;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2870;2870]}
+  |_SliceModel[300;600[: cumul cpu min/max 13.0/13.0 cumul mem min/max 16177.0/17011.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/4.7/8 mem av
+g/percentile/config 17849.1/18138.8/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[805;805]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=1(-1 nth increase) [1
+013;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [190
+1;1902]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(-1 avg increase) [
+1835.0;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable)
+ [992;992]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1288;1290]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=1(-1 nth increase) [2;2.0] mem_state=2(+1 usage stable)
+ [3727;3735]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1746;1746]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2870;2871]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=9899
+  |_SliceModel[0;300[: cumul cpu min/max 13.0/13.0 cumul mem min/max 16991.0/22591.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.3/5.0/8 mem av
+g/percentile/config 17876.8/18153.2/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[804;805]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=0(-1 avg increase) [1
+835.0;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [1
+901;1901]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=0(-1 avg increase)
+ [1835.0;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=0(-1 avg increase) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [990;992]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1286;1288]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=1(+1 usage stable) [2;2.0] mem_state=2(+1 usage stable)
+ [3725;3725]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(+1 usage stable) [
+1745;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2870;2870]}
+  |_SliceModel[300;600[: cumul cpu min/max 10.0/13.0 cumul mem min/max 17107.0/16986.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/4.7/8 mem av
+g/percentile/config 17924.6/18138.8/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=0(-1 nth increase) [1.0;1.0] mem_state=2(+1 usage stable)
+[804;804]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(-1 avg increase) [183
+5.0;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [190
+1;1901]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(+1 usage stable) [
+1964;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+984;986]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1284;1285]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=2(+1 usage stable) [
+3723;3723]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1746;1746]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [2866;2871]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=15383
+  |_SliceModel[0;300[: cumul cpu min/max 10.0/14.0 cumul mem min/max 16254/16978.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.3/5.0/8 mem av
+g/percentile/config 17961.3/18153.2/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [8
+03;804]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(+1 usage stable) [101
+3;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [190
+1;1901]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(+1 usage stable) [
+1964;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=0(-1 avg increase) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [980;986]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(-1 nth increase) [1;2.0] mem_state=2(+1 usage stable)
+ [1280;1283]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=2(+1 usage stable) [
+3718;3723]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1744;1745]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [2851;2866]}
+  |_SliceModel[300;600[: cumul cpu min/max 10.0/13.0 cumul mem min/max 17107.0/16986.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/4.7/8 mem av
+g/percentile/config 17924.6/18138.8/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=0(-1 nth increase) [1.0;1.0] mem_state=2(+1 usage stable)
+[804;804]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(-1 avg increase) [183
+5.0;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [190
+1;1901]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(+1 usage stable) [
+1964;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+984;986]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1284;1285]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=2(+1 usage stable) [
+3723;3723]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1746;1746]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [2866;2871]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=13043
+  |_SliceModel[0;300[: cumul cpu min/max 10.0/14.0 cumul mem min/max 16254/16978.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.3/5.0/8 mem av
+g/percentile/config 17961.3/18153.2/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [8
+03;804]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(+1 usage stable) [101
+3;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [190
+1;1901]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(+1 usage stable) [
+1964;1835.0]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=0(-1 avg increase) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [980;986]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(-1 nth increase) [1;2.0] mem_state=2(+1 usage stable)
+ [1280;1283]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=2(+1 usage stable) [
+3718;3723]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1744;1745]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [2851;2866]}
+  |_SliceModel[300;600[: cumul cpu min/max 14.0/17.0 cumul mem min/max 17085.0/19447.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/4.7/8 mem av
+g/percentile/config 18010.9/18173.1/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=0(-1 avg increase) [1.0;1.0] mem_state=2(+1 usage stable)
+[802;804]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=0(-1 nth increase)
+[1835.0;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[1901;1901]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [1964;1964]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=1(-1 avg increase) [1;1.0] mem_state=2(+1 usage stable)
+ [976;977]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=1(-1 avg increas
+e) [1316;3670.0]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [3720;3720]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=1(-1 avg increase) [1;4.0] mem_state=2(+1 usage stable)
+ [1746;1746]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2825;2830]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=13043
+  |_SliceModel[0;300[: cumul cpu min/max 14.0/14.0 cumul mem min/max 16254/18612.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.3/4.7/8 mem av
+g/percentile/config 18024.6/18199.3/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [802
+;802]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [101
+3;1013]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [190
+1;1901]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1963;1964]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable)
+ [976;976]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=1(-1 avg increas
+e) [1316;3670.0]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=2(+1 usage stable) [
+3718;3720]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1744;1744]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2821;2822]}
+  |_SliceModel[300;600[: cumul cpu min/max 14.0/17.0 cumul mem min/max 17085.0/19447.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/4.7/8 mem av
+g/percentile/config 18010.9/18173.1/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=0(-1 avg increase) [1.0;1.0] mem_state=2(+1 usage stable)
+[802;804]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=0(-1 nth increase)
+[1835.0;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[1901;1901]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [1964;1964]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=1(-1 avg increase) [1;1.0] mem_state=2(+1 usage stable)
+ [976;977]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=1(-1 avg increas
+e) [1316;3670.0]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [3720;3720]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=1(-1 avg increase) [1;4.0] mem_state=2(+1 usage stable)
+ [1746;1746]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2825;2830]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=13062
+  |_SliceModel[0;300[: cumul cpu min/max 14.0/14.0 cumul mem min/max 16254/18612.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.3/4.7/8 mem av
+g/percentile/config 18024.6/18199.3/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [802
+;802]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [101
+3;1013]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [190
+1;1901]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1963;1964]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable)
+ [976;976]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=1(-1 avg increas
+e) [1316;3670.0]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=2(+1 usage stable) [
+3718;3720]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1744;1744]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2821;2822]}
+  |_SliceModel[300;600[: cumul cpu min/max 14.0/17.0 cumul mem min/max 19425.0/19428.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.3/4.7/8 mem av
+g/percentile/config 18028.9/18174.1/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [8
+02;804]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=0(-1 avg increase) [1.0;1.0] mem_state=0(-1 avg increase)
+[1835.0;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [1
+900;1900]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable)
+ [1964;1964]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [975;976]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(-1 avg increase) [2.0;2.0] mem_state=0(-1 avg increas
+e) [3670.0;3670.0]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=1(+1 usage stable) [2;2.0] mem_state=2(+1 usage stable)
+ [3714;3714]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [1744;1744]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [2821;2821]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=13062
+  |_SliceModel[0;300[: cumul cpu min/max 10/14.0 cumul mem min/max 16244/17073.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.3/4.7/8 mem av
+g/percentile/config 18040.1/18199.3/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=1(-1 avg increase) [1;1.0] mem_state=2(+1 usage stable) [8
+02;802]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(-1 nth increase) [101
+5;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=1(-1 avg increase) [1;1.0] mem_state=2(+1 usage stable) [1
+900;1900]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=1(-1 avg increase) [1;1.0] mem_state=2(+1 usage stable)
+ [1963;1964]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+975;976]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(+1 usage stable) [1;2.0] mem_state=2(+1 usage stable)
+ [1316;1316]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=1(-1 avg increase) [2;2.0] mem_state=2(+1 usage stable)
+ [3714;3714]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1738;1744]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [2821;2822]}
+  |_SliceModel[300;600[: cumul cpu min/max 14.0/17.0 cumul mem min/max 19425.0/19428.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.3/4.7/8 mem av
+g/percentile/config 18028.9/18174.1/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [8
+02;804]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=0(-1 avg increase) [1.0;1.0] mem_state=0(-1 avg increase)
+[1835.0;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [1
+900;1900]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable)
+ [1964;1964]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [975;976]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(-1 avg increase) [2.0;2.0] mem_state=0(-1 avg increas
+e) [3670.0;3670.0]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=1(+1 usage stable) [2;2.0] mem_state=2(+1 usage stable)
+ [3714;3714]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [1744;1744]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [2821;2821]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=13119
+  |_SliceModel[0;300[: cumul cpu min/max 10/14.0 cumul mem min/max 16244/17073.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.3/4.7/8 mem av
+g/percentile/config 18040.1/18199.3/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=1(-1 avg increase) [1;1.0] mem_state=2(+1 usage stable) [8
+02;802]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(-1 nth increase) [101
+5;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=1(-1 avg increase) [1;1.0] mem_state=2(+1 usage stable) [1
+900;1900]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=1(-1 avg increase) [1;1.0] mem_state=2(+1 usage stable)
+ [1963;1964]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+975;976]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(+1 usage stable) [1;2.0] mem_state=2(+1 usage stable)
+ [1316;1316]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=1(-1 avg increase) [2;2.0] mem_state=2(+1 usage stable)
+ [3714;3714]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1738;1744]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [2821;2822]}
+  |_SliceModel[300;600[: cumul cpu min/max 14.0/14.0 cumul mem min/max 16234/19371.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/4.6/8 mem av
+g/percentile/config 18036.4/18177.2/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [801
+;801]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=0(-1 avg increase) [1.0;1.0] mem_state=1(+1 usage stable)
+[1015;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [189
+9;1900]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1963;1963]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable)
+ [975;975]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(-1 avg increase) [2.0;2.0] mem_state=1(+1 usage stabl
+e) [1316;3670.0]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=1(-1 avg increase) [
+3714;3670.0]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [1732;1736]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+2819;2821]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=13119
+  |_SliceModel[0;300[: cumul cpu min/max 16.0/16.0 cumul mem min/max 16225/16191.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.3/4.7/8 mem av
+g/percentile/config 18039.7/18199.3/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[801;802]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[1013;1015]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[1899;1899]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [1962;1963]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [973;975]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1316;1316]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=1(-1 avg increas
+e) [3714;3670.0]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [1729;1731]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 nth increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2818;2820]}
+  |_SliceModel[300;600[: cumul cpu min/max 14.0/14.0 cumul mem min/max 16234/19371.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.2/4.6/8 mem av
+g/percentile/config 18036.4/18177.2/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [801
+;801]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=0(-1 avg increase) [1.0;1.0] mem_state=1(+1 usage stable)
+[1015;1835.0]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [189
+9;1900]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1963;1963]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable)
+ [975;975]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(-1 avg increase) [2.0;2.0] mem_state=1(+1 usage stabl
+e) [1316;3670.0]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=1(-1 avg increase) [
+3714;3670.0]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [1732;1736]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+2819;2821]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=16265
+  |_SliceModel[0;300[: cumul cpu min/max 16.0/16.0 cumul mem min/max 16225/16191.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.3/4.7/8 mem av
+g/percentile/config 18039.7/18199.3/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[801;802]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[1013;1015]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[1899;1899]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [1962;1963]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stabl
+e) [973;975]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1316;1316]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=1(-1 avg increas
+e) [3714;3670.0]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [1729;1731]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 nth increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2818;2820]}
+  |_SliceModel[300;600[: cumul cpu min/max 10/14.0 cumul mem min/max 16176.0/16180.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.0/4.6/8 mem av
+g/percentile/config 17971.0/18177.2/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [800
+;800]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [1
+013;1015]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=1(-1 avg increase) [1;1.0] mem_state=2(+1 usage stable) [1
+898;1898]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=1(-1 avg increase) [1;1.0] mem_state=2(+1 usage stable)
+ [1961;1962]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+974;974]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(+1 usage stable) [1;2.0] mem_state=2(+1 usage stable)
+ [1315;1316]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=0(>0 perf oc desc) [
+3670.0;3670.0]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [1726;1726]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+2819;2819]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=16266
+  |_SliceModel[0;300[: cumul cpu min/max 16.0/17.0 cumul mem min/max 16218/16224
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 3.4/4.6/8 mem av
+g/percentile/config 17811.6/18199.3/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [8
+00;802]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [1
+013;1015]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [1
+898;1898]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable)
+ [1961;1961]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable)
+ [973;973]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(-1 nth increase) [1;2.0] mem_state=2(+1 usage stable)
+ [1316;1316]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=1(+1 usage stable) [2;2.0] mem_state=2(+1 usage stable)
+ [3714;3714]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(-1 nth increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [1725;1725]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2818;2820]}
+  |_SliceModel[300;600[: cumul cpu min/max 10/14.0 cumul mem min/max 16176.0/16180.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 4.0/4.6/8 mem av
+g/percentile/config 17971.0/18177.2/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [800
+;800]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [1
+013;1015]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=1(-1 avg increase) [1;1.0] mem_state=2(+1 usage stable) [1
+898;1898]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=1(-1 avg increase) [1;1.0] mem_state=2(+1 usage stable)
+ [1961;1962]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+974;974]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(+1 usage stable) [1;2.0] mem_state=2(+1 usage stable)
+ [1315;1316]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=0(>0 perf oc desc) [
+3670.0;3670.0]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [1726;1726]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+2819;2819]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=15453
+  |_SliceModel[0;300[: cumul cpu min/max 16.0/17.0 cumul mem min/max 16218/16224
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 3.4/4.6/8 mem av
+g/percentile/config 17811.6/18199.3/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [8
+00;802]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [1
+013;1015]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable) [1
+898;1898]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable)
+ [1961;1961]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=1(+1 usage stable) [1;1.0] mem_state=2(+1 usage stable)
+ [973;973]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(-1 nth increase) [1;2.0] mem_state=2(+1 usage stable)
+ [1316;1316]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=1(+1 usage stable) [2;2.0] mem_state=2(+1 usage stable)
+ [3714;3714]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(-1 nth increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [1725;1725]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2818;2820]}
+  |_SliceModel[300;600[: cumul cpu min/max 10/13.0 cumul mem min/max 16246/17037.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 3.0/4.5/8 mem av
+g/percentile/config 17674.8/18177.2/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [800
+;800]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [101
+3;1015]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [189
+7;1897]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1961;1961]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(-1 avg increase) [
+1004;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1315;1316]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=1(+1 usage stable) [
+3714;3670.0]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1725;1725]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(-1 avg increase) [1;4.0] mem_state=2(+1 usage stable)
+ [2817;2818]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=15418
+  |_SliceModel[0;300[: cumul cpu min/max 13.0/16.0 cumul mem min/max 16238/17072.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 2.4/4.6/8 mem av
+g/percentile/config 17506.9/18181.4/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [800
+;800]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [101
+3;1015]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [189
+7;1897]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1961;1961]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(-1 avg increase) [
+1004;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1312;1312]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=2(+1 usage stable) [
+3714;3714]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [1725;1725]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2812;2813]}
+  |_SliceModel[300;600[: cumul cpu min/max 10/13.0 cumul mem min/max 16246/17037.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 3.0/4.5/8 mem av
+g/percentile/config 17674.8/18177.2/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [800
+;800]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [101
+3;1015]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [189
+7;1897]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1961;1961]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(-1 avg increase) [
+1004;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1315;1316]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=1(+1 usage stable) [
+3714;3670.0]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1725;1725]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(-1 avg increase) [1;4.0] mem_state=2(+1 usage stable)
+ [2817;2818]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=15418
+  |_SliceModel[0;300[: cumul cpu min/max 13.0/16.0 cumul mem min/max 16238/17072.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 2.4/4.6/8 mem av
+g/percentile/config 17506.9/18181.4/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [800
+;800]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [101
+3;1015]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [189
+7;1897]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1961;1961]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(-1 avg increase) [
+1004;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1312;1312]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=2(+1 usage stable) [
+3714;3714]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [1725;1725]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2812;2813]}
+  |_SliceModel[300;600[: cumul cpu min/max 13.0/13.0 cumul mem min/max 17063.0/17070.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 2.0/4.4/8 mem av
+g/percentile/config 17369.5/18177.2/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [800
+;800]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [101
+3;1013]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [189
+7;1897]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1960;1961]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(-1 avg increase) [
+1835.0;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1308;1312]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=2(+1 usage stable) [
+3714;3714]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1725;1725]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 nth increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2811;2813]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=15420
+  |_SliceModel[0;300[: cumul cpu min/max 13.0/13.0 cumul mem min/max 16200/16206
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 1.4/4.6/8 mem av
+g/percentile/config 17200.1/18148.7/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [799
+;799]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [101
+1;1012]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [189
+7;1897]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1959;1960]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1004;1004]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1299;1300]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=2(+1 usage stable) [
+3714;3714]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1724;1724]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2793;2796]}
+  |_SliceModel[300;600[: cumul cpu min/max 13.0/13.0 cumul mem min/max 17063.0/17070.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 2.0/4.4/8 mem av
+g/percentile/config 17369.5/18177.2/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [800
+;800]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [101
+3;1013]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [189
+7;1897]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1960;1961]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(-1 avg increase) [
+1835.0;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1308;1312]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=2(+1 usage stable) [
+3714;3714]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1725;1725]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 nth increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2811;2813]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=9860
+  |_SliceModel[0;300[: cumul cpu min/max 13.0/13.0 cumul mem min/max 16200/16206
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 1.4/4.6/8 mem av
+g/percentile/config 17200.1/18148.7/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [799
+;799]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [101
+1;1012]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [189
+7;1897]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1959;1960]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1004;1004]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1299;1300]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [2;2] mem_state=2(+1 usage stable) [
+3714;3714]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1724;1724]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 avg increase) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [2793;2796]}
+  |_SliceModel[300;600[: cumul cpu min/max 9/13.0 cumul mem min/max 17006.0/22630.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 1.0/4.4/8 mem av
+g/percentile/config 17070.2/18094.4/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [799
+;799]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [100
+9;1010]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [189
+6;1897]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1957;1958]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(-1 avg increase) [
+1835.0;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1298;1299]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [1;2] mem_state=2(+1 usage stable) [
+3699;3714]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(-1 avg increase) [
+1748;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [2765;2778]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=9860
+  |_SliceModel[0;300[: cumul cpu min/max 9/12.0 cumul mem min/max 16142/22583.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 0.3/2.1/8 mem av
+g/percentile/config 16916.7/17680.1/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [799
+;799]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [100
+9;1009]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [189
+4;1896]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1940;1957]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(-1 avg increase) [
+1007;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1299;1300]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+3682;3682]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(-1 avg increase) [
+1748;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [2764;2765]}
+  |_SliceModel[300;600[: cumul cpu min/max 9/13.0 cumul mem min/max 17006.0/22630.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 1.0/4.4/8 mem av
+g/percentile/config 17070.2/18094.4/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [799
+;799]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [100
+9;1010]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [189
+6;1897]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1957;1958]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(-1 avg increase) [
+1835.0;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1298;1299]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [1;2] mem_state=2(+1 usage stable) [
+3699;3714]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(-1 avg increase) [
+1748;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [2765;2778]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=5354
+  |_SliceModel[0;300[: cumul cpu min/max 9/12.0 cumul mem min/max 16142/22583.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 0.3/2.1/8 mem av
+g/percentile/config 16916.7/17680.1/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [799
+;799]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [100
+9;1009]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [189
+4;1896]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1940;1957]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(-1 avg increase) [
+1007;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1299;1300]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+3682;3682]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(-1 avg increase) [
+1748;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [2764;2765]}
+  |_SliceModel[300;600[: cumul cpu min/max 12.0/12.0 cumul mem min/max 22553.0/27136.1
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 0.1/0.8/8 mem av
+g/percentile/config 16856.4/16908.7/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [799
+;799]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [100
+9;1009]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [188
+8;1889]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1929;1932]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(-1 avg increase) [
+1835.0;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1298;1298]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+3688;3694]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(-1 avg increase) [
+7340.0;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 nth increase) [4.0;4.0] mem_state=1(-1 avg increas
+e) [2767;7340.0]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=5354
+  |_SliceModel[0;300[: cumul cpu min/max 16.0/17.0 cumul mem min/max 16130/20687.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 0.1/0.2/8 mem av
+g/percentile/config 16861.3/16898.6/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [799
+;799]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [100
+9;1009]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [188
+8;1888]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1926;1926]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1007;1007]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [1298;1300]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=1(-1 avg increase) [1;2.0] mem_state=1(-1 avg increase)
+ [3688;3670.0]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [1748;1748]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 nth increase) [4.0;4.0] mem_state=1(-1 avg increas
+e) [2767;7340.0]}
+  |_SliceModel[300;600[: cumul cpu min/max 12.0/12.0 cumul mem min/max 22553.0/27136.1
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 0.1/0.8/8 mem av
+g/percentile/config 16856.4/16908.7/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [799
+;799]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [100
+9;1009]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [188
+8;1889]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1929;1932]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(-1 avg increase) [
+1835.0;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1298;1298]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+3688;3694]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=0(-1 avg increase) [
+7340.0;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 nth increase) [4.0;4.0] mem_state=1(-1 avg increas
+e) [2767;7340.0]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=5361
+  |_SliceModel[0;300[: cumul cpu min/max 16.0/17.0 cumul mem min/max 16130/20687.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 0.1/0.2/8 mem av
+g/percentile/config 16861.3/16898.6/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [799
+;799]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [100
+9;1009]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [188
+8;1888]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1926;1926]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1007;1007]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [1298;1300]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=1(-1 avg increase) [1;2.0] mem_state=1(-1 avg increase)
+ [3688;3670.0]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=2(+1 usage stabl
+e) [1748;1748]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(-1 nth increase) [4.0;4.0] mem_state=1(-1 avg increas
+e) [2767;7340.0]}
+  |_SliceModel[300;600[: cumul cpu min/max 16.0/16.0 cumul mem min/max 20701.0/27129.1
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 0.1/0.8/8 mem av
+g/percentile/config 16870.6/16908.7/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[798;799]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [100
+9;1009]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [188
+8;1888]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1925;1926]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(+1 usage stable) [
+1007;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [1298;1298]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+3688;3694]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=1(+1 usage stabl
+e) [1748;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=0(-1 avg increas
+e) [7340.0;7340.0]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=5361
+  |_SliceModel[0;300[: cumul cpu min/max 10.0/17.0 cumul mem min/max 20700.0/20702.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 0.1/0.2/8 mem av
+g/percentile/config 16872.4/16898.6/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [798
+;798]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [100
+9;1009]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=1(-1 avg increase) [1;1.0] mem_state=2(+1 usage stable) [1
+887;1887]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1925;1925]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=1(-1 nth increase) [1;1.0] mem_state=2(+1 usage stable)
+ [1007;1007]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(+1 usage stable) [1;2.0] mem_state=2(+1 usage stable)
+ [1298;1300]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=0(-1 avg increase) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [3688;3688]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [1748;1748]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=0(-1 avg increase)
+ [7340.0;7340.0]}
+  |_SliceModel[300;600[: cumul cpu min/max 16.0/16.0 cumul mem min/max 20701.0/27129.1
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 0.1/0.8/8 mem av
+g/percentile/config 16870.6/16908.7/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[798;799]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [100
+9;1009]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [188
+8;1888]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1925;1926]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=1(+1 usage stable) [
+1007;1835.0]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(>0 perf oc desc) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [1298;1298]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+3688;3694]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=1(+1 usage stabl
+e) [1748;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=0(>0 perf oc desc) [4.0;4.0] mem_state=0(-1 avg increas
+e) [7340.0;7340.0]}
+
+NodeModel{url=http://192.168.0.23:9100/metrics} free_cpu=0 free_mem=3820
+  |_SliceModel[0;300[: cumul cpu min/max 10.0/17.0 cumul mem min/max 20700.0/20702.0
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 0.1/0.2/8 mem av
+g/percentile/config 16872.4/16898.6/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [798
+;798]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [100
+9;1009]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=1(-1 avg increase) [1;1.0] mem_state=2(+1 usage stable) [1
+887;1887]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+1925;1925]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=1(-1 nth increase) [1;1.0] mem_state=2(+1 usage stable)
+ [1007;1007]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=1(+1 usage stable) [1;2.0] mem_state=2(+1 usage stable)
+ [1298;1300]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=0(-1 avg increase) [2.0;2.0] mem_state=2(+1 usage stabl
+e) [3688;3688]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=2(+1 usage stable)
+ [1748;1748]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=0(-1 avg increase)
+ [7340.0;7340.0]}
+  |_SliceModel[300;600[: cumul cpu min/max 10.0/16.0 cumul mem min/max 28663.1/28670.1
+    >{SliceHostWrapper for http://192.168.0.23:9100/metrics hostcpu avg/percentile/config 0.2/0.8/8 mem av
+g/percentile/config 16893.8/17129.0/32490}
+    >{SliceVmWrapper for vm1periodic: cpu_state=0(-1 avg increase) [1.0;1.0] mem_state=2(+1 usage stable)
+[798;798]}
+    >{SliceVmWrapper for vm2periodic: cpu_state=0(>0 perf oc desc) [1.0;1.0] mem_state=2(+1 usage stable)
+[1009;1009]}
+    >{SliceVmWrapper for vm3periodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [188
+7;1887]}
+    >{SliceVmWrapper for vm4notperiodic: cpu_state=1(-1 avg increase) [1;1.0] mem_state=2(+1 usage stable)
+ [1924;1925]}
+    >{SliceVmWrapper for vm5notperiodic: cpu_state=1(-1 nth increase) [1;1.0] mem_state=2(+1 usage stable)
+ [1007;1007]}
+    >{SliceVmWrapper for vm6notperiodic: cpu_state=0(-1 avg increase) [2.0;2.0] mem_state=0(>0 perf oc des
+c) [3670.0;3670.0]}
+    >{SliceVmWrapper for vm7notperiodic: cpu_state=2(+1 usage stable) [1;1] mem_state=2(+1 usage stable) [
+3688;3694]}
+    >{SliceVmWrapper for vm8notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=0(-1 avg increase)
+ [7340.0;7340.0]}
+    >{SliceVmWrapper for vm9notperiodic: cpu_state=1(+1 usage stable) [1;4.0] mem_state=0(-1 nth increase)
+ [7340.0;7340.0]}
+
+^CProgram interrupted
+(venv) [pjacquet@thinkcentre2:vmsched]$ save-pane
+

@@ -103,7 +103,7 @@ class SliceVmWrapper(object):
             new_value = new_slice.get_mem_percentile(mem_percentile)
         else:
             raise ValueError("No metrics passed to is_incoherent_value()")
-        thresold = last_value # + multiplier*getattr(last_slice, std_metric)
+        thresold = last_value + multiplier*getattr(last_slice, std_metric)
         return new_value > thresold
 
     def get_last_slice(self):

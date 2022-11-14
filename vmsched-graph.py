@@ -84,6 +84,20 @@ def graph_node(data : dict):
 
     fig.tight_layout()
 
+# epoch, avg, tier0, tier1, state
+def graph_node_generic(x, avg_data, tier0_data, tier1_data, state_data, **kwargs):
+    empty_data = [0 for i in x]
+    tier1_cumulated_data = list()
+    for key in tier0_data.keys():
+        tier1_cumulated_data.append(tier0_data[key] + tier1_data[key])
+    # Convert to numpy format
+    tier0_np = np.array(empty_data)
+    tier1_np = np.array(tier1_cumulated_data)
+    plt.fill_between(x, empty_data, tier0_data, color='blue', alpha=0.3, interpolate=True, label="Tier0")
+    plt.fill_between(x, tier0_data, tier1_data,  where=(tier0_data<tier1_data), color='orange', alpha=0.3,  interpolate=True, label="Tier1")
+    plt.plot(x, avg_data, '-', color='black')
+    plt.gca().twinx().plot(x, state_data, color = 'r')
+
 def graph_vm(data : dict):
 
     test = list()
@@ -211,8 +225,7 @@ def graph_usage(data : dict):
     for vmname, vmdata in data["vm"].items():
 
         current_axe = axes[index_y][index_x]
-
-        vmdata["mem_percentile"] = [round(i/1024,1) for i in vmdata["mem_percentile"]]
+        vmdata["mem_percentile"] = [round(i/1024,1) for i in vmdata["mem_percentile"]['90']]
         vmdata["mem_config"] = [round(i/1024,1) for i in vmdata["mem_config"]]
     
         current_axe.fill_between(x_axis, np.array(empty_data), np.array(vmdata["mem_percentile"]), alpha=1, interpolate=True)
@@ -233,7 +246,7 @@ def graph_horizon(data : dict):
     graphlabel = list()
     metric = 'mem_percentile'
     for vmname, vmdata in data["vm"].items():
-        graphdata+=vmdata[metric]
+        graphdata+=vmdata['mem_percentile']['90']
         graphlabel+=[vmname for i in range(value_count)]
 
     df = pd.DataFrame({'chrom': [metric]*vm_count*value_count,
@@ -245,18 +258,17 @@ def graph_horizon(data : dict):
 
 def graph_test(data_source : dict):
 
-    number_of_slice=data_input["config"]["number_of_slice"]
+    number_of_slice=data_source["config"]["number_of_slice"]
     columns=["free_cpu","free_mem","cpu_tier0","cpu_tier1","cpu_tier2","mem_tier0","mem_tier1","mem_tier2",
             "epoch"]
 
     vm_based_columns=["cpu_avg","cpu_tier0","cpu_tier1","mem_avg","mem_tier0","mem_tier1","cpu_config","mem_config"]
-    data={key:data_input[key]for key in columns}
+    data={key:data_source[key]for key in columns}
     data=pd.DataFrame(data)
     data.head()
     	
     data=data.melt(id_vars="epoch",var_name="tier",value_vars=["cpu_tier0","cpu_tier1","cpu_tier2"],value_name="conso_cpu")
     sns.barplot(data=data, x="epoch", y="conso_cpu",hue="tier")
-
 
 def graph_test2(data_source : dict):
 
@@ -278,10 +290,53 @@ def graph_test2(data_source : dict):
 
     data = pd.DataFrame.from_dict(formatted_data[0])
     #data = data.T
-    print(data.head())
     # sns.barplot(data=data)
     data=data.melt(var_name="tier",value_vars=["cpu_tier0","cpu_tier1","cpu_tier2"],value_name="conso_cpu")
     sns.barplot(data=data, y="conso_cpu",hue="tier")
+
+def graph_slice(dataframe):
+    g = sns.FacetGrid(dataframe, col="slice", order=set(dataframe["vm"]))
+    g.map(sns.barplot, "vm", "cpu_state")
+
+def graph_slice2(dataframe):
+    g = sns.FacetGrid(dataframe, col="slice", row="vm")
+    g.map(plt.plot, "epoch", "cpu_state")
+
+def graph_slice3(dataframe):
+    g = sns.FacetGrid(dataframe, col="slice", row="vm")
+    g.map(graph_node_generic, "epoch", "cpu_avg", "cpu_tier0", "cpu_tier1", "cpu_state")
+
+def get_vm_dataframe(data_source : dict):
+    number_of_slice=data_source["config"]["number_of_slice"]
+    epoch = [int(x/60) for x in data_source["epoch"]]
+    vm_based_columns=["cpu_avg","cpu_tier0","cpu_tier1", "cpu_state", "mem_avg","mem_tier0","mem_tier1","cpu_config","mem_config", "mem_state"]
+    csv_like_data=dict()
+    csv_like_data["slice"]=list()
+    csv_like_data["vm"]=list()
+    csv_like_data["epoch"]=list()
+    ordered_vm_name_list=list()
+    index=0
+
+    for vm_name, vm_stats in data_source["vm"].items():
+        data={key:vm_stats[key]for key in vm_based_columns}
+        ordered_vm_name="vm" + chr(65 + index)
+        ordered_vm_name_list.append(ordered_vm_name)
+        for key, value in data.items():
+            if key not in csv_like_data:
+                csv_like_data[key] = list()
+            csv_like_data[key].extend(value)
+        count=0
+        for i in range(len(data[vm_based_columns[0]])):
+            csv_like_data["vm"].append(ordered_vm_name)
+            slice_id = "slice" + str(count)
+            csv_like_data["slice"].append(slice_id)
+            count+=1
+            if count >= number_of_slice:
+                count=0
+        index+=1
+        csv_like_data["epoch"].extend(epoch)
+
+    return pd.DataFrame(csv_like_data)
 
 if __name__ == '__main__':
 
@@ -293,6 +348,7 @@ if __name__ == '__main__':
     display_graph_vm = False
     display_graph_usage = False
     display_graph_horizon = False
+    display_graph_slice = True
 
     try:
         arguments, values = getopt.getopt(sys.argv[1:], short_options, long_options)
@@ -322,8 +378,6 @@ if __name__ == '__main__':
         print(help)
         sys.exit(0)    
 
-    #graph_test(data_input)
-
     if display_graph_node:
         graph_node(data_input)
 
@@ -335,5 +389,10 @@ if __name__ == '__main__':
 
     if display_graph_horizon:
         graph_horizon(data_input)
+    
+    if display_graph_slice:
+        dataframe = get_vm_dataframe(data_input)
+        graph_slice3(dataframe)
+        #graph_slice2(dataframe)
 
     plt.show()
