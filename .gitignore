@@ -3,6 +3,7 @@
 
 ##misc
 dump*.json
+pane-*
 debug/
 
 ### Python ###

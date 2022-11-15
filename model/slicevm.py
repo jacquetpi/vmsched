@@ -21,6 +21,12 @@ class SliceVm(object):
         self.oc_sched_wait = oc_sched_wait
         self.oc_sched_wait_std = oc_sched_wait_std
         self.number_of_values = number_of_values
+        self.cpu_tier0 = -1 
+        self.cpu_tier1 = -1
+        self.cpu_tier2 = -1
+        self.mem_tier0 = -1 
+        self.mem_tier1 = -1
+        self.mem_tier2 = -1
         self.cpu_state = 0
         self.mem_state = 0
 
@@ -64,16 +70,24 @@ class SliceVm(object):
     def get_mem_percentile(self, percentile : int):
         return self.mem_percentile[percentile]
 
+    # Tiers as thresold
+    def update_cpu_tiers(self, cpu_tier0, cpu_tier1):
+        # Tiers are computed at the wrapper level to take into account previous slices, but updated here to be able to dump current state
+        self.cpu_tier0=cpu_tier0
+        self.cpu_tier1=cpu_tier1
+        self.cpu_tier2=self.cpu_config
+
+    # Tiers as thresold
+    def update_mem_tiers(self, mem_tier0, mem_tier1):
+        # Tiers are computed at the wrapper level to take into account previous slices, but updated here to be able to dump current state
+        self.mem_tier0=mem_tier0
+        self.mem_tier1=mem_tier1
+        self.mem_tier2=self.mem_config
+
     def dump_state_to_dict(self, dump_dict : dict,  key : str, iteration : int = 0):
 
         if key not in dump_dict:
             dump_dict[key] = dict()
-            dump_dict[key]["cpu_tier0"]=list()
-            dump_dict[key]["cpu_tier1"]=list()
-            dump_dict[key]["cpu_tier2"]=list()
-            dump_dict[key]["mem_tier0"]=list()
-            dump_dict[key]["mem_tier1"]=list()
-            dump_dict[key]["mem_tier2"]=list()
 
         for attribute, value in self.__dict__.items():
             if attribute not in dump_dict[key]:

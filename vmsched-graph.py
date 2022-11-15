@@ -85,17 +85,13 @@ def graph_node(data : dict):
     fig.tight_layout()
 
 # epoch, avg, tier0, tier1, state
-def graph_node_generic(x, avg_data, tier0_data, tier1_data, state_data, **kwargs):
+def graph_node_generic(x, avg_data, percentile_data, tier0_data, tier1_data, state_data, **kwargs):
     empty_data = [0 for i in x]
-    tier1_cumulated_data = list()
-    for key in tier0_data.keys():
-        tier1_cumulated_data.append(tier0_data[key] + tier1_data[key])
     # Convert to numpy format
-    tier0_np = np.array(empty_data)
-    tier1_np = np.array(tier1_cumulated_data)
     plt.fill_between(x, empty_data, tier0_data, color='blue', alpha=0.3, interpolate=True, label="Tier0")
     plt.fill_between(x, tier0_data, tier1_data,  where=(tier0_data<tier1_data), color='orange', alpha=0.3,  interpolate=True, label="Tier1")
     plt.plot(x, avg_data, '-', color='black')
+    plt.plot(x, percentile_data, '--', color='black')
     plt.gca().twinx().plot(x, state_data, color = 'r')
 
 def graph_vm(data : dict):
@@ -304,7 +300,7 @@ def graph_slice2(dataframe):
 
 def graph_slice3(dataframe):
     g = sns.FacetGrid(dataframe, col="slice", row="vm")
-    g.map(graph_node_generic, "epoch", "cpu_avg", "cpu_tier0", "cpu_tier1", "cpu_state")
+    g.map(graph_node_generic, "epoch", "cpu_avg", "graph_cpu_percentile", "cpu_tier0", "cpu_tier1", "cpu_state")
 
 def get_vm_dataframe(data_source : dict):
     number_of_slice=data_source["config"]["number_of_slice"]
@@ -314,6 +310,8 @@ def get_vm_dataframe(data_source : dict):
     csv_like_data["slice"]=list()
     csv_like_data["vm"]=list()
     csv_like_data["epoch"]=list()
+    csv_like_data["graph_cpu_percentile"] = list()
+    csv_like_data["graph_mem_percentile"] = list()
     ordered_vm_name_list=list()
     index=0
 
@@ -326,6 +324,8 @@ def get_vm_dataframe(data_source : dict):
                 csv_like_data[key] = list()
             csv_like_data[key].extend(value)
         count=0
+        csv_like_data["graph_cpu_percentile"].extend([x['90'] for x in vm_stats["cpu_percentile"]])
+        csv_like_data["graph_mem_percentile"].extend([x['90'] for x in vm_stats["mem_percentile"]])
         for i in range(len(data[vm_based_columns[0]])):
             csv_like_data["vm"].append(ordered_vm_name)
             slice_id = "slice" + str(count)

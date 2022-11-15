@@ -21,6 +21,12 @@ class SliceModel(object):
         # Data itself:
         self.slicevmdata=dict()
         self.slicenodedata=SliceHostWrapper(self.model_node_name)
+        self.cpu_tier0=0
+        self.cpu_tier1=0
+        self.cpu_tier2=0
+        self.mem_tier0=0
+        self.mem_tier1=0
+        self.mem_tier2=0
 
     def build_past_slices(self, past_iteration : int = 1):
         for i in range((-past_iteration),0):
@@ -40,53 +46,60 @@ class SliceModel(object):
             if domain_name not in self.slicevmdata:
                 self.slicevmdata[domain_name]=SliceVmWrapper(domain_name=domain_name, historical_occurences=self.model_historical_occurences)
             self.slicevmdata[domain_name].add_data(domain_stats)
+        self.update_cpu_mem_tiers()
 
     def get_vmwrapper(self):
         return self.slicevmdata
 
-    def get_vm_cpu_mem_min_max(self):
-        slice_cpu_min, slice_cpu_max = 0, 0
-        slice_mem_min, slice_mem_max = 0, 0
+    def get_vm_cpu_tiers_sum(self):
+        slice_cpu_tier0, slice_cpu_tier1 = 0, 0
+        slice_mem_tier0, slice_mem_tier1 = 0, 0
         for vm, vmwrapper in self.slicevmdata.items():
-            wp_cpu_min, wp_cpu_max, wp_mem_min, wp_mem_max = vmwrapper.get_cpu_mem_tier()
-            slice_cpu_min += wp_cpu_min
-            slice_cpu_max += wp_cpu_max
-            slice_mem_min += wp_mem_min
-            slice_mem_max += wp_mem_max
-        return slice_cpu_min, slice_cpu_max, slice_mem_min, slice_mem_max
+            wp_cpu_min, wp_cpu_max, wp_mem_min, wp_mem_max = vmwrapper.get_cpu_mem_tiers()
+            slice_cpu_tier0 += wp_cpu_min
+            slice_cpu_tier1 += wp_cpu_max
+            slice_mem_tier0 += wp_mem_min
+            slice_mem_tier1 += wp_mem_max
+        return slice_cpu_tier0, slice_cpu_tier1, slice_mem_tier0, slice_mem_tier1
 
-    def get_cpu_mem_tier(self):
+    def get_cpu_mem_tiers(self):
+        return self.cpu_tier0, self.cpu_tier1, self.cpu_tier2, self.mem_tier0, self.mem_tier1, self.mem_tier2
+
+    def update_cpu_mem_tiers(self):
         cpu_config, mem_config = self.get_host_config()
         if cpu_config<0 or mem_config<0:
             #print("Not enough data to compute cpu/mem tier on this slice: [" + str(self.leftBound) + ";" + str(self.rightBound) + "[")
-            return 0, 0, 0, 0, 0, 0
-        slice_cpu_min, slice_cpu_max, slice_mem_min, slice_mem_max = self.get_vm_cpu_mem_min_max()
-        return self.compute_cpu_mem_tier(slice_cpu_min=slice_cpu_min, slice_cpu_max=slice_cpu_max, cpu_config=cpu_config, 
-                    slice_mem_min=slice_mem_min, slice_mem_max=slice_mem_max, mem_config=mem_config)
+            return
+        slice_cpu_tier0, slice_cpu_tier1, slice_mem_tier0, slice_mem_tier1 = self.get_vm_cpu_tiers_sum()
+        self.compute_cpu_mem_tiers(slice_cpu_tier0=slice_cpu_tier0, slice_cpu_tier1=slice_cpu_tier1, cpu_config=cpu_config, 
+                    slice_mem_tier0=slice_mem_tier0, slice_mem_tier1=slice_mem_tier1, mem_config=mem_config)
 
-    def compute_cpu_mem_tier(self, slice_cpu_min : int, slice_cpu_max : int, cpu_config : int, slice_mem_min : int, slice_mem_max : int, mem_config : int):
-        # Compute CPU tier
-        cpu_tier0 = round(slice_cpu_min, 1)
-        cpu_tier1 = round(slice_cpu_max - cpu_tier0, 1)
-        if cpu_tier1 <= 0:
-            cpu_tier1 = 0
-        if cpu_tier1>cpu_config:
-            cpu_tier1 = cpu_config-cpu_tier0
-            cpu_tier2 = 0
+    # At the slice level, we compute tiers as quantities instead of thresold (todo : change name?)
+    def compute_cpu_mem_tiers(self, slice_cpu_tier0 : int, slice_cpu_tier1 : int, cpu_config : int, slice_mem_tier0 : int, slice_mem_tier1 : int, mem_config : int):
+        # Compute CPU tiers quantities from thresold
+        self.cpu_tier0 = round(slice_cpu_tier0, 1)
+        self.cpu_tier1 = round(slice_cpu_tier1 - self.cpu_tier0, 1)
+        if self.cpu_tier1 <= 0:
+            self.cpu_tier1 = 0
+        if self.cpu_tier1>cpu_config:
+            self.cpu_tier1 = cpu_config-self.cpu_tier0
+            self.cpu_tier2 = 0
         else:
-            cpu_tier2 = round(cpu_config - cpu_tier1 - cpu_tier0, 1)
-        # Compute memory tier
-        mem_tier0 = int(slice_mem_min)
-        mem_tier1 = int(slice_mem_max - mem_tier0)
-        if mem_tier1 < 0:
-            mem_tier1 = 0
-        if mem_tier1>mem_config:
-            mem_tier1 = mem_config-mem_tier0
-            mem_tier2 = 0
+            self.cpu_tier2 = round(cpu_config - self.cpu_tier1 - self.cpu_tier0, 1)
+            if self.cpu_tier2<0:
+                self.cpu_tier2=0
+        # Compute memory tiers quantities from thresold
+        self.mem_tier0 = int(slice_mem_tier0)
+        self.mem_tier1 = int(slice_mem_tier1 - self.mem_tier0)
+        if self.mem_tier1 < 0:
+            self.mem_tier1 = 0
+        if self.mem_tier1>mem_config:
+            self.mem_tier1 = mem_config-self.mem_tier0
+            self.mem_tier2 = 0
         else:
-            mem_tier2 = int(mem_config - mem_tier1 - mem_tier0)
-        #print("debug", cpu_tier0, cpu_tier1, cpu_tier2, mem_tier0, mem_tier1, mem_tier2)
-        return cpu_tier0, cpu_tier1, cpu_tier2, mem_tier0, mem_tier1, mem_tier2
+            self.mem_tier2 = int(mem_config - self.mem_tier1 - self.mem_tier0)
+            if self.mem_tier2<0:
+                self.mem_tier2=0
         
 
     def retrieve_domain_data(self, begin_epoch : int, end_epoch : int):
@@ -146,11 +159,11 @@ class SliceModel(object):
         return str(self.leftBound) + ";" + str(self.rightBound) + "["
 
     def __str__(self):
-        slice_cpu_min, slice_cpu_max, slice_mem_min, slice_mem_max = self.get_vm_cpu_mem_min_max()
+        slice_cpu_tier0, slice_cpu_tier1, slice_mem_tier0, slice_mem_tier1 = self.get_vm_cpu_tiers_sum()
         slice_cpu_config, slice_mem_config = self.get_host_config()
         txt = "SliceModel[" + str(self.leftBound) + ";" + str(self.rightBound) + "[:" + \
-            " cumul cpu min/max " + str(round(slice_cpu_min,1)) + "/" + str(round(slice_cpu_max,1)) +\
-            " cumul mem min/max " + str(round(slice_mem_min,1)) + "/" + str(round(slice_mem_max,1)) +\
+            " cumul cpu min/max " + str(round(slice_cpu_tier0,1)) + "/" + str(round(slice_cpu_tier1,1)) +\
+            " cumul mem min/max " + str(round(slice_mem_tier0,1)) + "/" + str(round(slice_mem_tier1,1)) +\
             "\n    >{" + str(self.slicenodedata) + "}"
         for vm, slicevm in self.slicevmdata.items():
             txt += "\n    >{" + str(slicevm) + "}"
