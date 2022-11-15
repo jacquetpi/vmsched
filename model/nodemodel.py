@@ -116,6 +116,8 @@ class NodeModel(object):
         dump_dict["mem_tier1"].append(mem_tier1)
         dump_dict["mem_tier2"].append(mem_tier2)
 
+        self.get_slice(slice_number).get_hostwrapper().get_last_slice().dump_state_to_dict(dump_dict=dump_dict, iteration=len(dump_dict["epoch"]))
+
         for vm, vmwrapper in self.get_slice(slice_number).get_vmwrapper().items():
             vmwrapper.get_last_slice().dump_state_to_dict(dump_dict=dump_dict["vm"], key=vm, iteration=len(dump_dict["epoch"]))
 

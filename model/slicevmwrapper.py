@@ -19,8 +19,8 @@ class SliceVmWrapper(object):
             print("Empty data on slice encountered on domain " + self.domain_name)
             return
         # Update wrapper metrics
-        self.last_seen = int(domain_data['time'][-1])
-        self.vm_last_seen+=1
+        self.vm_seen+=1
+        self.vm_last_seen = int(domain_data['time'][-1])
         # CPU/mem indicators
         cpu_config = domain_data['cpu'][-1]
         mem_config = domain_data['mem'][-1]
@@ -54,7 +54,7 @@ class SliceVmWrapper(object):
         self.slice_vm_list.append(slice)
 
     def is_historical_full(self):
-        return len(self.slice_vm_list) >= (self.historical_occurences+1) # +1 as we want to compare, let's say a day, with its previous occurence
+        return len(self.slice_vm_list) >= (self.historical_occurences+1) # +1 as we want to compare, let's say a slice in a day, with its previous occurence
 
     def get_slices_metric(self, metric : str = None, cpu_percentile : int = None, mem_percentile : int = None):
         metric_list = list()
@@ -161,31 +161,37 @@ class SliceVmWrapper(object):
 
     # VM tiers as thresold
     def get_cpu_tiers(self): # return tier0, tier1
+        if self.get_last_slice().is_cpu_tier_defined():
+            return self.get_last_slice().get_cpu_tiers()
+        # Main algorithm
         cpu_state = self.get_last_slice().get_cpu_state()
         if cpu_state == 0:
             cpu_tier0 = self.get_last_slice().get_cpu_config()
             cpu_tier1 = self.get_last_slice().get_cpu_config()
         elif cpu_state == 1:
-            cpu_tier0 = math.ceil(self.get_slices_max_metric(cpu_percentile=90))
+            cpu_tier0 = math.ceil(self.get_slices_max_metric(cpu_percentile=95))
             cpu_tier1 = self.get_last_slice().get_cpu_config()
         else:
             cpu_tier0 = math.ceil(self.get_slices_max_metric(metric='cpu_avg'))
-            cpu_tier1 = math.ceil(self.get_slices_max_metric(cpu_percentile=90))
+            cpu_tier1 = math.ceil(self.get_slices_max_metric(cpu_percentile=95))
         self.get_last_slice().update_cpu_tiers(cpu_tier0, cpu_tier1)
         return cpu_tier0, cpu_tier1
 
     # VM tiers as thresold
     def get_mem_tiers(self): # return tier0, tier1
+        if self.get_last_slice().is_mem_tier_defined():
+            return self.get_last_slice().get_mem_tiers()
+        # Main algorithm
         mem_state = self.get_last_slice().get_mem_state()
         if mem_state == 0:
             mem_tier0 = self.get_last_slice().get_mem_config()
             mem_tier1 = self.get_last_slice().get_mem_config()
         elif mem_state == 1:
-            mem_tier0 = math.ceil(self.get_slices_max_metric(mem_percentile=90))
+            mem_tier0 = math.ceil(self.get_slices_max_metric(mem_percentile=95))
             mem_tier1 = self.get_last_slice().get_mem_config()
         else:
             mem_tier0 = math.ceil(self.get_slices_max_metric(metric='mem_avg'))
-            mem_tier1 = math.ceil(self.get_slices_max_metric(mem_percentile=90))
+            mem_tier1 = math.ceil(self.get_slices_max_metric(mem_percentile=95))
         self.get_last_slice().update_mem_tiers(mem_tier0, mem_tier1)
         return mem_tier0, mem_tier1
 

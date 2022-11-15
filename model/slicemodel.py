@@ -20,13 +20,13 @@ class SliceModel(object):
         self.size=rightBound-leftBound
         # Data itself:
         self.slicevmdata=dict()
-        self.slicenodedata=SliceHostWrapper(self.model_node_name)
-        self.cpu_tier0=0
-        self.cpu_tier1=0
-        self.cpu_tier2=0
-        self.mem_tier0=0
-        self.mem_tier1=0
-        self.mem_tier2=0
+        self.slicenodedata=SliceHostWrapper(self.model_node_name, historical_occurences=self.model_historical_occurences)
+        self.cpu_tier0=-1
+        self.cpu_tier1=-1
+        self.cpu_tier2=-1
+        self.mem_tier0=-1
+        self.mem_tier1=-1
+        self.mem_tier2=-1
 
     def build_past_slices(self, past_iteration : int = 1):
         for i in range((-past_iteration),0):
@@ -50,6 +50,9 @@ class SliceModel(object):
 
     def get_vmwrapper(self):
         return self.slicevmdata
+
+    def get_hostwrapper(self):
+        return self.slicenodedata
 
     def get_vm_cpu_tiers_sum(self):
         slice_cpu_tier0, slice_cpu_tier1 = 0, 0

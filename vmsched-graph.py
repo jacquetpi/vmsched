@@ -291,8 +291,8 @@ def graph_test2(data_source : dict):
     sns.barplot(data=data, y="conso_cpu",hue="tier")
 
 def graph_slice(dataframe):
-    g = sns.FacetGrid(dataframe, col="slice", order=set(dataframe["vm"]))
-    g.map(sns.barplot, "vm", "cpu_state")
+    g = sns.FacetGrid(dataframe, col="vm")
+    g.map(sns.barplot, "slice", "cpu_tier0")
 
 def graph_slice2(dataframe):
     g = sns.FacetGrid(dataframe, col="slice", row="vm")
@@ -300,7 +300,8 @@ def graph_slice2(dataframe):
 
 def graph_slice3(dataframe):
     g = sns.FacetGrid(dataframe, col="slice", row="vm")
-    g.map(graph_node_generic, "epoch", "cpu_avg", "graph_cpu_percentile", "cpu_tier0", "cpu_tier1", "cpu_state")
+    #g.map(graph_node_generic, "epoch", "cpu_avg", "graph_cpu_percentile", "cpu_tier0", "cpu_tier1", "cpu_state")
+    g.map(graph_node_generic, "epoch", "mem_avg", "graph_mem_percentile", "mem_tier0", "mem_tier1", "mem_state")
 
 def get_vm_dataframe(data_source : dict):
     number_of_slice=data_source["config"]["number_of_slice"]
@@ -322,10 +323,13 @@ def get_vm_dataframe(data_source : dict):
         for key, value in data.items():
             if key not in csv_like_data:
                 csv_like_data[key] = list()
-            csv_like_data[key].extend(value)
+            if 'mem_' in key and 'percentile' not in key and 'state' not in key:
+                csv_like_data[key].extend([round(x/1024) for x in value])
+            else:
+                csv_like_data[key].extend(value)
         count=0
         csv_like_data["graph_cpu_percentile"].extend([x['90'] for x in vm_stats["cpu_percentile"]])
-        csv_like_data["graph_mem_percentile"].extend([x['90'] for x in vm_stats["mem_percentile"]])
+        csv_like_data["graph_mem_percentile"].extend([round(x['90']/1024) for x in vm_stats["mem_percentile"]])
         for i in range(len(data[vm_based_columns[0]])):
             csv_like_data["vm"].append(ordered_vm_name)
             slice_id = "slice" + str(count)
@@ -392,7 +396,7 @@ if __name__ == '__main__':
     
     if display_graph_slice:
         dataframe = get_vm_dataframe(data_input)
-        graph_slice3(dataframe)
+        graph_slice(dataframe)
         #graph_slice2(dataframe)
 
     plt.show()

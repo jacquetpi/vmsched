@@ -70,6 +70,22 @@ class SliceVm(object):
     def get_mem_percentile(self, percentile : int):
         return self.mem_percentile[percentile]
 
+    def is_cpu_tier_defined(self):
+        if self.cpu_tier0 < 0 or self.cpu_tier1 < 0 or self.cpu_tier2 < 0:
+            return False
+        return True
+
+    def is_mem_tier_defined(self):
+        if self.mem_tier0 < 0 or self.mem_tier1 < 0 or self.mem_tier2 < 0:
+            return False
+        return True
+
+    def get_cpu_tiers(self):
+        return self.cpu_tier0, self.cpu_tier1
+
+    def get_mem_tiers(self):
+        return self.mem_tier0, self.mem_tier1
+
     # Tiers as thresold
     def update_cpu_tiers(self, cpu_tier0, cpu_tier1):
         # Tiers are computed at the wrapper level to take into account previous slices, but updated here to be able to dump current state

@@ -3,25 +3,25 @@ import numpy as np
 
 class SliceHostWrapper(object):
 
-    def __init__(self, host_name : str):
+    def __init__(self, host_name : str, historical_occurences : int):
         self.host_name=host_name
         self.host_seen = 0
         self.host_last_seen = 0
         self.slice_host_list=list()
-        self.max_data = 3
+        self.historical_occurences=historical_occurences
 
     def add_data(self, host_data : dict):
         if(len(host_data.keys()) == 0):
             print("Empty data on slice encountered on host " + self.host_name)
             return
         # Update wrapper metrics
-        self.last_seen = host_data['time'][-1]
-        self.host_last_seen+=1
+        self.host_seen+=1
+        self.host_last_seen = host_data['time'][-1]
         # CPU/mem indicators
         cpu_config = host_data['cpu'][-1]
         mem_config = host_data['mem'][-1]
-        cpu_percentile = np.percentile(host_data['cpu_usage'],90)
-        mem_percentile = np.percentile(host_data['mem_usage'],90)
+        cpu_percentile = np.percentile(host_data['cpu_usage'],95)
+        mem_percentile = np.percentile(host_data['mem_usage'],95)
         cpu_avg = np.average(host_data['cpu_usage'])
         mem_avg = np.average(host_data['mem_usage'])
         # Overcommitment indicators
@@ -34,9 +34,15 @@ class SliceHostWrapper(object):
         self.add_slice(slice_host)
 
     def add_slice(self, slice : SliceHost):
-        if self.max_data<len(self.slice_host_list):
+        if self.is_historical_full():
             self.slice_host_list.pop(0) # remove oldest element
         self.slice_host_list.append(slice)
+
+    def is_historical_full(self):
+        return len(self.slice_host_list) >= (self.historical_occurences+1) # +1 as we want to compare, let's say a slice in a day, with its previous occurence
+
+    def get_last_slice(self):
+        return self.slice_host_list[-1]
     
     def get_slice_metric(self, metric : str):
         metric_list = list()

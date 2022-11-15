@@ -23,3 +23,9 @@ class SliceHost(object):
 
     def alert_oc_mem(self):
         return (self.oc_page_fault>100000); # TODO value
+
+    def dump_state_to_dict(self, dump_dict : dict, iteration : int = 0):
+        for attribute, value in self.__dict__.items():
+            if attribute not in dump_dict:
+                dump_dict[attribute] = [0 for x in range(iteration)] # in case of new host
+            dump_dict[attribute].append(value)
