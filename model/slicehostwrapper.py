@@ -20,8 +20,19 @@ class SliceHostWrapper(object):
         # CPU/mem indicators
         cpu_config = host_data['cpu'][-1]
         mem_config = host_data['mem'][-1]
-        cpu_percentile = np.percentile(host_data['cpu_usage'],95)
-        mem_percentile = np.percentile(host_data['mem_usage'],95)
+        cpu_percentile = dict() 
+        mem_percentile = dict() 
+        for i in range(10, 100, 5): # percentiles from 10 to 95
+            cpu_percentile[i] = np.percentile(host_data['cpu_usage'],95)
+            mem_percentile[i] = np.percentile(host_data['mem_usage'],95)
+        cpi = dict()
+        hwcpucycles = dict()
+        if "cpi" in host_data:
+            for i in range(10, 100, 5):
+                cpi[i] = np.percentile(host_data["cpi"],i)
+        if "hwcpucycles" in host_data:
+            for i in range(10, 100, 5):
+                hwcpucycles[i] = np.percentile(host_data["hwcpucycles"],i)
         cpu_avg = np.average(host_data['cpu_usage'])
         mem_avg = np.average(host_data['mem_usage'])
         # Overcommitment indicators
@@ -29,7 +40,8 @@ class SliceHostWrapper(object):
         oc_sched_wait = np.percentile(host_data['sched_busy'],95)
         slice_host = SliceHost(cpu_config=cpu_config, mem_config=mem_config, 
                 cpu_percentile=cpu_percentile, mem_percentile=mem_percentile, 
-                cpu_avg=cpu_avg, mem_avg=mem_avg, 
+                cpu_avg=cpu_avg, mem_avg=mem_avg,
+                cpi=cpi,hwcpucycles=hwcpucycles, 
                 oc_page_fault=oc_page_fault, oc_sched_wait=oc_sched_wait)
         self.add_slice(slice_host)
 
@@ -43,6 +55,7 @@ class SliceHostWrapper(object):
         slice_host = SliceHost(cpu_config=host_dump_data["cpu_config"][occurence], mem_config=host_dump_data["mem_config"][occurence], 
                 cpu_percentile=host_dump_data["cpu_percentile"][occurence], mem_percentile=host_dump_data["mem_percentile"][occurence], 
                 cpu_avg=host_dump_data["cpu_avg"][occurence], mem_avg=host_dump_data["mem_avg"][occurence], 
+                cpi=host_dump_data["hwcpucycles"][occurence],hwcpucycles=host_dump_data["hwcpucycles"][occurence], 
                 oc_page_fault=host_dump_data["oc_page_fault"][occurence], oc_sched_wait=host_dump_data["oc_sched_wait"][occurence])
         self.add_slice(slice_host)
 
@@ -57,33 +70,60 @@ class SliceHostWrapper(object):
     def get_last_slice(self):
         return self.slice_host_list[-1]
     
-    def get_slice_metric(self, metric : str):
+    def get_slices_metric(self, metric : str = None, cpu_percentile : int = None, mem_percentile : int = None, cpi_percentile : int = None, hwcpucycles_percentile : int = None):
         metric_list = list()
         for slice in self.slice_host_list:
-            metric_list.append(getattr(slice, metric))
+            if metric is not None:
+                metric_list.append(getattr(slice, metric))
+            elif cpu_percentile is not None:
+                metric_list.append(slice.get_cpu_percentile(cpu_percentile))
+            elif mem_percentile is not None:
+                metric_list.append(slice.get_mem_percentile(mem_percentile))
+            elif cpi_percentile is not None:
+                metric_list.append(slice.get_cpi_percentile(cpi_percentile))
+            elif hwcpucycles_percentile is not None:
+                metric_list.append(slice.get_hwcpucycles_percentile(hwcpucycles_percentile))
         return metric_list
 
+    def get_slices_max_metric(self, metric : str = None, cpu_percentile : int = None, mem_percentile : int = None, cpi_percentile : int = None, hwcpucycles_percentile : int = None):
+        max = None
+        value = None
+        for slice in self.slice_host_list:
+            if metric is not None:
+                value =  getattr(slice, metric)
+            elif cpu_percentile is not None:
+                value =  slice.get_cpu_percentile(cpu_percentile)
+            elif mem_percentile is not None:
+                value =  slice.get_mem_percentile(mem_percentile)
+            elif cpi_percentile is not None:
+                value =  slice.get_cpi_percentile(cpi_percentile)
+            elif hwcpucycles_percentile is not None:
+                value = slice.get_hwcpucycles_percentile(hwcpucycles_percentile)
+            if (max is None) or max < value:
+                max = value
+        return max
+
     def get_host_config(self):
-        cpu_config_list =  self.get_slice_metric("cpu_config")
-        mem_config_list =  self.get_slice_metric("cpu_config")
+        cpu_config_list =  self.get_slices_metric("cpu_config")
+        mem_config_list =  self.get_slices_metric("cpu_config")
         if cpu_config_list:
-            cpu_config = self.get_slice_metric("cpu_config")[-1]
+            cpu_config = self.get_slices_metric("cpu_config")[-1]
         else:
             cpu_config=-1
         if mem_config_list:
-            mem_config = self.get_slice_metric("mem_config")[-1]
+            mem_config = self.get_slices_metric("mem_config")[-1]
         else:
             mem_config=-1
         return cpu_config, mem_config
 
     def get_host_average(self):
-        cpu_usage_list = self.get_slice_metric("cpu_avg")
-        mem_usage_list = self.get_slice_metric("mem_avg")
+        cpu_usage_list = self.get_slices_metric("cpu_avg")
+        mem_usage_list = self.get_slices_metric("mem_avg")
         return np.average(cpu_usage_list), np.average(mem_usage_list)
 
     def get_host_percentile(self):
-        cpu_usage_list = self.get_slice_metric("cpu_percentile")
-        mem_usage_list = self.get_slice_metric("mem_percentile")
+        cpu_usage_list = self.get_slices_metric(cpu_percentile=90)
+        mem_usage_list = self.get_slices_metric(mem_percentile=90)
         return np.max(cpu_usage_list), np.max(mem_usage_list)
 
     def __str__(self):

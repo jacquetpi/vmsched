@@ -89,9 +89,9 @@ class SliceModel(object):
         self.compute_cpu_mem_tiers(slice_cpu_tier0=slice_cpu_tier0, slice_cpu_tier1=slice_cpu_tier1, cpu_config=cpu_config, 
                     slice_mem_tier0=slice_mem_tier0, slice_mem_tier1=slice_mem_tier1, mem_config=mem_config)
 
-    # At the slice level, we compute tiers as quantities instead of thresold (todo : change name?)
+    # At the slice level, we compute tiers as quantities instead of threshold (todo : change name?)
     def compute_cpu_mem_tiers(self, slice_cpu_tier0 : int, slice_cpu_tier1 : int, cpu_config : int, slice_mem_tier0 : int, slice_mem_tier1 : int, mem_config : int):
-        # Compute CPU tiers quantities from thresold
+        # Compute CPU tiers quantities from threshold
         self.cpu_tier0 = round(slice_cpu_tier0, 1)
         self.cpu_tier1 = round(slice_cpu_tier1 - self.cpu_tier0, 1)
         if self.cpu_tier1 <= 0:
@@ -103,7 +103,7 @@ class SliceModel(object):
             self.cpu_tier2 = round(cpu_config - self.cpu_tier1 - self.cpu_tier0, 1)
             if self.cpu_tier2<0:
                 self.cpu_tier2=0
-        # Compute memory tiers quantities from thresold
+        # Compute memory tiers quantities from threshold
         self.mem_tier0 = int(slice_mem_tier0)
         self.mem_tier1 = int(slice_mem_tier1 - self.mem_tier0)
         if self.mem_tier1 < 0:
