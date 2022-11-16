@@ -1,5 +1,5 @@
 from resultfilehandler import ResultFileHandler
-import time, sys, getopt, os, libvirt, json
+import sys, getopt, os, libvirt, json
 from dotenv import load_dotenv
 
 STATE_ENDPOINT = ""

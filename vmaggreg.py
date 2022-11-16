@@ -3,7 +3,7 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from dotenv import load_dotenv
 
-from influxdb_client import InfluxDBClient, Point, WritePrecision
+from influxdb_client import InfluxDBClient
 from influxdb_client.client.write_api import SYNCHRONOUS
 
 # Global parameters

@@ -1,9 +1,6 @@
-import requests, os, time, sys, getopt, copy, json
-from collections import defaultdict
+import os, time, sys, getopt, json
 from resultfilehandler import ResultFileHandler
 from dotenv import load_dotenv
-import numpy as np
-import matplotlib.pyplot as plt
 
 from model.nodemodel import NodeModel
 
@@ -98,8 +95,8 @@ if __name__ == '__main__':
     SCHED_SCOPE_HISTORICAL= int(os.getenv('SCHED_SCOPE_HISTORICAL'))
 
     try:
-        if not loaded_dump: # live mode
-            main_loop_live(debug)
+        if not loaded_dump: 
+            main_loop_live(debug) # live mode
         else:
             main_loop_from_dump(loaded_dump, debug) # offline mode
     except KeyboardInterrupt:

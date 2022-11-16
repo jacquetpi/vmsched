@@ -1,8 +1,8 @@
 from collections import defaultdict
 from lib2to3.pytree import Node
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 import numpy as np
-import threading, subprocess, libvirt
+import threading, libvirt
 import time, sys, getopt, os, json
 
 from influxdb_client import InfluxDBClient, Point, WritePrecision
@@ -57,7 +57,7 @@ def check_rss(domain : str, domain_metrics : dict):
     mem_rss = domain_metrics['mem_rss'][-1]
     mem_retrieval = mem_rss - mem_usage
     print("debug", domain, domain_metrics['node'], mem_usage, mem_rss, mem_retrieval)
-    if mem_retrieval > BALLOONING_threshold_GAIN_MB: # We can retrieve at least XGB
+    if mem_retrieval > BALLOONING_THRESHOLD_GAIN_MB: # We can retrieve at least XGB
         print("geronimo")
         reducer = RssReducer(node=LIBVIRT_NODES[domain_metrics['node']], domain=domain, mem_retrieval_threshold=mem_usage)
         reducer.run()
@@ -73,7 +73,7 @@ def retrieve_domains_stats():
     client = InfluxDBClient(url=myurl, token=mytoken, org=myorg)
     query_api = client.query_api()
     query = ' from(bucket:"' + mybucket + '")\
-    |> range(start: -' + str(int(BALLOONING_SCOPE_S*60)) + 'm)\
+    |> range(start: -' + str(BALLOONING_SCOPE_S) + 's)\
     |> filter(fn: (r) => r["_measurement"] == "domain")'
 
     result = query_api.query(org=myorg, query=query)
@@ -115,7 +115,7 @@ if __name__ == '__main__':
     BALLOONING_GRACE_PERIOD_S = int(os.getenv('BALLOONING_GRACE_PERIOD_S'))
     BALLOONING_SCOPE_S = int(os.getenv('BALLOONING_SCOPE_S'))
     BALLOONING_MIN_CONFIG_MB = int(os.getenv('BALLOONING_MIN_CONFIG_MB'))
-    BALLOONING_threshold_GAIN_MB = int(os.getenv('BALLOONING_threshold_GAIN_MB'))
+    BALLOONING_THRESHOLD_GAIN_MB = int(os.getenv('BALLOONING_THRESHOLD_GAIN_MB'))
     BALLOONING_SCOPE_SLEEP_S = int(os.getenv('BALLOONING_SCOPE_SLEEP_S'))
 
     try:    
