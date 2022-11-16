@@ -1,40 +1,16 @@
-class SliceHost(object):
+from model.sliceobject import SliceObject
 
-    def __init__(self, cpu_config : int, mem_config : int, 
-                cpu_percentile : dict, mem_percentile : dict, 
-                cpi : dict, hwcpucycles : dict,
-                cpu_avg : int, mem_avg : int, 
-                oc_page_fault : int, oc_sched_wait : int):
-        self.cpu_config = cpu_config
-        self.mem_config = mem_config
-        self.cpu_percentile = cpu_percentile
-        self.mem_percentile = mem_percentile
-        self.cpi=cpi
-        self.hwcpucycles=hwcpucycles
-        self.cpu_avg = cpu_avg
-        self.mem_avg = mem_avg
-        self.oc_page_fault = oc_page_fault
-        self.oc_sched_wait = oc_sched_wait
+class SliceHost(SliceObject):
 
-    def get_cpu_percentile(self, percentile : int):
-        if percentile in self.cpu_percentile:
-            return self.cpu_percentile[percentile]
-        return self.cpu_percentile[str(percentile)]
-
-    def get_mem_percentile(self, percentile : int):
-        if percentile in self.mem_percentile:
-            return self.mem_percentile[percentile]
-        return self.mem_percentile[str(percentile)]
-
-    def get_cpi_percentile(self, percentile : int):
-        if percentile in self.cpi:
-            return self.cpi[percentile]
-        return self.cpi[str(percentile)]
-
-    def get_hwcpucycles_percentile(self, percentile : int):
-        if percentile in self.hwcpucycles:
-            return self.hwcpucycles[percentile]
-        return self.hwcpucycles[str(percentile)]
+    def __init__(self, slice_object : SliceObject):
+        super().__init__(cpu_config=getattr(slice_object,'cpu_config'), mem_config=getattr(slice_object,'mem_config'), 
+                cpu_percentile=getattr(slice_object,'cpu_percentile'), mem_percentile=getattr(slice_object,'mem_percentile'), 
+                cpu_avg=getattr(slice_object,'cpu_avg'), mem_avg=getattr(slice_object,'mem_avg'),
+                cpu_std=getattr(slice_object,'cpu_std'), mem_std=getattr(slice_object,'mem_std'), 
+                oc_page_fault=getattr(slice_object,'oc_page_fault'), oc_page_fault_std=getattr(slice_object,'oc_page_fault_std'),
+                oc_sched_wait=getattr(slice_object,'oc_sched_wait'), oc_sched_wait_std=getattr(slice_object,'oc_sched_wait_std'),
+                cpi=getattr(slice_object,'cpi'), hwcpucycles=getattr(slice_object,'hwcpucycles'),
+                number_of_values=getattr(slice_object,'number_of_values'))
 
     def __str__(self):
         return "SliceHost[" +  str(round(self.cpu_avg,1))  + "/" + str(round(self.get_cpu_percentile(90))) + "/" + str(int(self.cpu_config)) + " " +\

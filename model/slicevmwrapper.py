@@ -1,16 +1,13 @@
+from model.sliceobjectwrapper import SliceObjectWrapper
+from model.sliceobject import SliceObject
 from model.slicevm import SliceVm
-import numpy as np
-import math
 from scipy.stats import ttest_ind_from_stats
 
-class SliceVmWrapper(object):
+class SliceVmWrapper(SliceObjectWrapper):
 
     def __init__(self, domain_name : str, historical_occurences : int):
+        super().__init__(historical_occurences)
         self.domain_name=domain_name
-        self.historical_occurences=historical_occurences
-        self.vm_seen = 0
-        self.vm_last_seen = 0
-        self.slice_vm_list=list()
         self.debug_cpu_reason = "=0 no prev data"
         self.debug_mem_reason = "=0 no prev data"
 
@@ -18,42 +15,7 @@ class SliceVmWrapper(object):
         if(len(domain_data.keys()) == 0):
             print("Empty data on slice encountered on domain " + self.domain_name)
             return
-        # Update wrapper metrics
-        self.vm_seen+=1
-        self.vm_last_seen = int(domain_data['time'][-1])
-        # CPU/mem indicators
-        cpu_config = domain_data['cpu'][-1]
-        mem_config = domain_data['mem'][-1]
-        cpu_percentile = dict()
-        mem_percentile = dict()
-        for i in range(10, 100, 5): # percentiles from 10 to 95
-            cpu_percentile[i] = np.percentile(domain_data['cpu_usage'],i)
-            mem_percentile[i] = np.percentile(domain_data['mem_rss'],i)
-        cpu_avg = np.average(domain_data['cpu_usage'])
-        mem_avg = np.average(domain_data['mem_rss'])
-        cpu_std = np.std(domain_data['cpu_usage'])
-        mem_std = np.std(domain_data['mem_rss'])
-        # Overcommitment indicators
-        oc_page_fault = np.percentile(domain_data['swpagefaults'],90)
-        oc_page_fault_std=np.std(domain_data['swpagefaults'])
-        oc_sched_wait = np.percentile(domain_data['sched_busy'],90)
-        oc_sched_wait_std=np.std(domain_data['sched_busy'])
-        cpi = dict()
-        hwcpucycles = dict()
-        if "cpi" in domain_data:
-            for i in range(10, 100, 5):
-                cpi[i] = np.percentile(domain_data["cpi"],i)
-        if "hwcpucycles" in domain_data:
-            for i in range(10, 100, 5):
-                hwcpucycles[i] = np.percentile(domain_data["hwcpucycles"],i)
-        slice_vm = SliceVm(cpu_config=cpu_config, mem_config=mem_config, 
-                cpu_percentile=cpu_percentile, mem_percentile=mem_percentile, 
-                cpu_avg=cpu_avg, mem_avg=mem_avg,
-                cpu_std=cpu_std, mem_std=mem_std, 
-                oc_page_fault=oc_page_fault, oc_page_fault_std=oc_page_fault_std,
-                oc_sched_wait=oc_sched_wait, oc_sched_wait_std=oc_sched_wait_std,
-                cpi=cpi, hwcpucycles=hwcpucycles,
-                number_of_values=len(domain_data['time']))
+        slice_vm = SliceVm(self.get_slice_object_from_raw(domain_data))
         self.compute_state_of_new_slice(slice_vm)
         self.add_slice(slice_vm)
 
@@ -61,60 +23,9 @@ class SliceVmWrapper(object):
         if(len(vm_dump_data.keys()) == 0):
             print("Empty data on slice encountered on dump " + self.domain_name)
             return
-        # Update wrapper metrics
-        self.vm_seen+=1
-        self.vm_last_seen = epoch
-        slice_vm = SliceVm(cpu_config=vm_dump_data["cpu_config"][occurence], mem_config=vm_dump_data["mem_config"][occurence], 
-                cpu_percentile=vm_dump_data["cpu_percentile"][occurence], mem_percentile=vm_dump_data["mem_percentile"][occurence],
-                cpu_avg=vm_dump_data["cpu_avg"][occurence], mem_avg=vm_dump_data["mem_avg"][occurence],
-                cpu_std=vm_dump_data["cpu_std"][occurence], mem_std=vm_dump_data["mem_std"][occurence], 
-                oc_page_fault=vm_dump_data["oc_page_fault"][occurence], oc_page_fault_std=vm_dump_data["oc_page_fault_std"][occurence],
-                oc_sched_wait=vm_dump_data["oc_sched_wait"][occurence], oc_sched_wait_std=vm_dump_data["oc_sched_wait_std"][occurence],
-                cpi=vm_dump_data["cpi"][occurence], hwcpucycles=vm_dump_data["hwcpucycles"][occurence],
-                number_of_values=vm_dump_data["number_of_values"][occurence])
+        slice_vm = SliceVm(self.get_slice_object_from_dump(dump_data=vm_dump_data, occurence=occurence, epoch=epoch))
         self.compute_state_of_new_slice(slice_vm)
         self.add_slice(slice_vm)
-
-    def add_slice(self, slice : SliceVm):
-        if self.is_historical_full():
-            self.slice_vm_list.pop(0) # remove oldest element
-        self.slice_vm_list.append(slice)
-
-    def is_historical_full(self):
-        return len(self.slice_vm_list) >= (self.historical_occurences+1) # +1 as we want to compare, let's say a slice in a day, with its previous occurence
-
-    def get_slices_metric(self, metric : str = None, cpu_percentile : int = None, mem_percentile : int = None, cpi_percentile : int = None, hwcpucycles_percentile : int = None):
-        metric_list = list()
-        for slice in self.slice_vm_list:
-            if metric is not None:
-                metric_list.append(getattr(slice, metric))
-            elif cpu_percentile is not None:
-                metric_list.append(slice.get_cpu_percentile(cpu_percentile))
-            elif mem_percentile is not None:
-                metric_list.append(slice.get_mem_percentile(mem_percentile))
-            elif cpi_percentile is not None:
-                metric_list.append(slice.get_cpi_percentile(cpi_percentile))
-            elif hwcpucycles_percentile is not None:
-                metric_list.append(slice.get_hwcpucycles_percentile(hwcpucycles_percentile))
-        return metric_list
-
-    def get_slices_max_metric(self, metric : str = None, cpu_percentile : int = None, mem_percentile : int = None, cpi_percentile : int = None, hwcpucycles_percentile : int = None):
-        max = None
-        value = None
-        for slice in self.slice_vm_list:
-            if metric is not None:
-                value =  getattr(slice, metric)
-            elif cpu_percentile is not None:
-                value =  slice.get_cpu_percentile(cpu_percentile)
-            elif mem_percentile is not None:
-                value =  slice.get_mem_percentile(mem_percentile)
-            elif cpi_percentile is not None:
-                value =  slice.get_cpi_percentile(cpi_percentile)
-            elif hwcpucycles_percentile is not None:
-                value = slice.get_hwcpucycles_percentile(hwcpucycles_percentile)
-            if (max is None) or max < value:
-                max = value
-        return max
 
     def is_incoherent_value_according_to_pvalue(self, new_slice : SliceVm, metric : str, std_metric : str):
         last_slice = self.get_last_slice()
@@ -140,9 +51,6 @@ class SliceVmWrapper(object):
             raise ValueError("No metrics passed to is_incoherent_value()")
         threshold = last_value + multiplier*getattr(last_slice, std_metric)
         return new_value > threshold
-
-    def get_last_slice(self):
-        return self.slice_vm_list[-1]
 
     def compute_cpu_state_of_new_slice(self, new_slice : SliceVm):
         current_cpu_state = self.get_last_slice().get_cpu_state()
@@ -194,9 +102,6 @@ class SliceVmWrapper(object):
             mem_state = self.compute_mem_state_of_new_slice(new_slice)
         new_slice.update_state(cpu_state = cpu_state, mem_state = mem_state)
 
-    def round_to_upper_nearest(self, x : int, nearest_val : int):
-        return nearest_val * math.ceil(x/nearest_val)
-
     # VM tiers as threshold
     def get_cpu_tiers(self): # return tier0, tier1
         if self.get_last_slice().is_cpu_tier_defined():
@@ -240,7 +145,7 @@ class SliceVmWrapper(object):
         return cpu_tier0, cpu_tier1, mem_tier0, mem_tier1
 
     def __str__(self):
-        if(len(self.slice_vm_list)>0):
+        if(len(self.slice_object_list)>0):
             cpu_tier0, cpu_tier1, mem_tier0, mem_tier1 = self.get_cpu_mem_tiers()
             cpu_state = self.get_last_slice().get_cpu_state()
             mem_state = self.get_last_slice().get_mem_state()
