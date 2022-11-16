@@ -10,7 +10,7 @@ class SliceHostWrapper(object):
         self.slice_host_list=list()
         self.historical_occurences=historical_occurences
 
-    def add_data(self, host_data : dict):
+    def add_slice_data_from_raw(self, host_data : dict):
         if(len(host_data.keys()) == 0):
             print("Empty data on slice encountered on host " + self.host_name)
             return
@@ -31,6 +31,19 @@ class SliceHostWrapper(object):
                 cpu_percentile=cpu_percentile, mem_percentile=mem_percentile, 
                 cpu_avg=cpu_avg, mem_avg=mem_avg, 
                 oc_page_fault=oc_page_fault, oc_sched_wait=oc_sched_wait)
+        self.add_slice(slice_host)
+
+    def add_slice_data_from_dump(self, host_dump_data : dict, occurence : int):
+        if(len(host_dump_data.keys()) == 0):
+            print("Empty data on slice encountered on dump " + self.host_name)
+            return
+        # Update wrapper metrics
+        self.host_seen+=1
+        self.host_last_seen = host_dump_data["epoch"][occurence]
+        slice_host = SliceHost(cpu_config=host_dump_data["cpu_config"][occurence], mem_config=host_dump_data["mem_config"][occurence], 
+                cpu_percentile=host_dump_data["cpu_percentile"][occurence], mem_percentile=host_dump_data["mem_percentile"][occurence], 
+                cpu_avg=host_dump_data["cpu_avg"][occurence], mem_avg=host_dump_data["mem_avg"][occurence], 
+                oc_page_fault=host_dump_data["oc_page_fault"][occurence], oc_sched_wait=host_dump_data["oc_sched_wait"][occurence])
         self.add_slice(slice_host)
 
     def add_slice(self, slice : SliceHost):

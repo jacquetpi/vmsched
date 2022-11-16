@@ -65,10 +65,14 @@ class SliceVm(object):
         return self.mem_avg
 
     def get_cpu_percentile(self, percentile : int):
-        return self.cpu_percentile[percentile]
+        if percentile in self.cpu_percentile:
+            return self.cpu_percentile[percentile]
+        return self.cpu_percentile[str(percentile)]
 
     def get_mem_percentile(self, percentile : int):
-        return self.mem_percentile[percentile]
+        if percentile in self.mem_percentile:
+            return self.mem_percentile[percentile]
+        return self.mem_percentile[str(percentile)]
 
     def is_cpu_tier_defined(self):
         if self.cpu_tier0 < 0 or self.cpu_tier1 < 0 or self.cpu_tier2 < 0:

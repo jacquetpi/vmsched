@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 class NodeModel(object):
 
-    def __init__(self, node_name : str, model_scope : int, slice_scope, historical_occurences : int):
+    def __init__(self, node_name : str, model_scope : int, slice_scope, historical_occurences : int = 0):
         if slice_scope > model_scope:
             raise ValueError("Model scope must be greater than slice scope")
         if model_scope % slice_scope !=0:
@@ -21,27 +21,44 @@ class NodeModel(object):
                 model_node_name= node_name, model_position=i, model_init_epoch=self.init_epoch, model_historical_occurences=historical_occurences, 
                 model_number_of_slice=self.number_of_slice, leftBound=i*slice_scope, rightBound=(i+1)*slice_scope))
 
-    def build_past_slices(self, past_slice : int):
+    def build_past_slices_from_epoch(self, past_slice : int):
         for slice in self.slices:
-            slice.build_past_slices(past_slice)
+            slice.build_past_slices_from_epoch(past_slice)
 
-    def get_current_iteration_and_slice_number(self):
+    def build_last_slice_from_epoch(self):
+        previous_scope_number, previous_slice_number = self.get_previous_scope_and_slice_number()
+        self.get_slice(previous_slice_number).build_slice_from_epoch(previous_scope_number)
+        self.get_slice(previous_slice_number)
+        return previous_slice_number
+
+    def build_slice_from_dump(self, dump : dict, occurence : int):
+        scope_number, slice_number = self.get_scope_and_slice_number_from_occurence(occurence)
+        self.get_slice(slice_number).build_slice_from_dump(dump, occurence)
+        return slice_number
+
+    def get_current_scope_and_slice_number(self):
         delta = int(time.time()) - self.init_epoch
-        iteration = int(delta / self.node_scope)
+        scope_number = int(delta / self.node_scope)
         slice_number = int((delta % self.node_scope)/self.slice_scope)
-        return iteration, slice_number
+        return scope_number, slice_number
 
-    def get_previous_iteration_and_slice_number(self):
-        current_iteration, current_slice_number = self.get_current_iteration_and_slice_number()
+    def get_scope_and_slice_number_from_occurence(self, occurence : int):
+        self.number_of_slice
+        scope_number = int(occurence / self.number_of_slice)
+        slice_number = occurence - (scope_number*self.number_of_slice)
+        return scope_number, slice_number 
+
+    def get_previous_scope_and_slice_number(self):
+        current_scope, current_slice_number = self.get_current_scope_and_slice_number()
         previous_slice_number = current_slice_number-1
         if previous_slice_number < 0:
             previous_slice_number = (self.number_of_slice-1)
-            previous_iteration = current_iteration-1
-            if previous_iteration<0:
+            previous_scope = current_scope-1
+            if previous_scope<0:
                 raise ValueError("No previous iteration at call")
         else:
-            previous_iteration = current_iteration # no iteration change on last slice
-        return previous_iteration, previous_slice_number
+            previous_scope = current_scope # no iteration change on last slice
+        return previous_scope, previous_slice_number
 
     def get_slice(self, slice_number):
         return self.slices[slice_number]
@@ -95,16 +112,17 @@ class NodeModel(object):
         fig.canvas.manager.set_window_title("CPU/Mem tiers on node " + self.node_name)
         plt.show()
 
-    def dump_state_and_slice_to_dict(self, dump_dict : dict, slice_number : int):
+    def dump_state_and_slice_to_dict(self, dump_dict : dict, slice_number : int, epoch : int = -1):
         to_dump = ["free_cpu", "free_mem", "epoch", "cpu_tier0", "cpu_tier1", "cpu_tier2", "mem_tier0", "mem_tier1", "mem_tier2"]
         if "config" not in dump_dict:
             dump_dict["config"] = dict()
-            dump_dict["config"]["node_scope"] = self.node_scope
-            dump_dict["config"]["slice_scope"] = self.slice_scope
-            dump_dict["config"]["number_of_slice"] = self.number_of_slice
             dump_dict["vm"]=dict()
             for x in to_dump:
                 dump_dict[x]=list()
+        dump_dict["config"]["node_scope"] = self.node_scope
+        dump_dict["config"]["slice_scope"] = self.slice_scope
+        dump_dict["config"]["number_of_slice"] = self.number_of_slice
+        dump_dict["config"]["node_name"] = self.node_name
         free_cpu, free_mem = self.get_free_cpu_mem()
         dump_dict["free_cpu"].append(free_cpu)
         dump_dict["free_mem"].append(free_mem)
@@ -121,6 +139,8 @@ class NodeModel(object):
         for vm, vmwrapper in self.get_slice(slice_number).get_vmwrapper().items():
             vmwrapper.get_last_slice().dump_state_to_dict(dump_dict=dump_dict["vm"], key=vm, iteration=len(dump_dict["epoch"]))
 
-        delta = int(time.time()) - self.init_epoch
-        dump_dict["epoch"].append(delta)
+        if epoch < 0:
+            epoch = int(time.time()) - self.init_epoch
+        dump_dict["epoch"].append(epoch)
+
         return dump_dict

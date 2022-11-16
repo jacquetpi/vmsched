@@ -14,7 +14,7 @@ class SliceVmWrapper(object):
         self.debug_cpu_reason = "=0 no prev data"
         self.debug_mem_reason = "=0 no prev data"
 
-    def add_data(self, domain_data : dict):
+    def add_slice_data_from_raw(self, domain_data : dict):
         if(len(domain_data.keys()) == 0):
             print("Empty data on slice encountered on domain " + self.domain_name)
             return
@@ -45,6 +45,23 @@ class SliceVmWrapper(object):
                 oc_page_fault=oc_page_fault, oc_page_fault_std=oc_page_fault_std,
                 oc_sched_wait=oc_sched_wait, oc_sched_wait_std=oc_sched_wait_std,
                 number_of_values=len(domain_data['time']))
+        self.compute_state_of_new_slice(slice_vm)
+        self.add_slice(slice_vm)
+
+    def add_slice_data_from_dump(self, vm_dump_data : dict, occurence : int, epoch : int):
+        if(len(vm_dump_data.keys()) == 0):
+            print("Empty data on slice encountered on dump " + self.domain_name)
+            return
+        # Update wrapper metrics
+        self.vm_seen+=1
+        self.vm_last_seen = epoch
+        slice_vm = SliceVm(cpu_config=vm_dump_data["cpu_config"][occurence], mem_config=vm_dump_data["mem_config"][occurence], 
+                cpu_percentile=vm_dump_data["cpu_percentile"][occurence], mem_percentile=vm_dump_data["mem_percentile"][occurence],
+                cpu_avg=vm_dump_data["cpu_avg"][occurence], mem_avg=vm_dump_data["mem_avg"][occurence],
+                cpu_std=vm_dump_data["cpu_std"][occurence], mem_std=vm_dump_data["mem_std"][occurence], 
+                oc_page_fault=vm_dump_data["oc_page_fault"][occurence], oc_page_fault_std=vm_dump_data["oc_page_fault_std"][occurence],
+                oc_sched_wait=vm_dump_data["oc_sched_wait"][occurence], oc_sched_wait_std=vm_dump_data["oc_sched_wait_std"][occurence],
+                number_of_values=vm_dump_data["number_of_values"][occurence])
         self.compute_state_of_new_slice(slice_vm)
         self.add_slice(slice_vm)
 
@@ -159,6 +176,9 @@ class SliceVmWrapper(object):
             mem_state = self.compute_mem_state_of_new_slice(new_slice)
         new_slice.update_state(cpu_state = cpu_state, mem_state = mem_state)
 
+    def round_to_upper_nearest(self, x : int, nearest_val : int):
+        return nearest_val * math.ceil(x/nearest_val)
+
     # VM tiers as thresold
     def get_cpu_tiers(self): # return tier0, tier1
         if self.get_last_slice().is_cpu_tier_defined():
@@ -169,11 +189,11 @@ class SliceVmWrapper(object):
             cpu_tier0 = self.get_last_slice().get_cpu_config()
             cpu_tier1 = self.get_last_slice().get_cpu_config()
         elif cpu_state == 1:
-            cpu_tier0 = math.ceil(self.get_slices_max_metric(cpu_percentile=95))
+            cpu_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=95), nearest_val=0.50) # unity is vcpu
             cpu_tier1 = self.get_last_slice().get_cpu_config()
         else:
-            cpu_tier0 = math.ceil(self.get_slices_max_metric(metric='cpu_avg'))
-            cpu_tier1 = math.ceil(self.get_slices_max_metric(cpu_percentile=95))
+            cpu_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(metric='cpu_avg'), nearest_val=0.50)
+            cpu_tier1 = self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=95), nearest_val=0.50)
         self.get_last_slice().update_cpu_tiers(cpu_tier0, cpu_tier1)
         return cpu_tier0, cpu_tier1
 
@@ -187,11 +207,11 @@ class SliceVmWrapper(object):
             mem_tier0 = self.get_last_slice().get_mem_config()
             mem_tier1 = self.get_last_slice().get_mem_config()
         elif mem_state == 1:
-            mem_tier0 = math.ceil(self.get_slices_max_metric(mem_percentile=95))
+            mem_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(mem_percentile=95), nearest_val=256) # unity is MB
             mem_tier1 = self.get_last_slice().get_mem_config()
         else:
-            mem_tier0 = math.ceil(self.get_slices_max_metric(metric='mem_avg'))
-            mem_tier1 = math.ceil(self.get_slices_max_metric(mem_percentile=95))
+            mem_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(metric='mem_avg'), nearest_val=256)
+            mem_tier1 = self.round_to_upper_nearest(x=self.get_slices_max_metric(mem_percentile=95), nearest_val=256)
         self.get_last_slice().update_mem_tiers(mem_tier0, mem_tier1)
         return mem_tier0, mem_tier1
 

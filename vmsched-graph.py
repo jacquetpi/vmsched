@@ -10,7 +10,12 @@ from collections import defaultdict
 
 def graph_node(data : dict):
     fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
-    x_axis = [round(x/60) for x in data["epoch"]]
+    if data["config"]["slice_scope"] > 60:
+        x_axis = [round(x/60) for x in data["epoch"]]
+        ax1.set_xlabel('time (mn)')
+    else:
+        x_axis =data["epoch"]
+        ax1.set_xlabel('time (s)')
     empty_data = [0 for i in data["epoch"]]
 
     ax1prime = ax1.twinx()
@@ -31,7 +36,6 @@ def graph_node(data : dict):
     ax1.fill_between(x_axis, empty_data, mem_tier0_np, color='blue', alpha=0.3, interpolate=True, label="Tier0")
     ax1.fill_between(x_axis, mem_tier0_np, mem_tier1_np,  where=(mem_tier0_np<mem_tier1_np), color='orange', alpha=0.3,  interpolate=True, label="Tier1")
     ax1.fill_between(x_axis, mem_tier1_np, mem_tier2_np, where=(mem_tier1_np<mem_tier2_np), color='green', alpha=0.3, interpolate=True, label="Tier2")
-    ax1.set_xlabel('time (s)')
     ax1.set_ylabel('Memory (GB)')
     ax1.legend(loc="upper left")
     ax1prime.plot(x_axis, mem_free_np, '-', color='red', label="free mem")
@@ -300,8 +304,8 @@ def graph_slice2(dataframe):
 
 def graph_slice3(dataframe):
     g = sns.FacetGrid(dataframe, col="slice", row="vm")
-    #g.map(graph_node_generic, "epoch", "cpu_avg", "graph_cpu_percentile", "cpu_tier0", "cpu_tier1", "cpu_state")
-    g.map(graph_node_generic, "epoch", "mem_avg", "graph_mem_percentile", "mem_tier0", "mem_tier1", "mem_state")
+    g.map(graph_node_generic, "epoch", "cpu_avg", "graph_cpu_percentile", "cpu_tier0", "cpu_tier1", "cpu_state")
+    #g.map(graph_node_generic, "epoch", "mem_avg", "graph_mem_percentile", "mem_tier0", "mem_tier1", "mem_state")
 
 def get_vm_dataframe(data_source : dict):
     number_of_slice=data_source["config"]["number_of_slice"]
@@ -397,6 +401,6 @@ if __name__ == '__main__':
     if display_graph_slice:
         dataframe = get_vm_dataframe(data_input)
         graph_slice(dataframe)
-        #graph_slice2(dataframe)
+        graph_slice3(dataframe)
 
     plt.show()
