@@ -1,11 +1,10 @@
 from collections import defaultdict
-from lib2to3.pytree import Node
 from dotenv import load_dotenv
 import numpy as np
 import threading, libvirt
 import time, sys, getopt, os, json
 
-from influxdb_client import InfluxDBClient, Point, WritePrecision
+from influxdb_client import InfluxDBClient
 from influxdb_client.client.write_api import SYNCHRONOUS
 
 # Global parameters
@@ -24,7 +23,7 @@ class RssReducer(object):
     def __init__(self, node : str, domain : str, mem_retrieval_threshold : int):
         self.node=node
         self.domain=domain
-        self.mem_retrieval_threshold=mem_retrieval_threshold*1024
+        self.mem_retrieval_threshold=int(mem_retrieval_threshold*1024)
 
     def run(self):
         conn = None
@@ -41,7 +40,7 @@ class RssReducer(object):
                 print('Failed to find the domain '+ self.domain, file=sys.stderr)
                 exit(1)
             print("Reduce", self.domain, "to", self.mem_retrieval_threshold, dom.setMemoryFlags(self.mem_retrieval_threshold,flags=libvirt.VIR_DOMAIN_AFFECT_LIVE))
-            time.sleep(180)
+            time.sleep(30)
             print("Increase", self.domain, "to", dom.maxMemory(), dom.setMemoryFlags(dom.maxMemory(),flags=libvirt.VIR_DOMAIN_AFFECT_LIVE))
             conn.close()
 

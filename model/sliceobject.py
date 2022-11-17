@@ -3,7 +3,8 @@ class SliceObject(object):
     def __init__(self, cpu_config : int, mem_config : int, 
             cpu_percentile : dict, mem_percentile : dict, 
             cpu_avg : int, mem_avg : int, 
-            cpu_std : int, mem_std : int, 
+            cpu_std : int, mem_std : int,
+            cpu_max : int, mem_max : int,
             oc_page_fault : int, oc_page_fault_std : int,
             oc_sched_wait : int, oc_sched_wait_std : int,
             cpi : dict, hwcpucycles : dict,
@@ -17,6 +18,8 @@ class SliceObject(object):
         self.mem_avg = mem_avg
         self.cpu_std = cpu_std
         self.mem_std = mem_std
+        self.cpu_max = cpu_max
+        self.mem_max = mem_max
         self.oc_page_fault = oc_page_fault
         self.oc_page_fault_std = oc_page_fault_std
         self.oc_sched_wait = oc_sched_wait

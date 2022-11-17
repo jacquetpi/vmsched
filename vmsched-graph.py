@@ -2,7 +2,6 @@ import getopt, sys, json
 from typing import DefaultDict
 import numpy as np
 import seaborn as sns
-import matplotlib
 import matplotlib.pyplot as plt
 from horizonplot import horizonplot
 import pandas as pd

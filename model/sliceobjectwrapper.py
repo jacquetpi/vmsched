@@ -23,13 +23,18 @@ class SliceObjectWrapper(object):
         mem_config = data['mem'][-1]
         cpu_percentile = dict()
         mem_percentile = dict()
-        for i in range(10, 100, 5): # percentiles from 10 to 95
+        for i in range(10, 90, 5): # percentiles from 10 to 85
+            cpu_percentile[i] = np.percentile(data['cpu_usage'],i)
+            mem_percentile[i] = np.percentile(data[memory_metric],i)
+        for i in range(90, 100, 1): # percentiles from 90 to 99
             cpu_percentile[i] = np.percentile(data['cpu_usage'],i)
             mem_percentile[i] = np.percentile(data[memory_metric],i)
         cpu_avg = np.average(data['cpu_usage'])
         mem_avg = np.average(data[memory_metric])
         cpu_std = np.std(data['cpu_usage'])
         mem_std = np.std(data[memory_metric])
+        cpu_max = np.max(data['cpu_usage'])
+        mem_max = np.max(data[memory_metric])
         # Overcommitment indicators
         oc_page_fault = np.percentile(data['swpagefaults'],90)
         oc_page_fault_std=np.std(data['swpagefaults'])
@@ -46,7 +51,8 @@ class SliceObjectWrapper(object):
         sliceObject = SliceObject(cpu_config=cpu_config, mem_config=mem_config, 
                 cpu_percentile=cpu_percentile, mem_percentile=mem_percentile, 
                 cpu_avg=cpu_avg, mem_avg=mem_avg,
-                cpu_std=cpu_std, mem_std=mem_std, 
+                cpu_std=cpu_std, mem_std=mem_std,
+                cpu_max=cpu_max, mem_max=mem_max,
                 oc_page_fault=oc_page_fault, oc_page_fault_std=oc_page_fault_std,
                 oc_sched_wait=oc_sched_wait, oc_sched_wait_std=oc_sched_wait_std,
                 cpi=cpi, hwcpucycles=hwcpucycles,
