@@ -114,32 +114,36 @@ class NodeModel(object):
         plt.show()
 
     def dump_state_and_slice_to_dict(self, dump_dict : dict, slice_number : int, epoch : int = -1):
-        to_dump = ["free_cpu", "free_mem", "epoch", "cpu_tier0", "cpu_tier1", "cpu_tier2", "mem_tier0", "mem_tier1", "mem_tier2"]
+        to_dump = ["free_cpu", "free_mem", "cpu_tier0", "cpu_tier1", "cpu_tier2", "mem_tier0", "mem_tier1", "mem_tier2"]
         if "config" not in dump_dict:
-            dump_dict["config"] = dict()
-            dump_dict["vm"]=dict()
+            dump_dict["epoch"] = list()
+            category = ["config", "node", "vm", "model"]
+            for x in category:
+                dump_dict[x]=dict()
             for x in to_dump:
-                dump_dict[x]=list()
+                 dump_dict["model"][x]=list()
         dump_dict["config"]["node_scope"] = self.node_scope
         dump_dict["config"]["slice_scope"] = self.slice_scope
         dump_dict["config"]["number_of_slice"] = self.number_of_slice
         dump_dict["config"]["historical_occurences"] = self.historical_occurences
         dump_dict["config"]["node_name"] = self.node_name
         free_cpu, free_mem = self.get_free_cpu_mem()
-        dump_dict["free_cpu"].append(free_cpu)
-        dump_dict["free_mem"].append(free_mem)
+        dump_dict["model"]["free_cpu"].append(free_cpu)
+        dump_dict["model"]["free_mem"].append(free_mem)
         cpu_tier0, cpu_tier1, cpu_tier2, mem_tier0, mem_tier1, mem_tier2 = self.get_slice(slice_number).get_cpu_mem_tiers()
-        dump_dict["cpu_tier0"].append(cpu_tier0)
-        dump_dict["cpu_tier1"].append(cpu_tier1)
-        dump_dict["cpu_tier2"].append(cpu_tier2)
-        dump_dict["mem_tier0"].append(mem_tier0)
-        dump_dict["mem_tier1"].append(mem_tier1)
-        dump_dict["mem_tier2"].append(mem_tier2)
+        dump_dict["model"]["cpu_tier0"].append(cpu_tier0)
+        dump_dict["model"]["cpu_tier1"].append(cpu_tier1)
+        dump_dict["model"]["cpu_tier2"].append(cpu_tier2)
+        dump_dict["model"]["mem_tier0"].append(mem_tier0)
+        dump_dict["model"]["mem_tier1"].append(mem_tier1)
+        dump_dict["model"]["mem_tier2"].append(mem_tier2)
 
-        self.get_slice(slice_number).get_hostwrapper().get_last_slice().dump_state_to_dict(dump_dict=dump_dict, iteration=len(dump_dict["epoch"]))
+        self.get_slice(slice_number).get_hostwrapper().get_last_slice().dump_state_to_dict(dump_dict=dump_dict["node"], iteration=len(dump_dict["epoch"]))
 
         for vm, vmwrapper in self.get_slice(slice_number).get_vmwrapper().items():
-            vmwrapper.get_last_slice().dump_state_to_dict(dump_dict=dump_dict["vm"], key=vm, iteration=len(dump_dict["epoch"]))
+            if vm not in dump_dict["vm"]:
+                dump_dict["vm"][vm] = dict()
+            vmwrapper.get_last_slice().dump_state_to_dict(dump_dict=dump_dict["vm"][vm], iteration=len(dump_dict["epoch"]))
 
         if epoch < 0:
             epoch = int(time.time()) - self.init_epoch

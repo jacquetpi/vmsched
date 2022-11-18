@@ -17,12 +17,12 @@ class SliceHostWrapper(SliceObjectWrapper):
                         vm_list=host_data["vm"])
         self.add_slice(slice_host)
 
-    def add_slice_data_from_dump(self, host_dump_data : dict, occurence : int):
-        if(len(host_dump_data.keys()) == 0):
+    def add_slice_data_from_dump(self, dump_data : dict, occurence : int):
+        if(len(dump_data.keys()) == 0):
             print("Empty data on slice encountered on dump " + self.host_name)
             return
-        slice_host = SliceHost(slice_object=self.get_slice_object_from_dump(dump_data=host_dump_data, occurence=occurence, epoch=host_dump_data["epoch"][occurence]),
-                        vm_list=host_dump_data["vm_list"][occurence])
+        slice_host = SliceHost(slice_object=self.get_slice_object_from_dump(dump_data=dump_data["node"], occurence=occurence, epoch=dump_data["epoch"][occurence]),
+                        vm_list=dump_data["node"]["vm_list"][occurence])
         self.add_slice(slice_host)
 
     def get_host_config(self):

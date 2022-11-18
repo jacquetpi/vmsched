@@ -19,14 +19,14 @@ def graph_node(data : dict):
 
     ax1prime = ax1.twinx()
     ax1.set_title('Host Memory Tiers evolution with ' + str(len(data["vm"])) + ' vm')
-    mem_free = data["free_mem"]
-    mem_tier0 = data["mem_tier0"]
+    mem_free = data["model"]["free_mem"]
+    mem_tier0 = data["model"]["mem_tier0"]
     mem_tier1_cumulated = list()
-    for i in range(len(data["mem_tier0"])):
-        mem_tier1_cumulated.append(data["mem_tier0"][i] + data["mem_tier1"][i])
+    for i in range(len(data["model"]["mem_tier0"])):
+        mem_tier1_cumulated.append(data["model"]["mem_tier0"][i] + data["model"]["mem_tier1"][i])
     mem_tier2_cumulated = list()
-    for i in range(len(data["mem_tier1"])):
-        mem_tier2_cumulated.append(mem_tier1_cumulated[i] + data["mem_tier2"][i])
+    for i in range(len(data["model"]["mem_tier1"])):
+        mem_tier2_cumulated.append(mem_tier1_cumulated[i] + data["model"]["mem_tier2"][i])
     # Convert to numpy format
     mem_free_np = np.array([round(i/1024,1) for i in mem_free])
     mem_tier0_np = np.array([round(i/1024,1) for i in mem_tier0])
@@ -43,14 +43,14 @@ def graph_node(data : dict):
 
     ax2prime = ax2.twinx()
     ax2.set_title('Host CPU Tiers evolution with ' + str(len(data["vm"])) + ' vm')
-    cpu_free = [0 if i < 0 else i for i in data["free_cpu"]] 
-    cpu_tier0 = data["cpu_tier0"]
+    cpu_free = [0 if i < 0 else i for i in data["model"]["free_cpu"]] 
+    cpu_tier0 = data["model"]["cpu_tier0"]
     cpu_tier1_cumulated = list()
-    for i in range(len(data["cpu_tier0"])):
-        cpu_tier1_cumulated.append(data["cpu_tier0"][i] + data["cpu_tier1"][i])
+    for i in range(len(data["model"]["cpu_tier0"])):
+        cpu_tier1_cumulated.append(data["model"]["cpu_tier0"][i] + data["model"]["cpu_tier1"][i])
     cpu_tier2_cumulated = list()
-    for i in range(len(data["cpu_tier1"])):
-        cpu_tier2_cumulated.append(cpu_tier1_cumulated[i] + data["cpu_tier2"][i])
+    for i in range(len(data["model"]["cpu_tier1"])):
+        cpu_tier2_cumulated.append(cpu_tier1_cumulated[i] + data["model"]["cpu_tier2"][i])
     # Convert to numpy format
     cpu_free_np = np.array(cpu_free)
     cpu_tier0_np = np.array(cpu_tier0)
@@ -155,8 +155,8 @@ def graph_vm_save2(data : dict):
     for vmname, vmdata in data["vm"].items():
         # Display area for usage:
         tier0_cumul_data = list()
-        for i in range(len(vmdata["mem_tier0"])):
-            tier0_cumul_data.append(old_cumul_data[i] + vmdata["mem_tier0"][i])
+        for i in range(len(vmdata["model"]["mem_tier0"])):
+            tier0_cumul_data.append(old_cumul_data[i] + vmdata["model"]["mem_tier0"][i])
         x = ax1.fill_between(x_axis, np.array(old_cumul_data), np.array(tier0_cumul_data), alpha=1, interpolate=True, label=vmname)
         vmdata["color"] = x.get_facecolor()
 
@@ -170,8 +170,8 @@ def graph_vm_save2(data : dict):
     for vmname, vmdata in data["vm"].items():
         # Display area for usage:
         tier1_cumul_data = list()
-        for i in range(len(vmdata["mem_tier1"])):
-            tier1_cumul_data.append(old_cumul_data[i] + vmdata["mem_tier1"][i])
+        for i in range(len(vmdata["model"]["mem_tier1"])):
+            tier1_cumul_data.append(old_cumul_data[i] + vmdata["model"]["mem_tier1"][i])
         ax1.fill_between(x_axis, np.array(old_cumul_data), np.array(tier1_cumul_data), alpha=0.4, color=vmdata["color"], hatch='/', interpolate=True)
 
         old_cumul_data = tier1_cumul_data
@@ -179,14 +179,14 @@ def graph_vm_save2(data : dict):
     for vmname, vmdata in data["vm"].items():
         # Display area for usage:
         tier2_cumul_data = list()
-        for i in range(len(vmdata["mem_tier1"])):
-            tier2_cumul_data.append(old_cumul_data[i] + (vmdata["mem_config"][i] - vmdata["mem_tier1"][i] - vmdata["mem_tier0"][i]))
+        for i in range(len(vmdata["model"]["mem_tier1"])):
+            tier2_cumul_data.append(old_cumul_data[i] + (vmdata["mem_config"][i] - vmdata["model"]["mem_tier1"][i] - vmdata["model"]["mem_tier0"][i]))
         ax1.fill_between(x_axis, np.array(old_cumul_data), np.array(tier2_cumul_data), alpha=0.2, color=vmdata["color"], interpolate=True)
 
         old_cumul_data = tier2_cumul_data
 
     ax1.legend(loc="upper left")
-    ax1prime.plot(x_axis, np.array(data["free_mem"]), '-', color='red', label="free mem")
+    ax1prime.plot(x_axis, np.array(data["model"]["free_mem"]), '-', color='red', label="free mem")
     ax1prime.legend(loc="upper right")
     ax1prime.set_ylabel('Memory (MB)')
 
@@ -224,10 +224,10 @@ def graph_usage(data : dict):
     for vmname, vmdata in data["vm"].items():
 
         current_axe = axes[index_y][index_x]
-        vmdata["mem_percentile"] = [round(i/1024,1) for i in vmdata["mem_percentile"]['90']]
+        vmdata["rounded_mem_percentile"] = [round(i['90']/1024,1) for i in vmdata["mem_percentile"]]
         vmdata["mem_config"] = [round(i/1024,1) for i in vmdata["mem_config"]]
     
-        current_axe.fill_between(x_axis, np.array(empty_data), np.array(vmdata["mem_percentile"]), alpha=1, interpolate=True)
+        current_axe.fill_between(x_axis, np.array(empty_data), np.array(vmdata["rounded_mem_percentile"]), alpha=1, interpolate=True)
         current_axe.fill_between(x_axis, np.array(empty_data), np.array(vmdata["mem_config"]), alpha=0.3, interpolate=True)
 
         current_axe.set_xlabel(vmname)
@@ -245,7 +245,7 @@ def graph_horizon(data : dict):
     graphlabel = list()
     metric = 'mem_percentile'
     for vmname, vmdata in data["vm"].items():
-        graphdata+=vmdata['mem_percentile']['90']
+        graphdata+=[round(i['90']/1024,1) for i in vmdata["mem_percentile"]]
         graphlabel+=[vmname for i in range(value_count)]
 
     df = pd.DataFrame({'chrom': [metric]*vm_count*value_count,

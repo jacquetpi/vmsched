@@ -33,17 +33,14 @@ class SliceVm(SliceObject):
     def get_mem_state(self):
         return self.mem_state
 
-    def dump_state_to_dict(self, dump_dict : dict,  key : str, iteration : int = 0):
-        if key not in dump_dict:
-            dump_dict[key] = dict()
-
+    def dump_state_to_dict(self, dump_dict : dict, iteration : int = 0):
         for attribute, value in self.__dict__.items():
-            if attribute not in dump_dict[key]:
+            if attribute not in dump_dict:
                 if attribute in ["raw_data", "cpu_percentile", "mem_percentile", "cpi", "hwcpucycles"]:
-                    dump_dict[key][attribute] = [dict() for x in range(iteration)] # in case of new VM
+                    dump_dict[attribute] = [dict() for x in range(iteration)] # in case of a new VM
                 else:
-                    dump_dict[key][attribute] = [0 for x in range(iteration)]
-            dump_dict[key][attribute].append(value)
+                    dump_dict[attribute] = [0 for x in range(iteration)]
+            dump_dict[attribute].append(value)
 
     def __str__(self):
         return "SliceVM[" +  str(self.cpu_avg)  + "/" + str(round(self.get_cpu_percentile(90))) + "/" + str(self.cpu_config) + " " +\
