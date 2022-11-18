@@ -9,7 +9,6 @@ class SliceHost(SliceObject):
         super().__init__(**slice_attributes)
         # Specific attributes
         self.vm_list=vm_list
-        print(len(self.vm_list))
 
     def get_vm_list(self):
         return self.vm_list

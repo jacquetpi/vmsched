@@ -26,7 +26,7 @@ def main_loop_from_dump(dump_to_load: dict, debug : int = 0):
     filehandler = ResultFileHandler()
     models = dict()
     for sched_node in SCHED_NODES:
-        models[sched_node]= NodeModel(node_name=dump_to_load["config"]["node_name"], 
+        models[sched_node]= NodeModel(node_name=dump_to_load["config"]["node_name"], historical_occurences=dump_to_load["config"]["historical_occurences"],
         model_scope=dump_to_load["config"]["node_scope"], slice_scope=dump_to_load["config"]["slice_scope"])
     for occurence in range(len(dump_to_load["epoch"])):
         # Retrieve nodes model
