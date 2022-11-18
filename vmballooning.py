@@ -52,10 +52,16 @@ def check_rss(domain : str, domain_metrics : dict):
     if (grace_period_tracker[domain] + BALLOONING_GRACE_PERIOD_S) > int(time.time()):
         print(domain, "is in grace period")
         return
+    if "mem_usage" not in domain_metrics or not domain_metrics['mem_usage']:
+        print(domain, "not enough data to proceed (lacking usage)")
+        return
+    if "mem_rss" not in domain_metrics or not domain_metrics['mem_rss']:
+        print(domain, "not enough data to proceed (lacking rss)")
+        return
     mem_usage = np.percentile(domain_metrics['mem_usage'], 90)
     mem_rss = domain_metrics['mem_rss'][-1]
     mem_retrieval = mem_rss - mem_usage
-    print("debug", domain, domain_metrics['node'], mem_usage, mem_rss, mem_retrieval)
+    #print("debug", domain, domain_metrics['node'], mem_usage, mem_rss, mem_retrieval)
     if mem_retrieval > BALLOONING_THRESHOLD_GAIN_MB: # We can retrieve at least XGB
         print("geronimo")
         reducer = RssReducer(node=LIBVIRT_NODES[domain_metrics['node']], domain=domain, mem_retrieval_threshold=mem_usage)
