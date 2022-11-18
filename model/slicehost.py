@@ -37,14 +37,4 @@ class SliceHost(SliceObject):
                     dump_dict[attribute] = [list() for x in range(iteration)]
                 else:
                      dump_dict[attribute] = [0 for x in range(iteration)]
-            if attribute == "vm_list":
-                print("to be added")
-                print(value)
-                print("before")
-                print(dump_dict[attribute])
             dump_dict[attribute].append(value)
-            if attribute == "vm_list":
-                print("was added")
-                print(value)
-                print("after")
-                print(dump_dict[attribute])
