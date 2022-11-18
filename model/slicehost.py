@@ -2,16 +2,19 @@ from model.sliceobject import SliceObject
 
 class SliceHost(SliceObject):
 
-    def __init__(self, slice_object : SliceObject):
-        super().__init__(cpu_config=getattr(slice_object,'cpu_config'), mem_config=getattr(slice_object,'mem_config'), 
-                cpu_percentile=getattr(slice_object,'cpu_percentile'), mem_percentile=getattr(slice_object,'mem_percentile'), 
-                cpu_avg=getattr(slice_object,'cpu_avg'), mem_avg=getattr(slice_object,'mem_avg'),
-                cpu_std=getattr(slice_object,'cpu_std'), mem_std=getattr(slice_object,'mem_std'),
-                cpu_max=getattr(slice_object,'cpu_max'), mem_max=getattr(slice_object,'mem_max'),  
-                oc_page_fault=getattr(slice_object,'oc_page_fault'), oc_page_fault_std=getattr(slice_object,'oc_page_fault_std'),
-                oc_sched_wait=getattr(slice_object,'oc_sched_wait'), oc_sched_wait_std=getattr(slice_object,'oc_sched_wait_std'),
-                cpi=getattr(slice_object,'cpi'), hwcpucycles=getattr(slice_object,'hwcpucycles'),
-                number_of_values=getattr(slice_object,'number_of_values'))
+    def __init__(self, slice_object : SliceObject, vm_list : list):
+        # Retrieve parent attribute for computation
+        slice_attributes = slice_object.__dict__
+        slice_attributes["compute"] = True
+        super().__init__(**slice_attributes)
+        # Specific attributes
+        self.vm_list=vm_list
+
+    def get_vm_list(self):
+        return self.vm_list
+
+    def is_vm_in(self, vm : str):
+        return (vm in self.vm_list)
 
     def __str__(self):
         return "SliceHost[" +  str(round(self.cpu_avg,1))  + "/" + str(round(self.get_cpu_percentile(90))) + "/" + str(int(self.cpu_config)) + " " +\

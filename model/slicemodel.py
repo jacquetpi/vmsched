@@ -41,14 +41,14 @@ class SliceModel(object):
         self.add_slice_data_from_dump(dump_data, iteration)
 
     def add_slice_data_from_epoch(self, begin_epoch : int, end_epoch : int):
-        node_stats = self.retrieve_node_data(begin_epoch, end_epoch)
-        self.slicenodedata.add_slice_data_from_raw(node_stats)
         domain_data = self.retrieve_domain_data(begin_epoch, end_epoch)
-        #print("debug", begin_epoch, end_epoch, len(node_stats.keys()), len(domain_data.keys()))
         for domain_name, domain_stats in domain_data.items():
             if domain_name not in self.slicevmdata:
                 self.slicevmdata[domain_name]=SliceVmWrapper(domain_name=domain_name, historical_occurences=self.model_historical_occurences)
             self.slicevmdata[domain_name].add_slice_data_from_raw(domain_stats)
+        node_stats = self.retrieve_node_data(begin_epoch, end_epoch)
+        node_stats["vm"] = list(domain_data.keys()) # vm id list
+        self.slicenodedata.add_slice_data_from_raw(node_stats)
         self.update_cpu_mem_tiers()
 
     def add_slice_data_from_dump(self, dump_data : dict, occurence : int):

@@ -11,67 +11,17 @@ class SliceObjectWrapper(object):
         self.slice_object_list=list()
 
     def get_slice_object_from_raw(self, data : dict):
-        if "mem_rss" in data:
-            memory_metric = "mem_rss" # VM case
-        else:
-            memory_metric = "mem_usage" # host case
         # Update wrapper metrics
         self.object_seen+=1
         self.object_last_seen = int(data['time'][-1])
-        # CPU/mem indicators
-        cpu_config = data['cpu'][-1]
-        mem_config = data['mem'][-1]
-        cpu_percentile = dict()
-        mem_percentile = dict()
-        for i in range(10, 90, 5): # percentiles from 10 to 85
-            cpu_percentile[i] = np.percentile(data['cpu_usage'],i)
-            mem_percentile[i] = np.percentile(data[memory_metric],i)
-        for i in range(90, 100, 1): # percentiles from 90 to 99
-            cpu_percentile[i] = np.percentile(data['cpu_usage'],i)
-            mem_percentile[i] = np.percentile(data[memory_metric],i)
-        cpu_avg = np.average(data['cpu_usage'])
-        mem_avg = np.average(data[memory_metric])
-        cpu_std = np.std(data['cpu_usage'])
-        mem_std = np.std(data[memory_metric])
-        cpu_max = np.max(data['cpu_usage'])
-        mem_max = np.max(data[memory_metric])
-        # Overcommitment indicators
-        oc_page_fault = np.percentile(data['swpagefaults'],90)
-        oc_page_fault_std=np.std(data['swpagefaults'])
-        oc_sched_wait = np.percentile(data['sched_busy'],90)
-        oc_sched_wait_std=np.std(data['sched_busy'])
-        cpi = dict()
-        hwcpucycles = dict()
-        if "cpi" in data:
-            for i in range(10, 100, 5):
-                cpi[i] = np.percentile(data["cpi"],i)
-        if "hwcpucycles" in data:
-            for i in range(10, 100, 5):
-                hwcpucycles[i] = np.percentile(data["hwcpucycles"],i)
-        sliceObject = SliceObject(cpu_config=cpu_config, mem_config=mem_config, 
-                cpu_percentile=cpu_percentile, mem_percentile=mem_percentile, 
-                cpu_avg=cpu_avg, mem_avg=mem_avg,
-                cpu_std=cpu_std, mem_std=mem_std,
-                cpu_max=cpu_max, mem_max=mem_max,
-                oc_page_fault=oc_page_fault, oc_page_fault_std=oc_page_fault_std,
-                oc_sched_wait=oc_sched_wait, oc_sched_wait_std=oc_sched_wait_std,
-                cpi=cpi, hwcpucycles=hwcpucycles,
-                number_of_values=len(data['time']))
+        sliceObject = SliceObject(raw_data=data)
         return sliceObject
 
     def get_slice_object_from_dump(self, dump_data : dict, occurence : int, epoch : int):
         # Update wrapper metrics
         self.object_seen+=1
         self.object_last_seen = epoch
-        sliceObject = SliceObject(cpu_config=dump_data["cpu_config"][occurence], mem_config=dump_data["mem_config"][occurence], 
-                cpu_percentile=dump_data["cpu_percentile"][occurence], mem_percentile=dump_data["mem_percentile"][occurence],
-                cpu_avg=dump_data["cpu_avg"][occurence], mem_avg=dump_data["mem_avg"][occurence],
-                cpu_std=dump_data["cpu_std"][occurence], mem_std=dump_data["mem_std"][occurence],
-                cpu_max=dump_data["cpu_max"][occurence], mem_max=dump_data["mem_max"][occurence],
-                oc_page_fault=dump_data["oc_page_fault"][occurence], oc_page_fault_std=dump_data["oc_page_fault_std"][occurence],
-                oc_sched_wait=dump_data["oc_sched_wait"][occurence], oc_sched_wait_std=dump_data["oc_sched_wait_std"][occurence],
-                cpi=dump_data["cpi"][occurence], hwcpucycles=dump_data["hwcpucycles"][occurence],
-                number_of_values=dump_data["number_of_values"][occurence])
+        sliceObject = SliceObject(raw_data=dump_data["raw_data"][occurence])
         return sliceObject
 
     def add_slice(self, slice : SliceObject):
@@ -117,6 +67,9 @@ class SliceObjectWrapper(object):
 
     def get_last_slice(self):
         return self.slice_object_list[-1]
+    
+    def get_oldest_slice(self):
+        return self.slice_object_list[0]
 
     def round_to_upper_nearest(self, x : int, nearest_val : int):
         return nearest_val * math.ceil(x/nearest_val)

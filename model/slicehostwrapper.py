@@ -13,19 +13,21 @@ class SliceHostWrapper(SliceObjectWrapper):
         if(len(host_data.keys()) == 0):
             print("Empty data on slice encountered on host " + self.host_name)
             return
-        slice_host =SliceHost(self.get_slice_object_from_raw(host_data))
+        slice_host = SliceHost(slice_object=self.get_slice_object_from_raw(host_data),
+                        vm_list=host_data["vm"])
         self.add_slice(slice_host)
 
     def add_slice_data_from_dump(self, host_dump_data : dict, occurence : int):
         if(len(host_dump_data.keys()) == 0):
             print("Empty data on slice encountered on dump " + self.host_name)
             return
-        slice_host =SliceHost(self.get_slice_object_from_dump(dump_data=host_dump_data, occurence=occurence, epoch=host_dump_data["epoch"][occurence]))
+        slice_host = SliceHost(slice_object=self.get_slice_object_from_dump(dump_data=host_dump_data, occurence=occurence, epoch=host_dump_data["epoch"][occurence]),
+                        vm_list=host_dump_data["vm_list"])
         self.add_slice(slice_host)
 
     def get_host_config(self):
-        cpu_config_list =  self.get_slices_metric("cpu_config")
-        mem_config_list =  self.get_slices_metric("cpu_config")
+        cpu_config_list = self.get_slices_metric("cpu_config")
+        mem_config_list = self.get_slices_metric("cpu_config")
         if cpu_config_list:
             cpu_config = self.get_slices_metric("cpu_config")[-1]
         else:
@@ -45,6 +47,39 @@ class SliceHostWrapper(SliceObjectWrapper):
         cpu_usage_list = self.get_slices_metric(cpu_percentile=90)
         mem_usage_list = self.get_slices_metric(mem_percentile=90)
         return np.max(cpu_usage_list), np.max(mem_usage_list)
+
+    def is_stable(self): # Host is considered stable if no new VM were deployed
+        if not self.is_historical_full():
+            return False
+        # VM name is supposed unique
+        for vm in self.get_last_slice().get_vm_list():
+            if not self.get_oldest_slice().is_vm_in(vm):
+                return False
+        return True
+
+    # Host tiers as threshold
+    def get_cpu_tiers(self): # return tier0, tier1
+        if self.is_stable():
+            cpu_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=95), nearest_val=0.50) # unity is vcpu
+            cpu_tier1 = self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=95), nearest_val=0.50) # unity is vcpu
+        # TODO : is last obtained by this way? Is it the right way?
+        elif self.get_last_slice().is_cpu_tier_defined():
+            cpu_tier0 = 1
+            cpu_tier1 = 1
+            # TODO
+        else:
+            # No OC
+            cpu_tier0 = 1
+            cpu_tier1 = 1
+            # TODO
+        self.get_last_slice().update_cpu_tiers(cpu_tier0, cpu_tier1)
+        return cpu_tier0, cpu_tier1
+
+    def get_cpu_mem_tiers(self): # return cpu_tier0, cpu_tier1, mem_tier0, mem_tier1
+        last_slice = self.get_last_slice()
+        cpu_tier0, cpu_tier1 = self.get_cpu_tiers()
+        mem_tier0, mem_tier1 = self.get_mem_tiers()
+        return cpu_tier0, cpu_tier1, mem_tier0, mem_tier1
 
     def __str__(self):
         if(len(self.slice_object_list)>0):

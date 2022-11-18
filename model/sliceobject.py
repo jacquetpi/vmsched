@@ -1,32 +1,64 @@
+import numpy as np
+
 class SliceObject(object):
 
-    def __init__(self, cpu_config : int, mem_config : int, 
-            cpu_percentile : dict, mem_percentile : dict, 
-            cpu_avg : int, mem_avg : int, 
-            cpu_std : int, mem_std : int,
-            cpu_max : int, mem_max : int,
-            oc_page_fault : int, oc_page_fault_std : int,
-            oc_sched_wait : int, oc_sched_wait_std : int,
-            cpi : dict, hwcpucycles : dict,
-            number_of_values :int,
-            ):
-        self.cpu_config = cpu_config
-        self.mem_config = mem_config
-        self.cpu_percentile = cpu_percentile
-        self.mem_percentile = mem_percentile
-        self.cpu_avg = cpu_avg
-        self.mem_avg = mem_avg
-        self.cpu_std = cpu_std
-        self.mem_std = mem_std
-        self.cpu_max = cpu_max
-        self.mem_max = mem_max
-        self.oc_page_fault = oc_page_fault
-        self.oc_page_fault_std = oc_page_fault_std
-        self.oc_sched_wait = oc_sched_wait
-        self.oc_sched_wait_std = oc_sched_wait_std
-        self.cpi=cpi
-        self.hwcpucycles=hwcpucycles
-        self.number_of_values = number_of_values
+    # Can be build either by passing raw data or by passing all required attributes
+    def __init__(self, **kwargs):
+        required_attributes = ["cpu_config","mem_config","cpu_percentile","mem_percentile",
+        "cpu_avg","mem_avg","cpu_std","mem_std","cpu_max","mem_max",
+        "oc_page_fault","oc_page_fault_std","oc_sched_wait","oc_sched_wait_std","cpi","hwcpucycles","number_of_values"]
+        if "raw_data" in kwargs:
+            if ("compute" in kwargs) and (kwargs["compute"]): # avoid dual computation as this object is rebuilt by its childrens
+                self.compute_attributes(kwargs["raw_data"])
+                self.raw_data = kwargs["raw_data"] # should probably be stored only based on depends on debug level
+            else:
+                self.raw_data = kwargs["raw_data"]
+        else:
+            for attribute in required_attributes:
+                setattr(self, attribute, kwargs[attribute])      
+        self.cpu_tier0 = -1 
+        self.cpu_tier1 = -1
+        self.cpu_tier2 = -1
+        self.mem_tier0 = -1 
+        self.mem_tier1 = -1
+        self.mem_tier2 = -1
+
+    def compute_attributes(self, raw_data : dict):
+        if "mem_rss" in raw_data:
+            memory_metric = "mem_rss" # VM case
+        else:
+            memory_metric = "mem_usage" # host case
+        # CPU/mem indicators
+        self.cpu_config = raw_data['cpu'][-1]
+        self.mem_config = raw_data['mem'][-1]
+        self.cpu_percentile = dict()
+        self.mem_percentile = dict()
+        for i in range(10, 90, 5): # percentiles from 10 to 85
+            self.cpu_percentile[i] = np.percentile(raw_data['cpu_usage'],i)
+            self.mem_percentile[i] = np.percentile(raw_data[memory_metric],i)
+        for i in range(90, 100, 1): # percentiles from 90 to 99
+            self.cpu_percentile[i] = np.percentile(raw_data['cpu_usage'],i)
+            self.mem_percentile[i] = np.percentile(raw_data[memory_metric],i)
+        self.cpu_avg = np.average(raw_data['cpu_usage'])
+        self.mem_avg = np.average(raw_data[memory_metric])
+        self.cpu_std = np.std(raw_data['cpu_usage'])
+        self.mem_std = np.std(raw_data[memory_metric])
+        self.cpu_max = np.max(raw_data['cpu_usage'])
+        self.mem_max = np.max(raw_data[memory_metric])
+        # Overcommitment indicators
+        self.oc_page_fault = np.percentile(raw_data['swpagefaults'],90)
+        self.oc_page_fault_std=np.std(raw_data['swpagefaults'])
+        self.oc_sched_wait = np.percentile(raw_data['sched_busy'],90)
+        self.oc_sched_wait_std=np.std(raw_data['sched_busy'])
+        self.cpi = dict()
+        self.hwcpucycles = dict()
+        if "cpi" in raw_data:
+            for i in range(10, 100, 5):
+                self.cpi[i] = np.percentile(raw_data["cpi"],i)
+        if "hwcpucycles" in raw_data:
+            for i in range(10, 100, 5):
+                self.hwcpucycles[i] = np.percentile(raw_data["hwcpucycles"],i)
+        self.number_of_values = len(raw_data['time'])
 
     def get_cpu_config(self):
         return self.cpu_config
@@ -59,3 +91,33 @@ class SliceObject(object):
         if percentile in self.hwcpucycles:
             return self.hwcpucycles[percentile]
         return self.hwcpucycles[str(percentile)]
+
+    def is_cpu_tier_defined(self):
+        if self.cpu_tier0 < 0 or self.cpu_tier1 < 0 or self.cpu_tier2 < 0:
+            return False
+        return True
+
+    def is_mem_tier_defined(self):
+        if self.mem_tier0 < 0 or self.mem_tier1 < 0 or self.mem_tier2 < 0:
+            return False
+        return True
+
+    def get_cpu_tiers(self):
+        return self.cpu_tier0, self.cpu_tier1
+
+    def get_mem_tiers(self):
+        return self.mem_tier0, self.mem_tier1
+
+    # Tiers as threshold
+    def update_cpu_tiers(self, cpu_tier0, cpu_tier1):
+        # Tiers are computed at the wrapper level to take into account previous slices, but updated here to be able to dump current state
+        self.cpu_tier0=cpu_tier0
+        self.cpu_tier1=cpu_tier1
+        self.cpu_tier2=self.cpu_config
+
+    # Tiers as threshold
+    def update_mem_tiers(self, mem_tier0, mem_tier1):
+        # Tiers are computed at the wrapper level to take into account previous slices, but updated here to be able to dump current state
+        self.mem_tier0=mem_tier0
+        self.mem_tier1=mem_tier1
+        self.mem_tier2=self.mem_config
