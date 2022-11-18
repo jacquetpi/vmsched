@@ -22,7 +22,7 @@ class SliceHostWrapper(SliceObjectWrapper):
             print("Empty data on slice encountered on dump " + self.host_name)
             return
         slice_host = SliceHost(slice_object=self.get_slice_object_from_dump(dump_data=host_dump_data, occurence=occurence, epoch=host_dump_data["epoch"][occurence]),
-                        vm_list=host_dump_data["vm_list"])
+                        vm_list=host_dump_data["vm_list"][occurence])
         self.add_slice(slice_host)
 
     def get_host_config(self):

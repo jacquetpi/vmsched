@@ -34,13 +34,15 @@ class SliceVm(SliceObject):
         return self.mem_state
 
     def dump_state_to_dict(self, dump_dict : dict,  key : str, iteration : int = 0):
-
         if key not in dump_dict:
             dump_dict[key] = dict()
 
         for attribute, value in self.__dict__.items():
             if attribute not in dump_dict[key]:
-                dump_dict[key][attribute] = [0 for x in range(iteration)] # in case of new vm
+                if attribute in ["raw_data", "cpu_percentile", "mem_percentile", "cpi", "hwcpucycles"]:
+                    dump_dict[key][attribute] = [dict() for x in range(iteration)] # in case of new VM
+                else:
+                    dump_dict[key][attribute] = [0 for x in range(iteration)]
             dump_dict[key][attribute].append(value)
 
     def __str__(self):

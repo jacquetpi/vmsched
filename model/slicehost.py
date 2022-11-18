@@ -9,6 +9,7 @@ class SliceHost(SliceObject):
         super().__init__(**slice_attributes)
         # Specific attributes
         self.vm_list=vm_list
+        print(len(self.vm_list))
 
     def get_vm_list(self):
         return self.vm_list
@@ -30,5 +31,20 @@ class SliceHost(SliceObject):
     def dump_state_to_dict(self, dump_dict : dict, iteration : int = 0):
         for attribute, value in self.__dict__.items():
             if attribute not in dump_dict:
-                dump_dict[attribute] = [0 for x in range(iteration)] # in case of new host
+                if attribute in ["raw_data", "cpu_percentile", "mem_percentile", "cpi", "hwcpucycles"]:
+                    dump_dict[attribute] = [dict() for x in range(iteration)] # in case of new host
+                elif attribute in ["vm_list"]:
+                    dump_dict[attribute] = [list() for x in range(iteration)]
+                else:
+                     dump_dict[attribute] = [0 for x in range(iteration)]
+            if attribute == "vm_list":
+                print("to be added")
+                print(value)
+                print("before")
+                print(dump_dict[attribute])
             dump_dict[attribute].append(value)
+            if attribute == "vm_list":
+                print("was added")
+                print(value)
+                print("after")
+                print(dump_dict[attribute])
