@@ -53,7 +53,7 @@ def check_rss(domain : str, domain_metrics : dict):
         print(domain, "is in grace period")
         return
     if "mem_usage" not in domain_metrics or not domain_metrics['mem_usage']:
-        print(domain, "not enough data to proceed (lacking usage)")
+        print(domain, "not enough data to proceed (lacking usage)") #can happen with new VMs
         return
     if "mem_rss" not in domain_metrics or not domain_metrics['mem_rss']:
         print(domain, "not enough data to proceed (lacking rss)")

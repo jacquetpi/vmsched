@@ -1,7 +1,7 @@
 import os, time, sys, getopt, json
 from resultfilehandler import ResultFileHandler
 from dotenv import load_dotenv
-
+import matplotlib.pyplot as plt
 from model.nodemodel import NodeModel
 
 STATE_ENDPOINT = ""
@@ -100,4 +100,6 @@ if __name__ == '__main__':
         else:
             main_loop_from_dump(loaded_dump, debug) # offline mode
     except KeyboardInterrupt:
+        plt.show()
         print("Program interrupted")
+        sys.exit(0)

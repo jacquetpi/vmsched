@@ -10,9 +10,7 @@ class SliceObject(object):
         if "raw_data" in kwargs:
             if ("compute" in kwargs) and (kwargs["compute"]): # avoid dual computation as this object is rebuilt by its childrens
                 self.compute_attributes(kwargs["raw_data"])
-                self.raw_data = kwargs["raw_data"] # should probably be stored only based on depends on debug level
-            else:
-                self.raw_data = kwargs["raw_data"]
+            self.raw_data = kwargs["raw_data"]
         else:
             for attribute in required_attributes:
                 setattr(self, attribute, kwargs[attribute])      
@@ -107,6 +105,12 @@ class SliceObject(object):
 
     def get_mem_tiers(self):
         return self.mem_tier0, self.mem_tier1
+
+    def get_mem_tiers(self):
+        return self.mem_tier0, self.mem_tier1
+
+    def get_raw_metric(self, metric : str):
+        return self.raw_data[metric]
 
     # Tiers as threshold
     def update_cpu_tiers(self, cpu_tier0, cpu_tier1):

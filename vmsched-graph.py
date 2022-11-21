@@ -138,6 +138,8 @@ def graph_vm(data : dict):
         if index_x>2:
             index_x=0
             index_y+=1
+        if index_y>2:
+            break
 
     fig.tight_layout()
 
@@ -298,11 +300,12 @@ def graph_slice(dataframe):
     g.map(sns.barplot, "slice", "cpu_tier0")
 
 def graph_slice2(dataframe):
-    g = sns.FacetGrid(dataframe, col="slice", row="vm")
+    g = sns.FacetGrid(dataframe, col="vm", row="vm")
     g.map(plt.plot, "epoch", "cpu_state")
 
 def graph_slice3(dataframe):
-    g = sns.FacetGrid(dataframe, col="slice", row="vm")
+    #g = sns.FacetGrid(dataframe, col="slice", row="vm")
+    g = sns.FacetGrid(dataframe, col="vm", col_wrap=4)
     g.map(graph_node_generic, "epoch", "cpu_avg", "graph_cpu_percentile", "cpu_tier0", "cpu_tier1", "cpu_state")
     #g.map(graph_node_generic, "epoch", "mem_avg", "graph_mem_percentile", "mem_tier0", "mem_tier1", "mem_state")
 
@@ -347,22 +350,22 @@ def get_vm_dataframe(data_source : dict):
 
 if __name__ == '__main__':
 
-    short_options = "hi:nvub"
-    long_options = ["help", "input=", "node", "vm", "usage", "bar"]
+    short_options = "hi:nvubs"
+    long_options = ["help", "input=", "node", "vm", "usage", "bar", "slice"]
 
     data_input = None
     display_graph_node = False
     display_graph_vm = False
     display_graph_usage = False
     display_graph_horizon = False
-    display_graph_slice = True
+    display_graph_slice = False
 
     try:
         arguments, values = getopt.getopt(sys.argv[1:], short_options, long_options)
     except getopt.error as err:
         print (str(err)) # Output error, and return with an error code
         sys.exit(2)
-    help = "python3 vmsched-dump.py [--help] [--input={file.json}] [--node] [--vm] [--usage] [--bar]"
+    help = "python3 vmsched-dump.py [--help] [--input={file.json}] [--node] [--vm] [--usage] [--bar] [--slice]"
     for current_argument, current_value in arguments:
         if current_argument in ("-h", "--help"):
             print(help)
@@ -378,6 +381,8 @@ if __name__ == '__main__':
             display_graph_usage = True
         elif current_argument in ("-b", "--bar"):
             display_graph_horizon = True
+        elif current_argument in ("-s", "--slice"):
+            display_graph_slice = True
 
     sns.set_style("white")
     if data_input is None:
@@ -399,7 +404,7 @@ if __name__ == '__main__':
     
     if display_graph_slice:
         dataframe = get_vm_dataframe(data_input)
-        graph_slice(dataframe)
+        #graph_slice(dataframe)
         graph_slice3(dataframe)
 
     plt.show()

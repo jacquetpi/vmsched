@@ -47,6 +47,12 @@ class SliceObjectWrapper(object):
                 metric_list.append(slice.get_hwcpucycles_percentile(hwcpucycles_percentile))
         return metric_list
 
+    def get_slices_raw_metric(self, metric : str):
+        metric_list = list()
+        for slice in self.slice_object_list:
+            metric_list.extend(slice.get_raw_metric(metric))
+        return metric_list
+
     def get_slices_max_metric(self, metric : str = None, cpu_percentile : int = None, mem_percentile : int = None, cpi_percentile : int = None, hwcpucycles_percentile : int = None):
         max = None
         value = None
