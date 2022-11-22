@@ -18,6 +18,7 @@ class SliceHostWrapper(SliceObjectWrapper):
             return
         slice_host = SliceHost(slice_object=self.get_slice_object_from_raw(host_data),
                         vm_list=host_data["vm"])
+        slice_host.set_stability(self.compute_stability(slice_to_be_added=slice_host))
         self.add_slice(slice_host)
 
     def add_slice_data_from_dump(self, dump_data : dict, occurence : int):
@@ -26,6 +27,7 @@ class SliceHostWrapper(SliceObjectWrapper):
             return
         slice_host = SliceHost(slice_object=self.get_slice_object_from_dump(dump_data=dump_data["node"], occurence=occurence, epoch=dump_data["epoch"][occurence]),
                         vm_list=dump_data["node"]["vm_list"][occurence])
+        slice_host.set_stability(self.compute_stability(slice_to_be_added=slice_host))
         self.add_slice(slice_host)
 
     def get_host_config(self):
@@ -58,26 +60,30 @@ class SliceHostWrapper(SliceObjectWrapper):
                 return True
         return False
 
-    def is_stable(self): # Host is considered stable if no new VM were deployed
+    def compute_stability(self, slice_to_be_added : SliceHost):
         if not self.is_historical_full():
             return False
-
-        # self.get_last_slice().has_model ?
-        data = dict()
-        # dict_keys(['time', 'cpi', 'cpu', 'cpu_time', 'cpu_usage', 'elapsed_cpu_time', 'elapsed_time', 'freq', 'hwcpucycles', 'hwinstructions', 'maxfreq', 'mem', 'mem_usage', 'minfreq', 'oc_cpu', 'oc_cpu_d', 'oc_mem', 'oc_mem_d', 'sched_busy', 'sched_runtime', 'sched_waittime', 'swpagefaults', 'vm_number', 'vm'])
-        data["time"] = [datetime.fromtimestamp(x) for x in self.get_slices_raw_metric("time")]
-        data["cpu_usage"] = self.get_slices_raw_metric("cpu_usage")
-        dataframe = pd.DataFrame(data)
-        model = auto_timeseries(score_type='rmse', time_interval='S', model_type='VAR', verbose=1)
-        model.fit(traindata=dataframe, ts_column="time", target="cpu_usage", cv=5,) 
         
-        predictions = model.predict(testdata=5, model = 'stats')
+        # dict_keys(['time', 'cpi', 'cpu', 'cpu_time', 'cpu_usage', 'elapsed_cpu_time', 'elapsed_time', 'freq', 'hwcpucycles', 'hwinstructions', 'maxfreq', 'mem', 'mem_usage', 'minfreq', 'oc_cpu', 'oc_cpu_d', 'oc_mem', 'oc_mem_d', 'sched_busy', 'sched_runtime', 'sched_waittime', 'swpagefaults', 'vm_number', 'vm'])
+        current_data = dict()
+        current_data["time"] = [datetime.fromtimestamp(x) for x in self.get_slices_raw_metric("time")]
+        current_data["cpu_usage"] = self.get_slices_raw_metric("cpu_usage")
+        current_dataframe = pd.DataFrame(current_data)
+        model = auto_timeseries(score_type='rmse', time_interval='S', model_type='ML', verbose=1)
+        model.fit(traindata=current_dataframe, ts_column="time", target="cpu_usage", cv=5,) 
+
+        print("###\n###\n###")
+        new_data = dict()
+        new_data["time"] = [datetime.fromtimestamp(x) for x in slice_to_be_added.get_raw_metric("time")]
+        #new_data["cpu_usage"] = slice_to_be_added.get_raw_metric("cpu_usage")
+        new_dataframe = pd.DataFrame(new_data)
+        predictions = model.predict(testdata=new_dataframe, model = 'best')
         print(predictions)
         return True
 
     # Host tiers as threshold
     def get_cpu_tiers(self): # return tier0, tier1
-        self.is_stable()
+        self.get_last_slice().is_stable()
         cpu_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=95), nearest_val=0.1) # unity is vcpu
         cpu_tier1 = cpu_tier0 # self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=99), nearest_val=0.1) # unity is vcpu
         return cpu_tier0, cpu_tier1

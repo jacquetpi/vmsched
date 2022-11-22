@@ -85,10 +85,13 @@ class SliceModel(object):
         if (cpu_config is None) or (mem_config is None):
             #print("Not enough data to compute cpu/mem tier on this slice: [" + str(self.leftBound) + ";" + str(self.rightBound) + "[")
             return
+
         # To compute slice tiers as sum of vm slices :
         # slice_cpu_tier0, slice_cpu_tier1, slice_mem_tier0, slice_mem_tier1 = self.get_vm_cpu_tiers_sum()
+
         # To compute slice tiers from node tiers: self.get_host_config()
         slice_cpu_tier0, slice_cpu_tier1, slice_mem_tier0, slice_mem_tier1 = self.slicenodedata.get_cpu_mem_tiers()
+        
         self.compute_cpu_mem_tiers(slice_cpu_tier0=slice_cpu_tier0, slice_cpu_tier1=slice_cpu_tier1, cpu_config=cpu_config, 
                     slice_mem_tier0=slice_mem_tier0, slice_mem_tier1=slice_mem_tier1, mem_config=mem_config)
 

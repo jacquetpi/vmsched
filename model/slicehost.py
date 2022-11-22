@@ -9,6 +9,7 @@ class SliceHost(SliceObject):
         super().__init__(**slice_attributes)
         # Specific attributes
         self.vm_list=vm_list
+        self.stable_state=False
 
     def get_vm_list(self):
         return self.vm_list
@@ -26,6 +27,12 @@ class SliceHost(SliceObject):
 
     def alert_oc_mem(self):
         return (self.oc_page_fault>100000); # TODO value
+
+    def set_stability(self, stable : bool):
+        self.stable_state=stable
+
+    def is_stable(self):
+        return self.stable_state
 
     def dump_state_to_dict(self, dump_dict : dict, iteration : int = 0):
         for attribute, value in self.__dict__.items():
