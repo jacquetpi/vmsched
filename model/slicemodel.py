@@ -71,10 +71,10 @@ class SliceModel(object):
         slice_mem_tier0, slice_mem_tier1 = 0, 0
         for vm, vmwrapper in self.slicevmdata.items():
             wp_cpu_min, wp_cpu_max, wp_mem_min, wp_mem_max = vmwrapper.get_cpu_mem_tiers()
-            slice_cpu_tier0 += wp_cpu_min
-            slice_cpu_tier1 += wp_cpu_max
-            slice_mem_tier0 += wp_mem_min
-            slice_mem_tier1 += wp_mem_max
+            slice_cpu_tier0 += wp_cpu_min if wp_cpu_min is not None else 0
+            slice_cpu_tier1 += wp_cpu_max if wp_cpu_max is not None else 0
+            slice_mem_tier0 += wp_mem_min if wp_mem_min is not None else 0
+            slice_mem_tier1 += wp_mem_max if wp_mem_max is not None else 0
         return slice_cpu_tier0, slice_cpu_tier1, slice_mem_tier0, slice_mem_tier1
 
     def get_cpu_mem_tiers(self):
@@ -82,7 +82,7 @@ class SliceModel(object):
 
     def update_cpu_mem_tiers(self):
         cpu_config, mem_config = self.get_host_config()
-        if cpu_config<0 or mem_config<0:
+        if (cpu_config is None) or (cpu_config<0) or (mem_config is None) or (mem_config<0):
             #print("Not enough data to compute cpu/mem tier on this slice: [" + str(self.leftBound) + ";" + str(self.rightBound) + "[")
             return
         # To compute slice tiers as sum of vm slices :

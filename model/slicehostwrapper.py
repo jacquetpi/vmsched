@@ -30,13 +30,13 @@ class SliceHostWrapper(SliceObjectWrapper):
 
     def get_host_config(self):
         cpu_config_list = self.get_slices_metric("cpu_config")
-        mem_config_list = self.get_slices_metric("cpu_config")
+        mem_config_list = self.get_slices_metric("mem_config")
         if cpu_config_list:
-            cpu_config = self.get_slices_metric("cpu_config")[-1]
+            cpu_config = cpu_config_list[-1]
         else:
             cpu_config=-1
         if mem_config_list:
-            mem_config = self.get_slices_metric("mem_config")[-1]
+            mem_config = mem_config_list[-1]
         else:
             mem_config=-1
         return cpu_config, mem_config
@@ -61,20 +61,17 @@ class SliceHostWrapper(SliceObjectWrapper):
     def is_stable(self): # Host is considered stable if no new VM were deployed
         if not self.is_historical_full():
             return False
-
+        return True
         # self.get_last_slice().has_model ?
         data = dict()
         # dict_keys(['time', 'cpi', 'cpu', 'cpu_time', 'cpu_usage', 'elapsed_cpu_time', 'elapsed_time', 'freq', 'hwcpucycles', 'hwinstructions', 'maxfreq', 'mem', 'mem_usage', 'minfreq', 'oc_cpu', 'oc_cpu_d', 'oc_mem', 'oc_mem_d', 'sched_busy', 'sched_runtime', 'sched_waittime', 'swpagefaults', 'vm_number', 'vm'])
-        data["time"] = [datetime.fromtimestamp(x, timezone.utc) for x in self.get_slices_raw_metric("time")]
+        data["time"] = [datetime.fromtimestamp(x) for x in self.get_slices_raw_metric("time")]
         data["cpu_usage"] = self.get_slices_raw_metric("cpu_usage")
         dataframe = pd.DataFrame(data)
-
-        model = auto_timeseries(score_type='rmse', time_interval='S', verbose=1)
+        model = auto_timeseries(score_type='rmse', time_interval='S', seasonality=True, seasonal_period=360, verbose=1)
         model.fit(traindata=dataframe, ts_column="time", target="cpu_usage", cv=5,) 
         
-        print("yoo")
         predictions = model.predict(testdata=5, model = 'best')
-        print("yoo2")
         print(predictions)
         return True
 

@@ -49,7 +49,10 @@ class SliceVmWrapper(SliceObjectWrapper):
             new_value = new_slice.get_mem_percentile(mem_percentile)
         else:
             raise ValueError("No metrics passed to is_incoherent_value()")
-        threshold = last_value + multiplier*getattr(last_slice, std_metric)
+        if last_value is None:
+            return True
+        variation =  self.get_slices_max_metric(metric=metric,cpu_percentile=cpu_percentile,mem_percentile=mem_percentile)
+        threshold = last_value + (multiplier*variation if variation is not None else 0)
         return new_value > threshold
 
     def compute_cpu_state_of_new_slice(self, new_slice : SliceVm):

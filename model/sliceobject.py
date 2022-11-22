@@ -27,36 +27,41 @@ class SliceObject(object):
         else:
             memory_metric = "mem_usage" # host case
         # CPU/mem indicators
-        self.cpu_config = raw_data['cpu'][-1]
-        self.mem_config = raw_data['mem'][-1]
-        self.cpu_percentile = dict()
-        self.mem_percentile = dict()
-        for i in range(10, 90, 5): # percentiles from 10 to 85
-            self.cpu_percentile[i] = np.percentile(raw_data['cpu_usage'],i)
-            self.mem_percentile[i] = np.percentile(raw_data[memory_metric],i)
-        for i in range(90, 100, 1): # percentiles from 90 to 99
-            self.cpu_percentile[i] = np.percentile(raw_data['cpu_usage'],i)
-            self.mem_percentile[i] = np.percentile(raw_data[memory_metric],i)
-        self.cpu_avg = np.average(raw_data['cpu_usage'])
-        self.mem_avg = np.average(raw_data[memory_metric])
-        self.cpu_std = np.std(raw_data['cpu_usage'])
-        self.mem_std = np.std(raw_data[memory_metric])
-        self.cpu_max = np.max(raw_data['cpu_usage'])
-        self.mem_max = np.max(raw_data[memory_metric])
+        
+        self.cpu_config = raw_data["cpu"][-1] if raw_data.get('cpu', False) else None
+        self.mem_config = raw_data["mem"][-1] if raw_data.get('mem', False) else None
+        self.cpu_avg = np.average(raw_data["cpu_usage"]) if raw_data.get('cpu_usage', False) else None
+        self.mem_avg = np.average(raw_data[memory_metric]) if raw_data.get(memory_metric, False) else None
+        self.cpu_std = np.std(raw_data["cpu_usage"]) if raw_data.get('cpu_usage', False) else None
+        self.mem_std = np.std(raw_data[memory_metric]) if raw_data.get(memory_metric, False) else None
+        self.cpu_max = np.max(raw_data["cpu_usage"]) if raw_data.get('cpu_usage', False) else None
+        self.mem_max = np.max(raw_data[memory_metric]) if raw_data.get(memory_metric, False) else None
         # Overcommitment indicators
-        self.oc_page_fault = np.percentile(raw_data['swpagefaults'],90)
-        self.oc_page_fault_std=np.std(raw_data['swpagefaults'])
-        self.oc_sched_wait = np.percentile(raw_data['sched_busy'],90)
-        self.oc_sched_wait_std=np.std(raw_data['sched_busy'])
+        self.oc_page_fault = np.percentile(raw_data['swpagefaults'],90) if raw_data.get("swpagefaults", False) else None
+        self.oc_page_fault_std = np.std(raw_data['swpagefaults']) if raw_data.get("swpagefaults", False) else None
+        self.oc_sched_wait = np.percentile(raw_data['sched_busy'],90) if raw_data.get("sched_busy", False) else None
+        self.oc_sched_wait_std=np.std(raw_data['sched_busy']) if raw_data.get("sched_busy", False) else None
         self.cpi = dict()
         self.hwcpucycles = dict()
+        self.cpu_percentile = dict()
+        self.mem_percentile = dict()
+        if "cpu_usage" in raw_data and raw_data["cpu_usage"]:
+            for i in range(10, 90, 5): # percentiles from 10 to 85
+                self.cpu_percentile[i] = np.percentile(raw_data['cpu_usage'],i)
+            for i in range(90, 100, 1): # percentiles from 90 to 99
+                self.cpu_percentile[i] = np.percentile(raw_data['cpu_usage'],i)
+        if memory_metric in raw_data and raw_data[memory_metric]:
+            for i in range(10, 90, 5): # percentiles from 10 to 85
+                self.mem_percentile[i] = np.percentile(raw_data[memory_metric],i)
+            for i in range(90, 100, 1): # percentiles from 90 to 99
+                self.mem_percentile[i] = np.percentile(raw_data[memory_metric],i)
         if "cpi" in raw_data:
             for i in range(10, 100, 5):
                 self.cpi[i] = np.percentile(raw_data["cpi"],i)
         if "hwcpucycles" in raw_data:
             for i in range(10, 100, 5):
                 self.hwcpucycles[i] = np.percentile(raw_data["hwcpucycles"],i)
-        self.number_of_values = len(raw_data['time'])
+        self.number_of_values = len(raw_data['time']) if 'time' in raw_data else 0
 
     def get_cpu_config(self):
         return self.cpu_config
@@ -70,25 +75,24 @@ class SliceObject(object):
     def get_mem_avg(self):
         return self.mem_avg
 
+    def get_percentile(self, attribute : str, percentile : int):
+        if percentile in getattr(self, attribute):
+            return getattr(self, attribute)[percentile]
+        if str(percentile) in getattr(self, attribute):    
+            return getattr(self, attribute)[str(percentile)]
+        return None
+
     def get_cpu_percentile(self, percentile : int):
-        if percentile in self.cpu_percentile:
-            return self.cpu_percentile[percentile]
-        return self.cpu_percentile[str(percentile)]
+        return self.get_percentile('cpu_percentile', percentile)
 
     def get_mem_percentile(self, percentile : int):
-        if percentile in self.mem_percentile:
-            return self.mem_percentile[percentile]
-        return self.mem_percentile[str(percentile)]
+        return self.get_percentile('mem_percentile', percentile)
 
     def get_cpi_percentile(self, percentile : int):
-        if percentile in self.cpi:
-            return self.cpi[percentile]
-        return self.cpi[str(percentile)]
+        return self.get_percentile('cpi', percentile)
 
     def get_hwcpucycles_percentile(self, percentile : int):
-        if percentile in self.hwcpucycles:
-            return self.hwcpucycles[percentile]
-        return self.hwcpucycles[str(percentile)]
+        return self.get_percentile('hwcpucycles', percentile)
 
     def is_cpu_tier_defined(self):
         if self.cpu_tier0 < 0 or self.cpu_tier1 < 0 or self.cpu_tier2 < 0:
