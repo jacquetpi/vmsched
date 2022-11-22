@@ -21,12 +21,12 @@ class SliceModel(object):
         # Data itself:
         self.slicevmdata=dict()
         self.slicenodedata=SliceHostWrapper(self.model_node_name, historical_occurences=self.model_historical_occurences)
-        self.cpu_tier0=-1
-        self.cpu_tier1=-1
-        self.cpu_tier2=-1
-        self.mem_tier0=-1
-        self.mem_tier1=-1
-        self.mem_tier2=-1
+        self.cpu_tier0=None
+        self.cpu_tier1=None
+        self.cpu_tier2=None
+        self.mem_tier0=None
+        self.mem_tier1=None
+        self.mem_tier2=None
 
     def build_past_slices_from_epoch(self, past_iteration : int = 1):
         for i in range((-past_iteration),0):
@@ -82,7 +82,7 @@ class SliceModel(object):
 
     def update_cpu_mem_tiers(self):
         cpu_config, mem_config = self.get_host_config()
-        if (cpu_config is None) or (cpu_config<0) or (mem_config is None) or (mem_config<0):
+        if (cpu_config is None) or (mem_config is None):
             #print("Not enough data to compute cpu/mem tier on this slice: [" + str(self.leftBound) + ";" + str(self.rightBound) + "[")
             return
         # To compute slice tiers as sum of vm slices :

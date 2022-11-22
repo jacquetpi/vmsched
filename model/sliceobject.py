@@ -14,12 +14,12 @@ class SliceObject(object):
         else:
             for attribute in required_attributes:
                 setattr(self, attribute, kwargs[attribute])      
-        self.cpu_tier0 = -1 
-        self.cpu_tier1 = -1
-        self.cpu_tier2 = -1
-        self.mem_tier0 = -1 
-        self.mem_tier1 = -1
-        self.mem_tier2 = -1
+        self.cpu_tier0 = None
+        self.cpu_tier1 = None
+        self.cpu_tier2 = None
+        self.mem_tier0 = None
+        self.mem_tier1 = None
+        self.mem_tier2 = None
 
     def compute_attributes(self, raw_data : dict):
         if "mem_rss" in raw_data:
@@ -95,12 +95,12 @@ class SliceObject(object):
         return self.get_percentile('hwcpucycles', percentile)
 
     def is_cpu_tier_defined(self):
-        if self.cpu_tier0 < 0 or self.cpu_tier1 < 0 or self.cpu_tier2 < 0:
+        if (self.cpu_tier0 is None) or (self.cpu_tier1 is None) or (self.cpu_tier2 is None):
             return False
         return True
 
     def is_mem_tier_defined(self):
-        if self.mem_tier0 < 0 or self.mem_tier1 < 0 or self.mem_tier2 < 0:
+        if (self.mem_tier0 is None) or (self.mem_tier1 is None) or (self.mem_tier2 is None):
             return False
         return True
 

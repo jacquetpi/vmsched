@@ -61,17 +61,17 @@ class SliceHostWrapper(SliceObjectWrapper):
     def is_stable(self): # Host is considered stable if no new VM were deployed
         if not self.is_historical_full():
             return False
-        return True
+
         # self.get_last_slice().has_model ?
         data = dict()
         # dict_keys(['time', 'cpi', 'cpu', 'cpu_time', 'cpu_usage', 'elapsed_cpu_time', 'elapsed_time', 'freq', 'hwcpucycles', 'hwinstructions', 'maxfreq', 'mem', 'mem_usage', 'minfreq', 'oc_cpu', 'oc_cpu_d', 'oc_mem', 'oc_mem_d', 'sched_busy', 'sched_runtime', 'sched_waittime', 'swpagefaults', 'vm_number', 'vm'])
         data["time"] = [datetime.fromtimestamp(x) for x in self.get_slices_raw_metric("time")]
         data["cpu_usage"] = self.get_slices_raw_metric("cpu_usage")
         dataframe = pd.DataFrame(data)
-        model = auto_timeseries(score_type='rmse', time_interval='S', seasonality=True, seasonal_period=360, verbose=1)
+        model = auto_timeseries(score_type='rmse', time_interval='S', model_type='VAR', verbose=1)
         model.fit(traindata=dataframe, ts_column="time", target="cpu_usage", cv=5,) 
         
-        predictions = model.predict(testdata=5, model = 'best')
+        predictions = model.predict(testdata=5, model = 'stats')
         print(predictions)
         return True
 
