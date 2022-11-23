@@ -13,7 +13,7 @@ class SliceObjectWrapper(object):
     def get_slice_object_from_raw(self, data : dict):
         # Update wrapper metrics
         self.object_seen+=1
-        self.object_last_seen = int(data['time'][-1])
+        self.object_last_seen = int(data['time'][-1]) if data.get('time', False) else None 
         sliceObject = SliceObject(raw_data=data)
         return sliceObject
 
