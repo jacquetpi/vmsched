@@ -1,10 +1,9 @@
 from model.sliceobjectwrapper import SliceObjectWrapper
 from model.sliceobject import SliceObject
 from model.slicehost import SliceHost
-from datetime import datetime, timezone
+from model.stabilityassesser import StabilityAssesser
+from datetime import datetime
 import numpy as np
-from auto_ts import auto_timeseries
-import pandas as pd
 
 class SliceHostWrapper(SliceObjectWrapper):
 
@@ -66,20 +65,15 @@ class SliceHostWrapper(SliceObjectWrapper):
         
         # dict_keys(['time', 'cpi', 'cpu', 'cpu_time', 'cpu_usage', 'elapsed_cpu_time', 'elapsed_time', 'freq', 'hwcpucycles', 'hwinstructions', 'maxfreq', 'mem', 'mem_usage', 'minfreq', 'oc_cpu', 'oc_cpu_d', 'oc_mem', 'oc_mem_d', 'sched_busy', 'sched_runtime', 'sched_waittime', 'swpagefaults', 'vm_number', 'vm'])
         current_data = dict()
-        current_data["time"] = [datetime.fromtimestamp(x) for x in self.get_slices_raw_metric("time")]
+        current_data["time"] = [x for x in self.get_slices_raw_metric("time")]
         current_data["cpu_usage"] = self.get_slices_raw_metric("cpu_usage")
-        current_dataframe = pd.DataFrame(current_data)
-        model = auto_timeseries(score_type='rmse', time_interval='S', model_type='ML', verbose=1)
-        model.fit(traindata=current_dataframe, ts_column="time", target="cpu_usage", cv=5,) 
 
-        print("###\n###\n###")
         new_data = dict()
-        new_data["time"] = [datetime.fromtimestamp(x) for x in slice_to_be_added.get_raw_metric("time")]
-        #new_data["cpu_usage"] = slice_to_be_added.get_raw_metric("cpu_usage")
-        new_dataframe = pd.DataFrame(new_data)
-        predictions = model.predict(testdata=new_dataframe, model = 'best')
-        print(predictions)
-        return True
+        new_data["time"] = [x for x in slice_to_be_added.get_raw_metric("time")]
+        new_data["cpu_usage"] = slice_to_be_added.get_raw_metric("cpu_usage")
+
+        assesser = StabilityAssesser()
+        return assesser.assess(traindata=current_data, targetdata=new_data, metric="cpu_usage")
 
     # Host tiers as threshold
     def get_cpu_tiers(self): # return tier0, tier1
