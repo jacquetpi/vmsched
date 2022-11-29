@@ -89,6 +89,8 @@ def add_ratio_if_exists(harvested_metrics : dict, field : str, probe_value1 : fl
 def treat_domain_metrics_delta(elapsed_time : int, vm_metrics : dict, domain_metrics : dict, vm_previous_metrics, vm_saved_metrics : dict):
 
     cpu_usage = 0
+    page_minflt = 0
+    page_majflt = 0
     if add_difference_if_exists(vm_metrics, 'elapsed_cpu_time', vm_metrics['fields'].get('cpu_time'), vm_previous_metrics.get('cpu_time')):
         if add_ratio_if_exists(vm_metrics, 'cpu_usage', vm_metrics['fields'].get('elapsed_cpu_time'), elapsed_time, (10**6)):
             cpu_usage = vm_metrics['fields']['cpu_usage']
@@ -99,9 +101,17 @@ def treat_domain_metrics_delta(elapsed_time : int, vm_metrics : dict, domain_met
         add_difference_if_exists(vm_metrics, 'sched_waittime', domain_metrics['sched'].get('waittime'), vm_previous_metrics.get('sched_waittime'))
         add_ratio_if_exists(vm_metrics, 'sched_busy', vm_metrics['fields'].get('sched_waittime'), vm_metrics['fields'].get('sched_runtime'))
 
+    if 'stat' in domain_metrics:
+        add_difference_if_exists(vm_metrics, 'stat_cmajflt', domain_metrics['stat'].get('cmajflt'), vm_previous_metrics.get('stat_cmajflt'))
+        add_difference_if_exists(vm_metrics, 'stat_cminflt', domain_metrics['stat'].get('cminflt'), vm_previous_metrics.get('stat_cminflt'))
+        if add_difference_if_exists(vm_metrics, 'stat_majflt', domain_metrics['stat'].get('majflt'), vm_previous_metrics.get('stat_majflt')):
+            page_majflt = vm_metrics['fields']['stat_majflt']
+        if add_difference_if_exists(vm_metrics, 'stat_minflt', domain_metrics['stat'].get('minflt'), vm_previous_metrics.get('stat_minflt')):
+            page_minflt = vm_metrics['fields']['stat_minflt']
+
     vm_saved_metrics['cpu_usage'] = cpu_usage
 
-    return cpu_usage
+    return cpu_usage, page_minflt, page_majflt
 
 def treat_domain_metrics(domain_name : str, url :str, epoch_ms : int, domain_metrics : dict, vm_previous_metrics, elapsed_time):
 
@@ -133,12 +143,27 @@ def treat_domain_metrics(domain_name : str, url :str, epoch_ms : int, domain_met
         add_field_if_exists(vm_saved_metrics, 'sched_runtime', domain_metrics['sched'].get('runtime'))
         add_field_if_exists(vm_saved_metrics, 'sched_waittime', domain_metrics['sched'].get('waittime'))
 
+    if 'stat' in domain_metrics:
+        add_field_if_exists(vm_metrics, 'stat_rss_pages', domain_metrics['stat'].get('rss'))
+        add_field_if_exists(vm_metrics, 'stat_rsslim', domain_metrics['stat'].get('rsslim'),  (10**6)) # B to MB
+        add_field_if_exists(vm_metrics, 'stat_vsize', domain_metrics['stat'].get('vsize'),  (10**6))
+        add_field_if_exists(vm_saved_metrics, 'stat_cminflt', domain_metrics['stat'].get('cminflt'))
+        add_field_if_exists(vm_saved_metrics, 'stat_cmajflt', domain_metrics['stat'].get('cmajflt'))
+        add_field_if_exists(vm_saved_metrics, 'stat_minflt', domain_metrics['stat'].get('minflt'))
+        add_field_if_exists(vm_saved_metrics, 'stat_majflt', domain_metrics['stat'].get('majflt'))
+
     if elapsed_time>0:
-        cpu_usage = treat_domain_metrics_delta(elapsed_time, vm_metrics, domain_metrics, vm_previous_metrics, vm_saved_metrics)
+        cpu_usage, page_minflt, page_majflt = treat_domain_metrics_delta(elapsed_time, vm_metrics, domain_metrics, vm_previous_metrics, vm_saved_metrics)
     else:
         cpu_usage = vm_previous_metrics.get('cpu_usage', 0)
+        page_minflt = vm_previous_metrics.get('stat_minflt', 0)
+        page_majflt = vm_previous_metrics.get('stat_majflt', 0)
 
-    return vm_metrics, vm_saved_metrics, vm_metrics['fields'].get('cpu', 0), cpu_usage, vm_metrics['fields'].get('mem', vm_previous_metrics.get('mem', 0)), vm_metrics['fields'].get('mem_usage',  vm_previous_metrics.get('mem_usage', 0))
+    return vm_metrics, vm_saved_metrics,\
+        vm_metrics['fields'].get('cpu', 0), cpu_usage,\
+        vm_metrics['fields'].get('mem', vm_previous_metrics.get('mem', 0)),\
+        vm_metrics['fields'].get('mem_usage',  vm_previous_metrics.get('mem_usage', 0)),\
+        page_minflt, page_majflt
 
 def treat_stub_metrics(url : str, probe_metrics : dict, previous_metrics : dict = dict()):
 
@@ -207,17 +232,20 @@ def treat_stub_metrics(url : str, probe_metrics : dict, previous_metrics : dict 
 
         cpu_alloc_sum = mem_alloc_sum = 0
         cpu_real_sum = mem_real_sum = 0
+        page_minflt_sum = page_majflt_sum = 0
 
         for domain_name, domain_metrics in probe_metrics['domain'].items():
             
             if ('domain' in previous_metrics) and (domain_name in previous_metrics['domain']) and (elapsed_time>0):
-                vm_metrics, vm_saved_metrics, domain_cpu, domain_cpu_usage, domain_mem, domain_mem_usage = treat_domain_metrics(domain_name, url, epoch_ms, domain_metrics, previous_metrics['domain'][domain_name], elapsed_time)
+                vm_metrics, vm_saved_metrics, domain_cpu, domain_cpu_usage, domain_mem, domain_mem_usage, page_minflt, page_majflt = treat_domain_metrics(domain_name, url, epoch_ms, domain_metrics, previous_metrics['domain'][domain_name], elapsed_time)
             else:
-                vm_metrics, vm_saved_metrics, domain_cpu, domain_cpu_usage, domain_mem, domain_mem_usage = treat_domain_metrics(domain_name, url, epoch_ms, domain_metrics, dict(), 0)
+                vm_metrics, vm_saved_metrics, domain_cpu, domain_cpu_usage, domain_mem, domain_mem_usage, page_minflt, page_majflt = treat_domain_metrics(domain_name, url, epoch_ms, domain_metrics, dict(), 0)
             cpu_alloc_sum += domain_cpu
             cpu_real_sum += domain_cpu_usage
             mem_alloc_sum += domain_mem
             mem_real_sum += domain_mem_usage
+            page_minflt_sum += page_minflt
+            page_majflt_sum += page_majflt
 
             saved_metrics['domain'][domain_name] = vm_saved_metrics
 
@@ -227,6 +255,8 @@ def treat_stub_metrics(url : str, probe_metrics : dict, previous_metrics : dict 
         add_ratio_if_exists(node_metrics, 'oc_mem', mem_alloc_sum, node_metrics['fields'].get('mem'))
         add_ratio_if_exists(node_metrics, 'oc_cpu_d', cpu_real_sum, node_metrics['fields'].get('cpu'))
         add_ratio_if_exists(node_metrics, 'oc_mem_d', mem_real_sum, node_metrics['fields'].get('mem'))
+        add_field_if_exists(node_metrics, 'minflt_sum', page_minflt_sum)
+        add_field_if_exists(node_metrics, 'majflt_sum', page_majflt_sum)
 
     else:
         print("No domain metrics")
@@ -235,6 +265,8 @@ def treat_stub_metrics(url : str, probe_metrics : dict, previous_metrics : dict 
         add_field_if_exists(node_metrics, 'oc_mem', 0.0)
         add_field_if_exists(node_metrics, 'oc_cpu_d', 0.0)
         add_field_if_exists(node_metrics, 'oc_mem_d', 0.0)
+        add_field_if_exists(node_metrics, 'minflt_sum', 0.0)
+        add_field_if_exists(node_metrics, 'majflt_sum', 0.0)
 
     store_influx(node_metrics)
     return saved_metrics

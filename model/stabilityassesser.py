@@ -4,6 +4,7 @@ from sklearn.metrics import mean_absolute_error
 from numpy import asarray
 from sklearn.ensemble import RandomForestRegressor
 from matplotlib import pyplot
+import numpy as np
 
 class StabilityAssesser(object):
 
@@ -106,7 +107,7 @@ class StabilityAssesser(object):
             # store forecast in list of predictions
             predictions.append(yhat)
             # summarize progress
-            print('>expected=%.1f, predicted=%.1f' % (testY, yhat))
+            #print('>expected=%.1f, predicted=%.1f' % (testY, yhat))
         # estimate prediction error
         error = mean_absolute_error(test[:, -1], predictions)
         return error, test[:, -1], predictions
@@ -119,12 +120,15 @@ class StabilityAssesser(object):
 
         # evaluate
         #mae, y, yhat = self.walk_forward_validation(traindata, n_test=len(targetdata["time"]))
-        mae, y, yhat = self.try_mode(traindata, n_test=len(targetdata["time"]))
+        mae, realdata, predictions = self.try_mode(traindata, n_test=len(targetdata["time"]))
+        print("real max", np.max(realdata), "predicted max", np.max(predictions))
         print('MAE: %.3f' % mae)
         # plot expected vs predicted
-        # pyplot.plot(y, label='Expected')
-        # pyplot.plot(yhat, label='Predicted')
-        # pyplot.legend()
-        # pyplot.show()
+        pyplot.plot(realdata, label='Expected')
+        print(len(realdata))
+        pyplot.plot(predictions, label='Predicted')
+        print(len(predictions))
+        pyplot.legend()
+        pyplot.show()
 
         return True # TODO MAE < THRESHOLD
