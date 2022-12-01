@@ -73,7 +73,12 @@ class SliceObjectWrapper(object):
 
     def get_last_slice(self):
         return self.slice_object_list[-1]
-    
+
+    def get_slice(self, index : int):
+        if index >= len(self.slice_object_list):
+            return None
+        return self.slice_object_list[index]
+
     def get_oldest_slice(self):
         return self.slice_object_list[0]
 
