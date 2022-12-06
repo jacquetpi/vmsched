@@ -72,15 +72,23 @@ class SliceObjectWrapper(object):
         return max
 
     def get_last_slice(self):
-        return self.slice_object_list[-1]
+        if self.slice_object_list:
+            return self.slice_object_list[-1]
+        return None
 
     def get_slice(self, index : int):
-        if index >= len(self.slice_object_list):
-            return None
-        return self.slice_object_list[index]
+        if self.slice_object_list and (index < len(self.slice_object_list)):
+           return self.slice_object_list[index]
+        return None
+
+    def get_nth_to_last_slice(self, index : int):
+        nthindex = len(self.slice_object_list) - index
+        return self.get_slice(nthindex)
 
     def get_oldest_slice(self):
-        return self.slice_object_list[0]
+        if self.slice_object_list:
+            return self.slice_object_list[0]
+        return None
 
     def round_to_upper_nearest(self, x : int, nearest_val : int):
         return nearest_val * math.ceil(x/nearest_val)

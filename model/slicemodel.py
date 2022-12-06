@@ -42,22 +42,32 @@ class SliceModel(object):
 
     def add_slice_data_from_epoch(self, begin_epoch : int, end_epoch : int):
         domain_data = self.retrieve_domain_data(begin_epoch, end_epoch)
+        booked_cpu, booked_mem = 0, 0
         for domain_name, domain_stats in domain_data.items():
             if domain_name not in self.slicevmdata:
                 self.slicevmdata[domain_name]=SliceVmWrapper(domain_name=domain_name, historical_occurences=self.model_historical_occurences)
+            booked_cpu+= domain_stats["cpu"][-1] if domain_stats["cpu"] else 0
+            booked_mem+= domain_stats["mem"][-1] if domain_stats["mem"] else 0
             self.slicevmdata[domain_name].add_slice_data_from_raw(domain_stats)
         node_stats = self.retrieve_node_data(begin_epoch, end_epoch)
         node_stats["vm"] = list(domain_data.keys()) # vm id list
+        node_stats["booked_cpu"] = booked_cpu
+        node_stats["booked_mem"] = booked_mem
         self.slicenodedata.add_slice_data_from_raw(node_stats)
         self.update_cpu_mem_tiers()
 
     def add_slice_data_from_dump(self, dump_data : dict, occurence : int):
-        self.slicenodedata.add_slice_data_from_dump(dump_data, occurence)
+        booked_cpu, booked_mem = 0, 0
         if "vm" in dump_data:
             for domain_name, domain_dump_data in dump_data["vm"].items():
                 if domain_name not in self.slicevmdata:
                     self.slicevmdata[domain_name]=SliceVmWrapper(domain_name=domain_name, historical_occurences=self.model_historical_occurences)
+                booked_cpu+= domain_dump_data["cpu_config"][-1] if domain_dump_data["cpu_config"][-1] is not None else 0
+                booked_mem+= domain_dump_data["mem_config"][-1] if domain_dump_data["mem_config"][-1] is not None else 0
                 self.slicevmdata[domain_name].add_slice_data_from_dump(domain_dump_data, occurence, epoch=dump_data["epoch"][occurence])
+        dump_data["node"]["booked_cpu"] = booked_cpu # can be avoided on newer trace
+        dump_data["node"]["booked_mem"] = booked_mem
+        self.slicenodedata.add_slice_data_from_dump(dump_data, occurence)
         self.update_cpu_mem_tiers()
 
     def get_vmwrapper(self):

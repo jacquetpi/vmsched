@@ -27,8 +27,9 @@ class SliceHostWrapper(SliceObjectWrapper):
             print("Empty data on slice encountered on dump " + self.host_name)
             return
         slice_host = SliceHost(slice_object=self.get_slice_object_from_dump(dump_data=dump_data["node"], occurence=occurence, epoch=dump_data["epoch"][occurence]),
-                        vm_list=dump_data["node"]["vm_list"][occurence])
-        slice_host.set_stability(self.compute_stability(slice_to_be_added=slice_host))
+                        vm_list=dump_data["node"]["vm_list"][occurence], booked_cpu=dump_data["node"]["booked_cpu"], booked_mem=dump_data["node"]["booked_mem"])
+        cpu_stability, mem_stability = self.compute_stability(slice_to_be_added=slice_host)
+        slice_host.set_stability(cpu_stability, mem_stability)
         self.add_slice(slice_host)
 
     def get_host_config(self):
@@ -63,7 +64,7 @@ class SliceHostWrapper(SliceObjectWrapper):
 
     def compute_stability(self, slice_to_be_added : SliceHost):
         if not self.is_historical_full():
-            return False
+            return False, False
         
         # dict_keys(['time', 'cpi', 'cpu', 'cpu_time', 'cpu_usage', 'elapsed_cpu_time', 'elapsed_time', 'freq', 'hwcpucycles', 'hwinstructions', 'maxfreq', 'mem', 'mem_usage', 'minfreq', 'oc_cpu', 'oc_cpu_d', 'oc_mem', 'oc_mem_d', 'sched_busy', 'sched_runtime', 'sched_waittime', 'swpagefaults', 'vm_number', 'vm'])
         current_data = list()
@@ -75,43 +76,52 @@ class SliceHostWrapper(SliceObjectWrapper):
             x = dict()
             x["time"] = slice.get_raw_metric("time")
             x["cpu_usage"] = slice.get_raw_metric("cpu_usage")
+            x["mem_usage"] = slice.get_raw_metric("mem_usage")
             current_data.append(x)
             index+=1
 
         new_data = dict()
         new_data["time"] = [x for x in slice_to_be_added.get_raw_metric("time")]
         new_data["cpu_usage"] = slice_to_be_added.get_raw_metric("cpu_usage")
+        new_data["mem_usage"] = slice_to_be_added.get_raw_metric("mem_usage")
 
         assesser = StabilityAssesserLstm()
-        #assesser = StabilityAssesserLstm()
-        return assesser.assess(traindata_as_list=current_data, targetdata=new_data, metric="cpu_usage", max_value_config=slice_to_be_added.get_cpu_config())
+        cpu_stability = assesser.assess(traindata_as_list=current_data, targetdata=new_data, metric="cpu_usage", max_value_config=slice_to_be_added.get_cpu_config())
+        mem_stability = assesser.assess(traindata_as_list=current_data, targetdata=new_data, metric="mem_usage", max_value_config=slice_to_be_added.get_mem_config())
+        return cpu_stability, mem_stability  
 
     # Host tiers as threshold
     def get_cpu_tiers(self): # return tier0, tier1
-        self.get_last_slice().is_stable()
-        cpu_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=95), nearest_val=0.1) # unity is vcpu
-        cpu_tier1 = cpu_tier0 # self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=99), nearest_val=0.1) # unity is vcpu
-        return cpu_tier0, cpu_tier1
-        if self.is_stable():
-            cpu_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=95), nearest_val=0.50) # unity is vcpu
-            cpu_tier1 = self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=95), nearest_val=0.50) # unity is vcpu
-        # TODO : is last obtained by this way? Is it the right way?
-        elif self.get_last_slice().is_cpu_tier_defined():
-            cpu_tier0 = 1
-            cpu_tier1 = 1
-            # TODO
+        studied_slice = self.get_last_slice()
+        if studied_slice.is_cpu_stable():
+            # Keep previous ratio
+            previous_slice = self.get_nth_to_last_slice(2)
+            if previous_slice is None:
+                cpu_tier0 = previous_slice.get_booked_cpu()
+                cpu_tier1 = cpu_tier0
+            else:
+                cpu_tier0, cpu_tier1 = previous_slice.get_cpu_tiers()
         else:
-            # No OC
-            cpu_tier0 = 1
-            cpu_tier1 = 1
-            # TODO
-        self.get_last_slice().update_cpu_tiers(cpu_tier0, cpu_tier1)
+            cpu_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=95), nearest_val=0.1) # unity is vcpu        
+            cpu_tier1 = cpu_tier0 # No tier1 in this paper
+        studied_slice.update_cpu_tiers(cpu_tier0, cpu_tier1)
         return cpu_tier0, cpu_tier1
 
     # Mem tiers as threshold
     def get_mem_tiers(self): # return tier0, tier1
-        mem_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(mem_percentile=50), nearest_val=1) # unity is MB
-        mem_tier1 = mem_tier0 # self.round_to_upper_nearest(x=self.get_slices_max_metric(mem_percentile=99), nearest_val=1) # unity is MB
+        studied_slice = self.get_last_slice()
+        if studied_slice.is_mem_stable():
+            # Keep previous ratio
+            previous_slice = self.get_nth_to_last_slice(2)
+            if previous_slice is None:
+                mem_tier0 = previous_slice.get_booked_mem()
+                mem_tier1 = mem_tier0
+            else:
+                mem_tier0, mem_tier1 = previous_slice.get_mem_tiers()
+        else:
+            mem_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(mem_percentile=80), nearest_val=1) # unity is MB
+            mem_tier1 = mem_tier0 # No tier1 in this paper
+        studied_slice.update_mem_tiers(mem_tier0, mem_tier1)
         return mem_tier0, mem_tier1
 
     def get_cpu_mem_tiers(self): # return cpu_tier0, cpu_tier1, mem_tier0, mem_tier1

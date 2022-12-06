@@ -3,6 +3,7 @@
 
 ##misc
 dump*.json
+*.pdf
 pane-*
 debug/
 

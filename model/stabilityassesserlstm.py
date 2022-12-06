@@ -1,23 +1,42 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import LSTM
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
+import matplotlib
+from matplotlib import pyplot as plt
+matplotlib.rcParams['pdf.fonttype'] = 42
+pd.set_option('styler.latex.hrules', True)
+pd.set_option('styler.format.precision', 2)
+
 
 class StabilityAssesserLstm(object):
 
-    def format_data(self, traindata_as_list : dict, metric : str, max_value_config : int):
+    def transform_list_of_dict(self, traindata_as_list : dict, metric : str, max_value_config : int):
         traindata = dict()
         traindata["time"] = list()
         traindata[metric] = list()
         for slicedata in traindata_as_list:
-            traindata["time"].extend(slicedata["time"])
-            traindata["cpu_usage"].extend([round(x/max_value_config,3) for x in slicedata[metric]])
+            time, metrics = self.transform_dict(slicedata, metric, max_value_config)
+            traindata["time"].extend(time)
+            traindata[metric].extend(metrics)
         return traindata
+
+    def transform_dict(self, slicedata : dict, metric : str, max_value_config):
+        return slicedata["time"], [round(x/max_value_config,3) for x in slicedata[metric]]
+
+    def inverse_transform_x(self,  array : np.array, max_value_config : int):
+        reverse_array = [round(x[0]*max_value_config,1) for x in array]
+        return np.array(reverse_array)[..., np.newaxis]
+
+    def inverse_transform_y(self,  array : np.array, max_value_config : int):
+        reverse_array = [round(x*max_value_config,1) for x in array]
+        return np.array([reverse_array])
 
     # convert an array of values into a dataset matrix
     def create_dataset(self, dataset, look_back=1):
@@ -30,68 +49,70 @@ class StabilityAssesserLstm(object):
 
     def assess(self, traindata_as_list : list, targetdata : dict, metric : str, max_value_config : int):
 
-        traindata = self.format_data(traindata_as_list, metric, max_value_config)
+        traindata = self.transform_list_of_dict(traindata_as_list, metric, max_value_config)
+        projectiondata_time, projectiondata_metrics = self.transform_dict(targetdata, metric, max_value_config)
 
         tf.random.set_seed(0) # for reproductilibity
 
-        # dataframe = pd.read_csv('airline-passengers.csv', usecols=[1], engine='python')
-        # dataset = dataframe.values
-        # dataset = dataset.astype('float32')
-
-        # scaler = MinMaxScaler(feature_range=(0, 1))
-        # dataset = scaler.fit_transform(dataset)
-
-        # split into train and test sets
-        # train_size = int(len(dataset) * 0.67)
-        # test_size = len(dataset) - train_size
-        # train, test = dataset[0:train_size,:], dataset[train_size:len(dataset),:]
-        # split into train and test sets
-        dataset2 = np.array(traindata[metric])[..., np.newaxis]
-        print(dataset2)
-        train_size = int(len(dataset2) * 0.67)
-        test_size = len(dataset2) - train_size
-        train, test = dataset2[0:train_size,:], dataset2[train_size:len(dataset2),:]
-        print(train)
+        dataset = np.array(traindata[metric] + projectiondata_metrics)[..., np.newaxis] # for plotting purpose only
+        dataset_train = np.array(traindata[metric])[..., np.newaxis]
+        dataset_projection = np.array(projectiondata_metrics)[..., np.newaxis]
 
         look_back = 1
-        trainX, trainY = self.create_dataset(train, look_back)
-        testX, testY = self.create_dataset(test, look_back)
+        trainX, trainY = self.create_dataset(dataset_train, look_back)
+        projectionX, projectionY =  self.create_dataset(dataset_projection, look_back)
 
         # reshape input to be [samples, time steps, features]
         trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
-        testX = np.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
+        projectionX = np.reshape(projectionX, (projectionX.shape[0], 1, projectionX.shape[1]))
 
         # create and fit the LSTM network
         model = Sequential()
-        model.add(LSTM(4, input_shape=(1, look_back)))
+        model.add(LSTM(6, input_shape=(1, look_back)))
         model.add(Dense(1))
         model.compile(loss='mean_squared_error', optimizer='adam')
-        model.fit(trainX, trainY, epochs=100, batch_size=1, verbose=2)
+        model.fit(trainX, trainY, epochs=5, batch_size=1, verbose=0)
 
         # make predictions
         trainPredict = model.predict(trainX)
-        testPredict = model.predict(testX)
+        projectionPredict = model.predict(projectionX)
+
         # invert predictions
-        trainPredict = scaler.inverse_transform(trainPredict)
-        trainY = scaler.inverse_transform([trainY])
-        testPredict = scaler.inverse_transform(testPredict)
-        testY = scaler.inverse_transform([testY])
+        trainPredict = self.inverse_transform_x(trainPredict, max_value_config)
+        trainY = self.inverse_transform_y(trainY, max_value_config)
+        projectionPredict = self.inverse_transform_x(projectionPredict, max_value_config)
+        projectionY = self.inverse_transform_y(projectionY, max_value_config)
+
         # calculate root mean squared error
         trainScore = np.sqrt(mean_squared_error(trainY[0], trainPredict[:,0]))
         print('Train Score: %.2f RMSE' % (trainScore))
-        testScore = np.sqrt(mean_squared_error(testY[0], testPredict[:,0]))
-        print('Test Score: %.2f RMSE' % (testScore))
+        projectionScore = np.sqrt(mean_squared_error(projectionY[0], projectionPredict[:,0]))
+        print('Projection Score: %.2f RMSE' % (projectionScore))
+        
+        abs_gap = np.abs(trainScore - projectionScore)
+        if abs_gap < (max_value_config*0.01):
+            print("Considered stable")
+            is_stable = True
+        else:
+            print("Considered unstable")
+            is_stable = False
 
-        # shift train predictions for plotting
+        # shift predictions for plotting
         trainPredictPlot = np.empty_like(dataset)
         trainPredictPlot[:, :] = np.nan
         trainPredictPlot[look_back:len(trainPredict)+look_back, :] = trainPredict
         # shift test predictions for plotting
-        testPredictPlot = np.empty_like(dataset)
-        testPredictPlot[:, :] = np.nan
-        testPredictPlot[len(trainPredict)+(look_back*2)+1:len(dataset)-1, :] = testPredict
+        projectionPredictPlot = np.empty_like(dataset)
+        projectionPredictPlot[:, :] = np.nan
+        projectionPredictPlot[len(trainPredict)+(look_back*2)+1:len(dataset)-1, :] = projectionPredict
         # plot baseline and predictions
-        plt.plot(scaler.inverse_transform(dataset))
+        plt.plot(self.inverse_transform_x(dataset, max_value_config))
         plt.plot(trainPredictPlot)
-        plt.plot(testPredictPlot)
-        plt.show()
+        plt.plot(projectionPredictPlot)
+        plt.gcf().savefig('last_graph' + metric + '.pdf', bbox_inches='tight')
+        #plt.show()
+        plt.cla()
+        plt.clf()
+
+        return is_stable
+        

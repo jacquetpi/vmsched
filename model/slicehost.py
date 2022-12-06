@@ -2,14 +2,17 @@ from model.sliceobject import SliceObject
 
 class SliceHost(SliceObject):
 
-    def __init__(self, slice_object : SliceObject, vm_list : list):
+    def __init__(self, slice_object : SliceObject, vm_list : list, booked_cpu : int, booked_mem):
         # Retrieve parent attribute for computation
         slice_attributes = slice_object.__dict__
         slice_attributes["compute"] = True
         super().__init__(**slice_attributes)
         # Specific attributes
         self.vm_list=vm_list
-        self.stable_state=False
+        self.booked_cpu=booked_cpu
+        self.booked_mem=booked_mem
+        self.cpu_stable_state=False
+        self.mem_stable_state=False
 
     def get_vm_list(self):
         return self.vm_list
@@ -28,11 +31,24 @@ class SliceHost(SliceObject):
     def alert_oc_mem(self):
         return (self.oc_page_fault>100000); # TODO value
 
-    def set_stability(self, stable : bool):
+    def set_cpu_stability(self, stable : bool):
         self.stable_state=stable
 
-    def is_stable(self):
-        return self.stable_state
+    def set_stability(self, cpu_stability : bool, mem_stability : bool):
+        self.cpu_stable_state=cpu_stability
+        self.mem_stable_state=mem_stability
+
+    def is_cpu_stable(self):
+        return self.cpu_stable_state
+
+    def is_mem_stable(self):
+        return self.mem_stable_state
+
+    def get_booked_cpu(self):
+        return self.booked_cpu
+
+    def get_booked_mem(self):
+        return self.booked_mem
 
     def dump_state_to_dict(self, dump_dict : dict, iteration : int = 0):
         for attribute, value in self.__dict__.items():
