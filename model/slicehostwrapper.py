@@ -94,16 +94,16 @@ class SliceHostWrapper(SliceObjectWrapper):
     def get_cpu_tiers(self): # return tier0, tier1
         studied_slice = self.get_last_slice()
         if studied_slice.is_cpu_stable():
+            cpu_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=99), nearest_val=0.1) # unity is vcpu        
+            cpu_tier1 = cpu_tier0 # No tier1 in this paper
+        else:
             # Keep previous ratio
-            previous_slice = self.get_nth_to_last_slice(2)
+            previous_slice = self.get_nth_to_last_slice(1)
             if previous_slice is None:
-                cpu_tier0 = previous_slice.get_booked_cpu()
+                cpu_tier0 = studied_slice.get_booked_cpu()
                 cpu_tier1 = cpu_tier0
             else:
                 cpu_tier0, cpu_tier1 = previous_slice.get_cpu_tiers()
-        else:
-            cpu_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=60), nearest_val=0.1) # unity is vcpu        
-            cpu_tier1 = cpu_tier0 # No tier1 in this paper
         studied_slice.update_cpu_tiers(cpu_tier0, cpu_tier1)
         return cpu_tier0, cpu_tier1
 
@@ -111,16 +111,16 @@ class SliceHostWrapper(SliceObjectWrapper):
     def get_mem_tiers(self): # return tier0, tier1
         studied_slice = self.get_last_slice()
         if studied_slice.is_mem_stable():
+            mem_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(mem_percentile=99), nearest_val=1) # unity is MB
+            mem_tier1 = mem_tier0 # No tier1 in this paper
+        else:
             # Keep previous ratio
-            previous_slice = self.get_nth_to_last_slice(2)
+            previous_slice = self.get_nth_to_last_slice(1)
             if previous_slice is None:
-                mem_tier0 = previous_slice.get_booked_mem()
+                mem_tier0 = studied_slice.get_booked_mem()
                 mem_tier1 = mem_tier0
             else:
                 mem_tier0, mem_tier1 = previous_slice.get_mem_tiers()
-        else:
-            mem_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(mem_percentile=40), nearest_val=1) # unity is MB
-            mem_tier1 = mem_tier0 # No tier1 in this paper
         studied_slice.update_mem_tiers(mem_tier0, mem_tier1)
         return mem_tier0, mem_tier1
 

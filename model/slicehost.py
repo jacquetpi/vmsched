@@ -60,3 +60,8 @@ class SliceHost(SliceObject):
                 else:
                      dump_dict[attribute] = [0 for x in range(iteration)]
             dump_dict[attribute].append(value)
+
+    def __str__(self):
+        return "SliceHost[" +  str(self.cpu_avg)  + "/" + str(round(self.get_cpu_percentile(90))) + "/" + str(self.cpu_config) + " " +\
+            str(self.mem_avg)  + "/" + str(round(self.get_mem_percentile(90)))  + "/" + str(self.mem_config) + " " +\
+            "cpu_stable_state=" + str(self.cpu_stable_state) + " mem_stable_state=" + str(self.mem_stable_state) + "]"

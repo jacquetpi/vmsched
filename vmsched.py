@@ -100,7 +100,5 @@ if __name__ == '__main__':
         else:
             main_loop_from_dump(loaded_dump, debug) # offline mode
     except KeyboardInterrupt:
-        if debug>0:
-            plt.show()
         print("Program interrupted")
         sys.exit(0)

@@ -30,7 +30,10 @@ class SliceObjectWrapper(object):
         self.slice_object_list.append(slice)
 
     def is_historical_full(self):
-        return len(self.slice_object_list) >= (self.historical_occurences+1) # +1 as we want to compare, let's say a slice in a day, with its previous occurence
+        return len(self.slice_object_list) >= self.get_historical_maxlength()
+
+    def get_historical_maxlength(self):
+        return (self.historical_occurences+1) # +1 as we want to compare, let's say a slice in a day, with its previous occurence
 
     def get_slices_metric(self, metric : str = None, cpu_percentile : int = None, mem_percentile : int = None, cpi_percentile : int = None, hwcpucycles_percentile : int = None):
         metric_list = list()
@@ -77,12 +80,12 @@ class SliceObjectWrapper(object):
         return None
 
     def get_slice(self, index : int):
-        if self.slice_object_list and (index < len(self.slice_object_list)):
+        if self.slice_object_list and (index>=0) and (index < len(self.slice_object_list)):
            return self.slice_object_list[index]
         return None
 
     def get_nth_to_last_slice(self, index : int):
-        nthindex = len(self.slice_object_list) - index
+        nthindex = (len(self.slice_object_list) - 1) - index
         return self.get_slice(nthindex)
 
     def get_oldest_slice(self):
