@@ -4,8 +4,11 @@ import math
 
 class SliceObjectWrapper(object):
 
-    def __init__(self, historical_occurences : int):
+    def __init__(self, historical_occurences : int, cpu_percentile : int, mem_percentile : int, aggregation : int):
         self.historical_occurences=historical_occurences
+        self.cpu_percentile=cpu_percentile
+        self.mem_percentile=mem_percentile
+        self.aggregation=aggregation
         self.object_seen = 0
         self.object_last_seen = 0
         self.slice_object_list=list()
@@ -14,14 +17,14 @@ class SliceObjectWrapper(object):
         # Update wrapper metrics
         self.object_seen+=1
         self.object_last_seen = int(data['time'][-1]) if data.get('time', False) else None 
-        sliceObject = SliceObject(raw_data=data)
+        sliceObject = SliceObject(raw_data=data, aggregation=self.aggregation)
         return sliceObject
 
     def get_slice_object_from_dump(self, dump_data : dict, occurence : int, epoch : int):
         # Update wrapper metrics
         self.object_seen+=1
         self.object_last_seen = epoch
-        sliceObject = SliceObject(raw_data=dump_data["raw_data"][occurence])
+        sliceObject = SliceObject(raw_data=dump_data["raw_data"][occurence], aggregation=self.aggregation)
         return sliceObject
 
     def add_slice(self, slice : SliceObject):

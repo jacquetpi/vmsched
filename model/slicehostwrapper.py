@@ -9,8 +9,8 @@ import numpy as np
 
 class SliceHostWrapper(SliceObjectWrapper):
 
-    def __init__(self, host_name : str, historical_occurences : int):
-        super().__init__(historical_occurences)
+    def __init__(self, host_name : str, historical_occurences : int, cpu_percentile : int, mem_percentile : int, aggregation : int):
+        super().__init__(historical_occurences, cpu_percentile, mem_percentile, aggregation)
         self.host_name=host_name
 
     def add_slice_data_from_raw(self, host_data : dict):
@@ -51,8 +51,8 @@ class SliceHostWrapper(SliceObjectWrapper):
         return np.average(cpu_usage_list), np.average(mem_usage_list)
 
     def get_host_percentile(self):
-        cpu_usage_list = self.get_slices_metric(cpu_percentile=90)
-        mem_usage_list = self.get_slices_metric(mem_percentile=90)
+        cpu_usage_list = self.get_slices_metric(cpu_percentile=self.cpu_percentile)
+        mem_usage_list = self.get_slices_metric(mem_percentile=self.mem_percentile)
         return np.max(cpu_usage_list), np.max(mem_usage_list)
 
     def does_last_slice_contain_a_new_vm(self):
@@ -94,7 +94,7 @@ class SliceHostWrapper(SliceObjectWrapper):
     def get_cpu_tiers(self): # return tier0, tier1
         studied_slice = self.get_last_slice()
         if studied_slice.is_cpu_stable():
-            cpu_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=99), nearest_val=0.1) # unity is vcpu        
+            cpu_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=self.cpu_percentile), nearest_val=0.1) # unity is vcpu        
             cpu_tier1 = cpu_tier0 # No tier1 in this paper
         else:
             # Keep previous ratio
@@ -111,7 +111,7 @@ class SliceHostWrapper(SliceObjectWrapper):
     def get_mem_tiers(self): # return tier0, tier1
         studied_slice = self.get_last_slice()
         if studied_slice.is_mem_stable():
-            mem_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(mem_percentile=99), nearest_val=1) # unity is MB
+            mem_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(mem_percentile=self.mem_percentile), nearest_val=1) # unity is MB
             mem_tier1 = mem_tier0 # No tier1 in this paper
         else:
             # Keep previous ratio

@@ -7,20 +7,25 @@ import os
 
 class SliceModel(object):
 
-    def __init__(self, model_node_name : str, model_position : int, model_init_epoch : int, model_historical_occurences : int, model_number_of_slice : int, leftBound : int, rightBound : int):
+    def __init__(self, model_node_name : str, model_position : int, model_init_epoch : int, 
+        model_historical_occurences : int, model_number_of_slice : int, leftBound : int, rightBound : int,
+        cpu_percentile : int, mem_percentile : int, aggregation : int):
         #Data related to model
         self.model_historical_occurences=model_historical_occurences
         self.model_node_name=model_node_name
         self.model_position=model_position
         self.model_init_epoch=model_init_epoch
         self.model_number_of_slice=model_number_of_slice
+        self.model_cpu_percentile=cpu_percentile
+        self.model_mem_percentile=mem_percentile
+        self.model_aggregation=aggregation
         #Data related to slice
         self.leftBound=leftBound
         self.rightBound=rightBound
         self.size=rightBound-leftBound
         # Data itself:
         self.slicevmdata=dict()
-        self.slicenodedata=SliceHostWrapper(self.model_node_name, historical_occurences=self.model_historical_occurences)
+        self.slicenodedata=SliceHostWrapper(self.model_node_name, historical_occurences=self.model_historical_occurences, cpu_percentile=self.model_cpu_percentile, mem_percentile=self.model_mem_percentile, aggregation=self.model_aggregation)
         self.cpu_tier0=None
         self.cpu_tier1=None
         self.cpu_tier2=None
@@ -45,7 +50,7 @@ class SliceModel(object):
         booked_cpu, booked_mem = 0, 0
         for domain_name, domain_stats in domain_data.items():
             if domain_name not in self.slicevmdata:
-                self.slicevmdata[domain_name]=SliceVmWrapper(domain_name=domain_name, historical_occurences=self.model_historical_occurences)
+                self.slicevmdata[domain_name]=SliceVmWrapper(domain_name=domain_name, historical_occurences=self.model_historical_occurences, cpu_percentile=self.model_cpu_percentile, mem_percentile=self.model_mem_percentile, aggregation=self.model_aggregation)
             booked_cpu+= domain_stats["cpu"][-1] if domain_stats["cpu"] else 0
             booked_mem+= domain_stats["mem"][-1] if domain_stats["mem"] else 0
             self.slicevmdata[domain_name].add_slice_data_from_raw(domain_stats)
@@ -61,7 +66,7 @@ class SliceModel(object):
         if "vm" in dump_data:
             for domain_name, domain_dump_data in dump_data["vm"].items():
                 if domain_name not in self.slicevmdata:
-                    self.slicevmdata[domain_name]=SliceVmWrapper(domain_name=domain_name, historical_occurences=self.model_historical_occurences)
+                    self.slicevmdata[domain_name]=SliceVmWrapper(domain_name=domain_name, historical_occurences=self.model_historical_occurences, cpu_percentile=self.model_cpu_percentile, mem_percentile=self.model_mem_percentile, aggregation=self.model_aggregation)
                 if ('raw_data' in domain_dump_data) and occurence < len(domain_dump_data['raw_data']):
                     booked_cpu+= domain_dump_data["raw_data"][occurence]['cpu'][-1] if 'cpu' in domain_dump_data["raw_data"][occurence] and domain_dump_data["raw_data"][occurence]['cpu'][-1] is not None else 0
                     booked_mem+= domain_dump_data["raw_data"][occurence]['mem'][-1] if 'mem' in domain_dump_data["raw_data"][occurence] and domain_dump_data["raw_data"][occurence]['mem'][-1] is not None else 0

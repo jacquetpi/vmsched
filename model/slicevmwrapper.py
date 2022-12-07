@@ -5,8 +5,8 @@ from scipy.stats import ttest_ind_from_stats
 
 class SliceVmWrapper(SliceObjectWrapper):
 
-    def __init__(self, domain_name : str, historical_occurences : int):
-        super().__init__(historical_occurences)
+    def __init__(self, domain_name : str, historical_occurences : int, cpu_percentile : int, mem_percentile : int, aggregation : int):
+        super().__init__(historical_occurences, cpu_percentile, mem_percentile, aggregation)
         self.domain_name=domain_name
         self.debug_cpu_reason = "=0 no prev data"
         self.debug_mem_reason = "=0 no prev data"
@@ -69,7 +69,7 @@ class SliceVmWrapper(SliceObjectWrapper):
         if self.is_incoherent_value(new_slice=new_slice, metric='cpu_avg', std_metric='cpu_std'):
             self.debug_cpu_reason = "-1 avg increase"
             return current_cpu_state-1
-        if self.is_incoherent_value(new_slice=new_slice, cpu_percentile=90, std_metric='cpu_std'):
+        if self.is_incoherent_value(new_slice=new_slice, cpu_percentile=self.cpu_percentile, std_metric='cpu_std'):
             self.debug_cpu_reason = "-1 nth increase"
             return current_cpu_state-1
         # Stability case
@@ -90,7 +90,7 @@ class SliceVmWrapper(SliceObjectWrapper):
         if self.is_incoherent_value(new_slice=new_slice, metric='mem_avg', std_metric='mem_std'):
             self.debug_mem_reason = "-1 avg increase"
             return current_mem_state-1
-        if self.is_incoherent_value(new_slice=new_slice, mem_percentile=90, std_metric='mem_std'):
+        if self.is_incoherent_value(new_slice=new_slice, mem_percentile=self.mem_percentile, std_metric='mem_std'):
             self.debug_mem_reason = "-1 nth increase"
             return current_mem_state-1
         # Stability case

@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 class NodeModel(object):
 
-    def __init__(self, node_name : str, model_scope : int, slice_scope, historical_occurences):
+    def __init__(self, node_name : str, model_scope : int, slice_scope, historical_occurences : int, cpu_percentile : int, mem_percentile : int, aggregation : int):
         if slice_scope > model_scope:
             raise ValueError("Model scope must be greater than slice scope")
         if model_scope % slice_scope !=0:
@@ -20,7 +20,8 @@ class NodeModel(object):
         for i in range(self.number_of_slice):
             self.slices.append(SliceModel(
                 model_node_name= node_name, model_position=i, model_init_epoch=self.init_epoch, model_historical_occurences=historical_occurences, 
-                model_number_of_slice=self.number_of_slice, leftBound=i*slice_scope, rightBound=(i+1)*slice_scope))
+                model_number_of_slice=self.number_of_slice, leftBound=i*slice_scope, rightBound=(i+1)*slice_scope,
+                cpu_percentile=cpu_percentile, mem_percentile=mem_percentile, aggregation=aggregation))
 
     def build_past_slices_from_epoch(self, past_slice : int):
         for slice in self.slices:
