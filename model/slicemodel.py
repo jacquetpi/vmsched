@@ -62,8 +62,9 @@ class SliceModel(object):
             for domain_name, domain_dump_data in dump_data["vm"].items():
                 if domain_name not in self.slicevmdata:
                     self.slicevmdata[domain_name]=SliceVmWrapper(domain_name=domain_name, historical_occurences=self.model_historical_occurences)
-                booked_cpu+= domain_dump_data["cpu_config"][-1] if domain_dump_data["cpu_config"][-1] is not None else 0
-                booked_mem+= domain_dump_data["mem_config"][-1] if domain_dump_data["mem_config"][-1] is not None else 0
+                if ('raw_data' in domain_dump_data) and occurence < len(domain_dump_data['raw_data']):
+                    booked_cpu+= domain_dump_data["raw_data"][occurence]['cpu'][-1] if 'cpu' in domain_dump_data["raw_data"][occurence] and domain_dump_data["raw_data"][occurence]['cpu'][-1] is not None else 0
+                    booked_mem+= domain_dump_data["raw_data"][occurence]['mem'][-1] if 'mem' in domain_dump_data["raw_data"][occurence] and domain_dump_data["raw_data"][occurence]['mem'][-1] is not None else 0
                 self.slicevmdata[domain_name].add_slice_data_from_dump(domain_dump_data, occurence, epoch=dump_data["epoch"][occurence])
         dump_data["node"]["booked_cpu"] = booked_cpu # can be avoided on newer trace
         dump_data["node"]["booked_mem"] = booked_mem

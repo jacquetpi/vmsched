@@ -27,7 +27,7 @@ class SliceHostWrapper(SliceObjectWrapper):
             print("Empty data on slice encountered on dump " + self.host_name)
             return
         slice_host = SliceHost(slice_object=self.get_slice_object_from_dump(dump_data=dump_data["node"], occurence=occurence, epoch=dump_data["epoch"][occurence]),
-                        vm_list=dump_data["node"]["vm_list"][occurence], booked_cpu=dump_data["node"]["booked_cpu"], booked_mem=dump_data["node"]["booked_mem"])
+                        vm_list=dump_data["node"]["raw_data"][occurence]['vm'], booked_cpu=dump_data["node"]["booked_cpu"], booked_mem=dump_data["node"]["booked_mem"])
         cpu_stability, mem_stability = self.compute_stability(slice_to_be_added=slice_host)
         slice_host.set_stability(cpu_stability, mem_stability)
         self.add_slice(slice_host)
@@ -102,7 +102,7 @@ class SliceHostWrapper(SliceObjectWrapper):
             else:
                 cpu_tier0, cpu_tier1 = previous_slice.get_cpu_tiers()
         else:
-            cpu_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=95), nearest_val=0.1) # unity is vcpu        
+            cpu_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=60), nearest_val=0.1) # unity is vcpu        
             cpu_tier1 = cpu_tier0 # No tier1 in this paper
         studied_slice.update_cpu_tiers(cpu_tier0, cpu_tier1)
         return cpu_tier0, cpu_tier1
@@ -119,7 +119,7 @@ class SliceHostWrapper(SliceObjectWrapper):
             else:
                 mem_tier0, mem_tier1 = previous_slice.get_mem_tiers()
         else:
-            mem_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(mem_percentile=80), nearest_val=1) # unity is MB
+            mem_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(mem_percentile=40), nearest_val=1) # unity is MB
             mem_tier1 = mem_tier0 # No tier1 in this paper
         studied_slice.update_mem_tiers(mem_tier0, mem_tier1)
         return mem_tier0, mem_tier1
