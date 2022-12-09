@@ -18,7 +18,7 @@ class SliceHostWrapper(SliceObjectWrapper):
             print("Empty data on slice encountered on host " + self.host_name)
             return
         slice_host = SliceHost(slice_object=self.get_slice_object_from_raw(host_data),
-                        vm_list=host_data["vm"])
+                        vm_list=host_data["vm"], booked_cpu=host_data["booked_cpu"], booked_mem=host_data["booked_mem"])
         slice_host.set_stability(self.compute_stability(slice_to_be_added=slice_host))
         self.add_slice(slice_host)
 
