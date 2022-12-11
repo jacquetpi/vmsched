@@ -66,7 +66,7 @@ class SliceHostWrapper(SliceObjectWrapper):
     def compute_stability(self, slice_to_be_added : SliceHost):
         if not self.is_historical_full():
             return False, False
-        
+        return True, True
         # dict_keys(['time', 'cpi', 'cpu', 'cpu_time', 'cpu_usage', 'elapsed_cpu_time', 'elapsed_time', 'freq', 'hwcpucycles', 'hwinstructions', 'maxfreq', 'mem', 'mem_usage', 'minfreq', 'oc_cpu', 'oc_cpu_d', 'oc_mem', 'oc_mem_d', 'sched_busy', 'sched_runtime', 'sched_waittime', 'swpagefaults', 'vm_number', 'vm'])
         current_data = list()
         index=0
