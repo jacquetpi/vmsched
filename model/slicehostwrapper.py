@@ -108,7 +108,9 @@ class SliceHostWrapper(SliceObjectWrapper):
                 cpu_tier0, cpu_tier1 = previous_slice.get_cpu_tiers()
 
                 delta_cpu_provision = studied_slice.get_booked_cpu() - previous_slice.get_booked_cpu()
-                if delta_cpu_provision > 0:
+                if delta_cpu_provision == 0:
+                    cpu_tier0 = max_percentile
+                elif delta_cpu_provision > 0:
                     #cpu_tier0 += delta_cpu_provision
                     last_ratio = np.max([1, (previous_slice.get_booked_cpu()/previous_slice.get_cpu_config())])
                     cpu_tier0 += round(delta_cpu_provision/last_ratio)
@@ -134,7 +136,9 @@ class SliceHostWrapper(SliceObjectWrapper):
                 mem_tier0, mem_tier1 = previous_slice.get_mem_tiers()
 
                 delta_mem_provision = studied_slice.get_booked_mem() - previous_slice.get_booked_mem()
-                if delta_mem_provision > 0:
+                if delta_mem_provision == 0:
+                    mem_tier0 = max_percentile
+                elif delta_mem_provision > 0:
                     #mem_tier0 += delta_mem_provision
                     last_ratio = np.max([1, (previous_slice.get_booked_mem()/previous_slice.get_mem_config())])
                     mem_tier0 += round(delta_mem_provision/last_ratio)
@@ -144,7 +148,7 @@ class SliceHostWrapper(SliceObjectWrapper):
         return mem_tier0, mem_tier1
 
     def get_cpu_mem_tiers(self): # return cpu_tier0, cpu_tier1, mem_tier0, mem_tier1
-        last_slice = self.get_last_slice()
+        last_slice = self.get_last_slicompuce()
         cpu_tier0, cpu_tier1 = self.get_cpu_tiers()
         mem_tier0, mem_tier1 = self.get_mem_tiers()
         return cpu_tier0, cpu_tier1, mem_tier0, mem_tier1
