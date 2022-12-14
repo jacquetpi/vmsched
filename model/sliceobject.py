@@ -120,8 +120,14 @@ class SliceObject(object):
             return False
         return True
 
+    def get_cpu_tier0(self):
+        return self.cpu_tier0
+
     def get_cpu_tiers(self):
         return self.cpu_tier0, self.cpu_tier1
+
+    def get_mem_tier0(self):
+        return self.mem_tier0
 
     def get_mem_tiers(self):
         return self.mem_tier0, self.mem_tier1

@@ -66,7 +66,7 @@ class SliceHostWrapper(SliceObjectWrapper):
     def compute_stability(self, slice_to_be_added : SliceHost):
         if not self.is_historical_full():
             return False, False
-        return True, True
+
         # dict_keys(['time', 'cpi', 'cpu', 'cpu_time', 'cpu_usage', 'elapsed_cpu_time', 'elapsed_time', 'freq', 'hwcpucycles', 'hwinstructions', 'maxfreq', 'mem', 'mem_usage', 'minfreq', 'oc_cpu', 'oc_cpu_d', 'oc_mem', 'oc_mem_d', 'sched_busy', 'sched_runtime', 'sched_waittime', 'swpagefaults', 'vm_number', 'vm'])
         current_data = list()
         index=0
@@ -94,34 +94,52 @@ class SliceHostWrapper(SliceObjectWrapper):
     # Host tiers as threshold
     def get_cpu_tiers(self): # return tier0, tier1
         studied_slice = self.get_last_slice()
-        if studied_slice.is_cpu_stable():
-            cpu_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=self.cpu_percentile), nearest_val=0.1) # unity is vcpu        
-            cpu_tier1 = cpu_tier0 # No tier1 in this paper
+        max_percentile = self.round_to_upper_nearest(x=self.get_slices_max_metric(cpu_percentile=self.cpu_percentile), nearest_val=0.1)
+        is_stable = studied_slice.is_cpu_stable()
+        previous_slice = self.get_nth_to_last_slice(1)
+
+        if is_stable:
+            cpu_tier0 = max_percentile
         else:
-            # Keep previous ratio
-            previous_slice = self.get_nth_to_last_slice(1)
-            if previous_slice is None:
-                cpu_tier0 = studied_slice.get_booked_cpu()
-                cpu_tier1 = cpu_tier0
-            else:
+            cpu_tier0 = studied_slice.get_booked_cpu()
+
+            if previous_slice is not None:
+
                 cpu_tier0, cpu_tier1 = previous_slice.get_cpu_tiers()
+
+                delta_cpu_provision = studied_slice.get_booked_cpu() - previous_slice.get_booked_cpu()
+                if delta_cpu_provision > 0:
+                    #cpu_tier0 += delta_cpu_provision
+                    last_ratio = np.max([1, (previous_slice.get_booked_cpu()/previous_slice.get_cpu_config())])
+                    cpu_tier0 += round(delta_cpu_provision/last_ratio)
+
+        cpu_tier1 = cpu_tier0 # No Tier1 in this paper
         studied_slice.update_cpu_tiers(cpu_tier0, cpu_tier1)
         return cpu_tier0, cpu_tier1
 
     # Mem tiers as threshold
     def get_mem_tiers(self): # return tier0, tier1
         studied_slice = self.get_last_slice()
-        if studied_slice.is_mem_stable():
-            mem_tier0 = self.round_to_upper_nearest(x=self.get_slices_max_metric(mem_percentile=self.mem_percentile), nearest_val=1) # unity is MB
-            mem_tier1 = mem_tier0 # No tier1 in this paper
+        max_percentile = self.round_to_upper_nearest(x=self.get_slices_max_metric(mem_percentile=self.mem_percentile), nearest_val=1)
+        is_stable = studied_slice.is_mem_stable()
+        previous_slice = self.get_nth_to_last_slice(1)
+
+        if is_stable:
+            mem_tier0 = max_percentile
         else:
-            # Keep previous ratio
-            previous_slice = self.get_nth_to_last_slice(1)
-            if previous_slice is None:
-                mem_tier0 = studied_slice.get_booked_mem()
-                mem_tier1 = mem_tier0
-            else:
+            mem_tier0 = studied_slice.get_booked_mem()
+            
+            if previous_slice is not None:
+                
                 mem_tier0, mem_tier1 = previous_slice.get_mem_tiers()
+
+                delta_mem_provision = studied_slice.get_booked_mem() - previous_slice.get_booked_mem()
+                if delta_mem_provision > 0:
+                    #mem_tier0 += delta_mem_provision
+                    last_ratio = np.max([1, (previous_slice.get_booked_mem()/previous_slice.get_mem_config())])
+                    mem_tier0 += round(delta_mem_provision/last_ratio)
+
+        mem_tier1 = mem_tier0 # No Tier1 in this paper
         studied_slice.update_mem_tiers(mem_tier0, mem_tier1)
         return mem_tier0, mem_tier1
 
