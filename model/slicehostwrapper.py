@@ -148,7 +148,7 @@ class SliceHostWrapper(SliceObjectWrapper):
         return mem_tier0, mem_tier1
 
     def get_cpu_mem_tiers(self): # return cpu_tier0, cpu_tier1, mem_tier0, mem_tier1
-        last_slice = self.get_last_slicompuce()
+        last_slice = self.get_last_slice()
         cpu_tier0, cpu_tier1 = self.get_cpu_tiers()
         mem_tier0, mem_tier1 = self.get_mem_tiers()
         return cpu_tier0, cpu_tier1, mem_tier0, mem_tier1
