@@ -207,6 +207,7 @@ def treat_stub_metrics(url : str, probe_metrics : dict, previous_metrics : dict 
     if 'sched' in probe_metrics['global']:
         add_field_if_exists(saved_metrics, 'sched_runtime', probe_metrics['global']['sched'].get('runtime'))
         add_field_if_exists(saved_metrics, 'sched_waittime', probe_metrics['global']['sched'].get('waittime'))
+        add_field_if_exists(saved_metrics, 'sched_timeslices', probe_metrics['global']['sched'].get('timeslices'))
         
         add_difference_if_exists(node_metrics, 'sched_runtime', probe_metrics['global']['sched'].get('runtime'), previous_metrics.get('sched_runtime'))
         add_difference_if_exists(node_metrics, 'sched_waittime', probe_metrics['global']['sched'].get('waittime'), previous_metrics.get('sched_waittime'))
